@@ -31,6 +31,9 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:var(--bg)}
+/* iOS home screen apps: with a translucent status bar, WebKit makes the page shorter by the status bar's height,
+   so the tab bar floats up and a black band shows below it. Making the root taller by that amount fills the screen. */
+@media (display-mode: standalone){ html{min-height:calc(100% + env(safe-area-inset-top))} body{min-height:100%} }
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,system-ui,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased;overflow:hidden;font-feature-settings:"tnum" 1,"cv11" 1}
 button{font-family:inherit;color:inherit;border:none;background:none;cursor:pointer}
 *{scrollbar-width:none}*::-webkit-scrollbar{display:none}
