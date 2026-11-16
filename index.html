@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#110b0e">
 <meta name="description" content="Free, ad-free calorie and macro tracker for Virginia Tech dining.">
 <link rel="manifest" href="manifest.webmanifest">
@@ -31,6 +31,9 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:var(--bg)}
+/* no double-tap zoom, and no auto-zoom when a text box is focused (iOS zooms into inputs under 16px) */
+html{touch-action:manipulation}
+@supports (-webkit-touch-callout:none){ input,select,textarea{font-size:16px!important} }
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,system-ui,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased;overflow:hidden;font-feature-settings:"tnum" 1,"cv11" 1}
 button{font-family:inherit;color:inherit;border:none;background:none;cursor:pointer}
 *{scrollbar-width:none}*::-webkit-scrollbar{display:none}
@@ -220,17 +223,17 @@ nav .tab.on .ic-fill{opacity:1}
 body.sheet-open .fab svg{transform:rotate(135deg)}
 
 /* ---------- sheet ---------- */
-.scrim{position:fixed;inset:0;z-index:15;background:rgba(5,2,4,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .35s}
+.scrim{position:fixed;inset:0;z-index:15;background:rgba(5,2,4,.62);opacity:0;pointer-events:none;transition:opacity .22s}
 body.sheet-open .scrim{opacity:1;pointer-events:auto}
 .sheet{position:fixed;left:0;right:0;margin:0 auto;max-width:430px;bottom:0;z-index:16;background:var(--surface);border-radius:28px 28px 0 0;border:1px solid var(--hair-2);border-bottom:none;
-  padding:10px 18px calc(var(--tabbar) + var(--safe-b) + 18px);transform:translateY(105%);transition:transform .55s var(--ease)}
+  padding:10px 18px calc(var(--tabbar) + var(--safe-b) + 18px);transform:translateY(105%);transition:transform .34s var(--ease)}
 body.sheet-open .sheet{transform:none}
 .grab{width:38px;height:5px;background:var(--surface-3);border-radius:3px;margin:0 auto 18px}
 .sheet h4{font-size:13px;font-weight:700;color:var(--muted);margin:0 4px 12px;letter-spacing:.3px;text-transform:uppercase}
 .opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .opt{background:var(--surface-2);border-radius:18px;padding:18px 6px 14px;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:13px;font-weight:650;border:1px solid var(--hair);
   opacity:0;transform:translateY(16px) scale(.96);transition:opacity .35s,transform .5s var(--spring)}
-body.sheet-open .opt{opacity:1;transform:none;transition-delay:calc(var(--k)*35ms + 80ms)}
+body.sheet-open .opt{opacity:1;transform:none;transition-delay:calc(var(--k)*20ms + 30ms)}
 .opt .oi{width:46px;height:46px;border-radius:15px;display:grid;place-items:center}
 
 /* ---------- toast ---------- */
@@ -295,7 +298,7 @@ body.sheet-open .opt{opacity:1;transform:none;transition-delay:calc(var(--k)*35m
 .popmenu{margin-top:12px;width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;border-radius:14px;background:rgba(238,138,60,.14);color:var(--orange-hi);font-weight:750;font-size:14.5px}
 /* ---------- add food ---------- */
 .addscreen{position:fixed;inset:0;margin:0 auto;max-width:430px;z-index:25;background:var(--bg);overflow-y:auto;padding:calc(var(--safe-t) + 10px) 16px calc(var(--safe-b) + 30px);
-  transform:translateY(100%);transition:transform .55s var(--ease);visibility:hidden}
+  transform:translateY(100%);transition:transform .34s var(--ease);visibility:hidden}
 body.add-open .addscreen{transform:none;visibility:visible}
 .addtop{display:flex;align-items:center;justify-content:space-between;margin:2px 0 12px}
 .addtop h2{font-size:17px;font-weight:800}
@@ -306,7 +309,7 @@ body.add-open .addscreen{transform:none;visibility:visible}
 .segment.four{grid-template-columns:repeat(4,1fr)}
 .segment.four .thumb{width:calc((100% - 6px)/4)}
 .rlist{padding:0}
-.rrow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 16px;border-top:1px solid var(--hair);animation:rise .45s var(--ease) both;animation-delay:var(--d)}
+.rrow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 16px;border-top:1px solid var(--hair)}
 .rrow:first-child{border-top:none}
 .rrow:active{background:var(--surface-2)}
 .rmain{flex:1;min-width:0}
@@ -321,10 +324,10 @@ body.add-open .addscreen{transform:none;visibility:visible}
 .spin{width:26px;height:26px;border-radius:50%;border:3px solid var(--surface-3);border-top-color:var(--orange);margin:0 auto;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 /* detail sheet */
-.dscrim{position:fixed;inset:0;z-index:26;background:rgba(5,2,4,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .35s}
+.dscrim{position:fixed;inset:0;z-index:26;background:rgba(5,2,4,.62);opacity:0;pointer-events:none;transition:opacity .22s}
 body.detail-open .dscrim{opacity:1;pointer-events:auto}
 .dsheet{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:430px;z-index:27;background:var(--surface);border:1px solid var(--hair-2);border-bottom:none;border-radius:28px 28px 0 0;
-  padding:10px 18px calc(var(--safe-b) + 18px);transform:translateY(105%);transition:transform .55s var(--ease);max-height:92vh;overflow-y:auto}
+  padding:10px 18px calc(var(--safe-b) + 18px);transform:translateY(105%);transition:transform .34s var(--ease);max-height:92vh;overflow-y:auto}
 body.detail-open #dsheet{transform:none}
 .dsheet h3{font-size:21px;font-weight:800;letter-spacing:-.4px;line-height:1.2}
 .dsrc{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:13px;font-weight:600;margin-top:6px}
@@ -333,6 +336,21 @@ body.detail-open #dsheet{transform:none}
 .field>span{font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
 .field select,.stepper{height:44px;border-radius:13px;background:var(--surface-2);border:1px solid var(--hair);color:var(--text);font:inherit;font-size:14.5px;font-weight:600}
 .field select{padding:0 12px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23988a91' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px;min-width:0}
+.qtybtn{height:44px;width:100%;border-radius:13px;background:var(--surface-2);border:1px solid var(--hair);color:var(--text);font:inherit;font-size:17px;font-weight:750}
+body.qw-open .qtybtn{border-color:var(--orange-hi);box-shadow:0 0 0 3px rgba(238,138,60,.18)}
+.qwheel{display:none;margin:10px 0 4px;border-radius:16px;background:var(--surface-2);border:1px solid var(--hair);overflow:hidden}
+body.qw-open .qwheel{display:block}
+.qwtop{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:1px solid var(--hair)}
+.qwmode{display:flex;background:var(--surface-3);border-radius:9px;padding:2px}
+.qwmode button{font:inherit;font-size:12px;font-weight:800;letter-spacing:.4px;padding:5px 10px;border-radius:7px;color:var(--muted)}
+.qwmode button.on{background:var(--surface);color:var(--orange-hi)}
+.qwdone{font:inherit;font-weight:750;color:var(--orange-hi);padding:6px 8px}
+.qwcols{position:relative;display:grid;grid-template-columns:1fr 1fr;height:200px}
+.qwcol{height:200px;overflow-y:scroll;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;scrollbar-width:none;padding:80px 0;position:relative;z-index:1;
+  -webkit-mask-image:linear-gradient(transparent,#000 35%,#000 65%,transparent);mask-image:linear-gradient(transparent,#000 35%,#000 65%,transparent)}
+.qwcol::-webkit-scrollbar{display:none}
+.qwcol div{height:40px;line-height:40px;text-align:center;font-size:21px;font-weight:650;scroll-snap-align:center;color:var(--text)}
+.qwband{position:absolute;left:8px;right:8px;top:80px;height:40px;border-radius:10px;background:var(--surface-3)}
 .stepper{display:flex;align-items:center;overflow:hidden}
 .stepper button{width:38px;height:100%;font-size:20px;font-weight:600;color:var(--orange-hi)}
 .stepper input{flex:1;min-width:0;width:100%;text-align:center;background:none;border:none;color:var(--text);font:inherit;font-weight:750;font-size:16px;outline:none}
@@ -354,7 +372,7 @@ body.detail-open #dsheet{transform:none}
 .dadd{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;align-items:end;margin-top:16px}
 .primary{height:48px;border-radius:15px;font-weight:800;font-size:15.5px;color:#fff;background:linear-gradient(145deg,var(--orange-hi),var(--orange-deep));box-shadow:0 8px 22px rgba(238,138,60,.35)}
 
-.ascrim{position:fixed;inset:0;z-index:26;background:rgba(5,2,4,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .35s}
+.ascrim{position:fixed;inset:0;z-index:26;background:rgba(5,2,4,.62);opacity:0;pointer-events:none;transition:opacity .22s}
 body.about-open .ascrim{opacity:1;pointer-events:auto}
 body.about-open .asheet{transform:none}
 .atext{margin-top:10px;color:var(--text-2);font-size:14.5px;line-height:1.55}
@@ -394,7 +412,7 @@ body.about-open .asheet{transform:none}
 .toast .undo{color:var(--orange-hi);font-weight:800;padding:6px 10px;border-radius:99px;background:rgba(238,138,60,.14)}
 
 /* ---------- activity ---------- */
-.fscrim{position:fixed;inset:0;z-index:28;background:rgba(5,2,4,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .35s}
+.fscrim{position:fixed;inset:0;z-index:28;background:rgba(5,2,4,.62);opacity:0;pointer-events:none;transition:opacity .22s}
 body.form-open .fscrim{opacity:1;pointer-events:auto}
 .fsheet{z-index:29}
 body.form-open .fsheet{transform:none}
@@ -812,7 +830,11 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
   <div class="dsrc" id="dSrc"></div><div class="ddate" id="dDate"></div>
   <div class="dgrid">
     <label class="field"><span>Serving</span><select id="dServ" onchange="renderDetail()"></select></label>
-    <div class="field qty"><span>Servings</span><div class="stepper"><button onclick="stepQty(-.5)" aria-label="Fewer">−</button><input id="dQty" inputmode="decimal" value="1" oninput="renderDetail()"><button onclick="stepQty(.5)" aria-label="More">+</button></div></div>
+    <div class="field qty"><span>Servings</span><button type="button" class="qtybtn" id="dQtyBtn" onclick="toggleQtyWheel()">1</button><input id="dQty" type="hidden" value="1"></div>
+  </div>
+  <div class="qwheel" id="qWheel">
+    <div class="qwtop"><div class="qwmode" id="qwMode"><button type="button" data-m="dec" onclick="setQwMode('dec')">DEC</button><button type="button" data-m="frac" onclick="setQwMode('frac')">FRAC</button></div><button type="button" class="qwdone" onclick="toggleQtyWheel(false)">Done</button></div>
+    <div class="qwcols"><div class="qwband"></div><div class="qwcol" id="qwA"></div><div class="qwcol" id="qwB"></div></div>
   </div>
   <div class="dnut">
     <div class="dring"><svg viewBox="0 0 100 100" id="dRing"></svg><div><b id="dCal">0</b><span>cal</span></div></div>
@@ -1026,6 +1048,7 @@ async function loadData(){
     DATA=await r.json(); LIVE=true;
   }catch(e){ DATA=sampleData(); LIVE=false; }
   try{ const v=await fetch('data/venues.json',{cache:'no-cache'}); if(v.ok) VENUES=await v.json(); }catch(e){}
+  setTimeout(()=>{ try{ fsWarm(); }catch(e){} },1500);
   onData();
 }
 
@@ -1107,8 +1130,22 @@ function xRow(it,ri,si,ii){
 }
 // FatSecret nutrition for hand-entered restaurant items: only the food IDs are stored in venues.json;
 // the numbers are fetched live through the proxy (and kept in memory for this visit only).
-const fsFoodCache=new Map();
-function fsFood(id){ if(!fsFoodCache.has(id)) fsFoodCache.set(id,fsGet(`fs=food&id=${id}`).then(j=>j&&j.ok?j.food:null).catch(()=>null)); return fsFoodCache.get(id); }
+// FatSecret allows caching for up to 24 hours, so foods and searches are kept on the phone for 24 h.
+const FS_TTL=864e5, fsMem=new Map();
+let fsStore=(()=>{ try{ return JSON.parse(localStorage.getItem('hm.fs')||'{}'); }catch(e){ return {}; } })();
+function fsSave(){ try{ const now=Date.now(); for(const k in fsStore) if(now-fsStore[k].t>FS_TTL) delete fsStore[k]; localStorage.setItem('hm.fs',JSON.stringify(fsStore)); }catch(e){} }
+function fsCached(key){ const e=fsStore[key]; return e&&Date.now()-e.t<FS_TTL?e.v:null; }
+function fsPut(key,v){ fsStore[key]={t:Date.now(),v}; }
+function fsFood(id){ id=String(id);
+  const c=fsCached('f:'+id); if(c) return Promise.resolve(c);
+  if(!fsMem.has(id)) fsMem.set(id,fsGet(`fs=food&id=${id}`).then(j=>{ const f=j&&j.ok?j.food:null; if(f){ fsPut('f:'+id,f); fsSave(); } else fsMem.delete(id); return f; }).catch(()=>{ fsMem.delete(id); return null; }));
+  return fsMem.get(id);
+}
+// load many foods in one request (a whole menu)
+async function fsFoods(ids){ ids=[...new Set(ids.map(String))].filter(id=>!fsCached('f:'+id));
+  for(let i=0;i<ids.length;i+=60){ const chunk=ids.slice(i,i+60);
+    try{ const j=await fsGet(`fs=foods&ids=${chunk.join(',')}`); if(j&&j.ok&&j.foods){ for(const id in j.foods) fsPut('f:'+id,j.foods[id]); fsSave(); } }catch(e){} }
+}
 function fsDefault(food){ const sv=(food&&food.sv)||[]; return sv.find(v=>v.def)||sv[0]||null; }
 async function fsCombo(ids){ // one or more FatSecret foods eaten together, as one food object
   const foods=await Promise.all([].concat(ids).map(fsFood)); if(foods.some(f=>!f)) return null;
@@ -1116,8 +1153,10 @@ async function fsCombo(ids){ // one or more FatSecret foods eaten together, as o
   const t={cal:0,p:0,c:0,f:0,fib:0,sug:0,sod:0}; for(const f of foods){ const v=fsDefault(f); if(!v) return null; for(const k in t) t[k]+=+v[k]||0; }
   return {id:'fs'+[].concat(ids).join('_'),n:foods.map(f=>f.n).join(' + '),b:foods[0].b,k:t,u:[['1 order',100]],nog:true,src:'F'};
 }
-function fillXNutrition(){
-  document.querySelectorAll('.xn[data-fs]').forEach(el=>{ const ids=el.dataset.fs.split('_');
+async function fillXNutrition(){
+  const els=[...document.querySelectorAll('.xn[data-fs]')];
+  await fsFoods(els.flatMap(el=>el.dataset.fs.split('_')));
+  els.forEach(el=>{ const ids=el.dataset.fs.split('_');
     fsCombo(ids.length>1?ids:ids[0]).then(f=>{ if(!f){ el.textContent='Nutrition coming soon'; el.className='soon'; return; }
       const sv=f.u&&f.u[0], n=per(f,{label:sv?sv[0]:'1 serving',g:sv?sv[1]:100});
       el.innerHTML=`<b>${fmtN(n.cal)}</b> cal · ${Math.round(n.p)}P ${Math.round(n.c)}C ${Math.round(n.f)}F`; }); });
@@ -1138,12 +1177,13 @@ function menuServs(it,sec,G){
   if(it.ct){ const [c,one,many]=it.ct; return [[`1 order (${c} ${many})`,G],[`1 ${one}`,G/c]]; }
   return [[`1 ${unitFor(it.n,sec)}`,G]];
 }
-function openXItem(ri,si,ii){
-  const r=xRests(hall)[ri], it=r.sections[si].items[ii], label=`${r.name} ${it.n}`;
+function openXItem(ri,si,ii,h){
+  const r=xRests(h||hall)[ri], it=r.sections[si].items[ii], label=`${r.name} ${it.n}`;
   if(it.k&&!it.build){ addMeal=mealNow(); addDate=todayISO();
     const k=it.g?Object.fromEntries(Object.entries(it.k).map(([a,v])=>[a,v*100/it.g])):it.k;   // items with a gram weight offer other sizes
     return showDetail({id:'xk'+ri+'_'+si+'_'+ii,n:it.n,b:r.name,k,u:menuServs(it,r.sections[si].name,it.g||100),nog:true,src:'X'},{standalone:true}); }
-  if(it.fs&&!it.build){ fsCombo(it.fs).then(f=>{ if(!f) return openQuickAdd(null,null,label);
+  if(it.fs&&!it.build){ const slow=setTimeout(()=>toast('Loading nutrition…'),350);
+    fsCombo(it.fs).then(f=>{ clearTimeout(slow); if(!f) return toast('Couldn’t load nutrition. Check your connection and try again.');
       addMeal=mealNow(); addDate=todayISO(); const G=(f.u&&f.u[0]&&f.u[0][1])||100;
       showDetail({...f,n:it.n,b:r.name,u:menuServs(it,r.sections[si].name,G),nog:true},{standalone:true}); }); return; }
   if(!it.build) return openQuickAdd(null,null,label,`${it.price!=null?money(it.price)+' at ':'From '}${r.name}. Nutrition for ${r.name} arrives soon; for now, enter what you know.`);
@@ -1322,11 +1362,29 @@ function diningIndex(){
   const v=[...seen.values()]; diningIndex.cache={k:DATA.updated+d,v}; return v;
 }
 
+// every hand-entered restaurant item (Chick-fil-A, Qdoba, ...) so search finds them directly
+let venueIdx=null;
+function venueIndex(){
+  if(venueIdx) return venueIdx; if(!VENUES||!VENUES.halls) return [];
+  const seen=new Set(), out=[], hallName=h=>{ const L=(DATA&&DATA.locations)||[]; const x=L.find(l=>String(l.id||l.num)===h); return x?x.name:''; };
+  for(const h in VENUES.halls) VENUES.halls[h].forEach((r,ri)=>r.sections.forEach((sec,si)=>sec.items.forEach((it,ii)=>{
+    const key=r.name+'|'+it.n; if(seen.has(key)) return; seen.add(key);
+    const k=it.k||null, fid=it.fs?[].concat(it.fs).join('_'):'';
+    out.push({id:'v:'+key,n:it.n,b:r.name,where:hallName(h),venue:[ri,si,ii,h],fid,k:k&&it.g?Object.fromEntries(Object.entries(k).map(([a,v])=>[a,v*100/it.g])):k,
+      u:[[`1 ${it.ct?'order':unitFor(it.n,sec.name)}`,it.g||100]],r:1,vr:1,build:!!it.build,_h:norm(it.n+' '+r.name+' '+(it.d||''))});
+  })));
+  return venueIdx=out;
+}
+function venueCal(x){
+  if(x.k) return Math.round(per(x,{label:x.u[0][0],g:x.u[0][1]}).cal);
+  if(x.fid){ const f=x.fid.split('_').map(id=>fsCached('f:'+id)); if(f.every(Boolean)){ return Math.round(f.reduce((t,food)=>{ const v=fsDefault(food); return t+(v?+v.cal:0); },0)); } }
+  return null;
+}
 function searchFoods(q,tab){
   const toks=norm(q).trim().split(' ').filter(Boolean); if(!toks.length) return [];
   const hit=(h,t)=>h.includes(' '+t)||(t.length>3&&t.endsWith('s')&&h.includes(' '+t.slice(0,-1)));
   const mine=(tab==='all'||tab==='foods')?[...STORE.myFoods,...(builder&&builder.picking?[]:STORE.myMeals)].map(x=>({...x,_h:norm(x.n+' '+(x.b||''))})):[];
-  const pool=[...mine,...(tab==='all'||tab==='vt'?diningIndex():[]),...((FOODS||[]).filter(f=>tab==='all'||(tab==='rest'?f.r:tab==='foods'?!f.r:false)))];
+  const pool=[...mine,...(tab==='all'||tab==='rest'?venueIndex():[]),...(tab==='all'||tab==='vt'?diningIndex():[]),...((FOODS||[]).filter(f=>tab==='all'||(tab==='rest'?f.r:tab==='foods'?!f.r:false)))];
   const out=[];
   for(const f of pool){
     if(!toks.every(t=>hit(f._h,t))) continue;
@@ -1342,7 +1400,7 @@ function searchFoods(q,tab){
     s-=Math.max(0,seg.split(' ').length-toks.length)*4;
     const full=name.trim(); if(full===q||full===q+'s'||full+'s'===q) s+=25;      // exactly what they typed
     if(/ (plain|whole|large|medium) /.test(name)) s+=2;
-    s+=f.my||f.items?14:f.vt?8:f.r?0:5;
+    s+=f.my||f.items?14:f.vr?12:f.vt?8:f.r?0:5;
     s-=f.n.length/10;
     out.push([s,f]);
   }
@@ -1361,6 +1419,7 @@ const mealNow=()=>{const m=etNow().min;return m<630?'Breakfast':m<960?'Lunch':m<
 let addDate=null;
 function openAdd(meal,date){
   addMeal=meal||mealNow(); addDate=date||todayISO(); addQ='';
+  fsWarm(); prefetchVenueNutrition();
   toggleSheet(false);
   document.body.classList.add('add-open');
   renderAddMeal(); setAddTab(addTab);
@@ -1383,6 +1442,9 @@ function resultRow(f,i){
     <div class="rcal"><b>${n.cal??'–'}</b><span>cal</span></div></button>`;
 }
 let lastResults=[];
+let venuePrefetched=false;
+function prefetchVenueNutrition(){ if(venuePrefetched||!VENUES) return; venuePrefetched=true; venueIdx=null;
+  fsFoods(venueIndex().flatMap(x=>x.fid?x.fid.split('_'):[])).then(()=>{ if(document.body.classList.contains('add-open')) renderResults(); }); }
 function renderResults(){
   const box=$('addResults'), q=addQ.trim();
   if(!q){
@@ -1416,12 +1478,18 @@ function fsGet(qs){ return fetch(`${PRICE_API}?${qs}`).then(r=>r.json()); }
 function fsSearch(q){
   clearTimeout(fsTimer); const key=q.toLowerCase(), seq=++fsSeq;
   fsTimer=setTimeout(()=>{
-    fsGet(`fs=search&n=25&q=${encodeURIComponent(q)}`).then(j=>{
+    const hit=fsCached('q:'+key);
+    const go=hit?Promise.resolve({ok:true,foods:hit}):fsGet(`fs=search&n=25&q=${encodeURIComponent(q)}`);
+    go.then(j=>{
       if(!j||!j.ok){ if(j&&j.error==='not-configured') FS_ON=false; fsCache.set(key,[]); }
-      else fsCache.set(key,(j.foods||[]).map(fsToFood).filter(Boolean).map(f=>({...f,fsBrief:1})));
+      else { if(!hit&&(j.foods||[]).length){ fsPut('q:'+key,j.foods); fsSave(); }
+        fsCache.set(key,(j.foods||[]).map(fsToFood).filter(Boolean).map(f=>({...f,fsBrief:1}))); }
     }).catch(()=>fsCache.set(key,[])).finally(()=>{ if(seq===fsSeq&&addQ.trim().toLowerCase()===key) renderResults(); });
-  },320);
+  },hitNow(key)?0:220);
 }
+const hitNow=key=>!!fsCached('q:'+key);
+// wake the proxy so the first search is fast
+function fsWarm(){ if(!fsWarm.t||Date.now()-fsWarm.t>240000){ fsWarm.t=Date.now(); fsGet('fs=ping').catch(()=>{}); } }
 // FatSecret gives nutrients per serving; the app works per 100 g. Servings without a gram weight
 // are converted through their calories relative to a serving that has one.
 function fsToFood(x){
@@ -1441,7 +1509,7 @@ function openFsFood(x){
 }
 
 // ---------- food detail ----------
-function openDetail(i){ const x=lastResults[i]; if(x.items) return openMealLog(x.id); if(x.fsBrief) return openFsFood(x); showDetail(x); }
+function openDetail(i){ const x=lastResults[i]; if(x.items) return openMealLog(x.id); if(x.vr){ const [ri,si,ii,h]=x.venue; return openXItem(ri,si,ii,h); } if(x.fsBrief) return openFsFood(x); showDetail(x); }
 function openDiningItem(id,h){
   const x=DATA.items[id]; if(!x) return; h=h||hall;
   // always tie the item to the hall it was opened from (the same dish can be on several menus)
@@ -1460,7 +1528,7 @@ function showDetail(f,opts={}){
   $('dName').textContent=f.n;
   $('dSrc').innerHTML=f.my?`<span class="rb my">My food</span>${f.b?esc(f.b):''}`:(f.vt?'<span class="rb vt">VT Dining</span>':f.r?'<span class="rb rs">Restaurant</span>':'<span class="rb us">USDA</span>')+(f.vt||f.b?srcLabel(f):esc(f.cat||''));
   $('dServ').innerHTML=servs.map((s,i)=>`<option value="${i}">${esc(s.label)}${s.g&&!f.nog&&!/^\d+(\.\d+)? (g|oz)$/.test(s.label)?` (${Math.round(s.g)} g)`:''}</option>`).join('');
-  $('dServ').value=si; $('dQty').value=+(+qty).toFixed(2);
+  $('dServ').value=si; $('dQty').value=+(+qty).toFixed(3); $('dQtyBtn').textContent=qtyLabel(qty); document.body.classList.remove('qw-open');
   $('dMeal').innerHTML=MEALS.map(m=>`<option ${m===meal?'selected':''}>${m}</option>`).join('');
   const editing=!!opts.entry;
   $('dPrimary').textContent=editing?'Save':builder&&builder.picking?'Add to meal':'Add to diary';
@@ -1470,9 +1538,9 @@ function showDetail(f,opts={}){
   document.body.classList.add('detail-open');
 }
 function openEdit(id){ const r=findEntry(id); if(r) showDetail(r.e.f,{entry:r}); }
-function closeDetail(){ document.body.classList.remove('detail-open'); }
+function closeDetail(){ document.body.classList.remove('detail-open','qw-open'); }
 function renderDetail(first){
-  const {f,servs}=detail; detail.si=+$('dServ').value||0; detail.qty=Math.max(.25,parseFloat($('dQty').value)||1);
+  const {f,servs}=detail; detail.si=+$('dServ').value||0; detail.qty=Math.max(.1,parseFloat($('dQty').value)||1);
   const n=per(f,servs[detail.si],detail.qty);
   const kc={p:(n.p||0)*4,c:(n.c||0)*4,f:(n.f||0)*9}, tot=kc.p+kc.c+kc.f||1;
   const C=2*Math.PI*44; let off=0;
@@ -1489,6 +1557,34 @@ function renderDetail(first){
     +(f.vt&&prefsActive()&&conflicts(f.tags,f.al).length?`<div class="dwarn"><span>Doesn’t match your filters</span><b>${esc(conflicts(f.tags,f.al).join(' · '))}</b></div>`:'');
   if(first) $('dRing').querySelectorAll('circle').forEach((c,i)=>{ if(!i) return; c.animate([{strokeDasharray:`0 ${C}`},{strokeDasharray:c.getAttribute('stroke-dasharray')}],{duration:700,easing:'cubic-bezier(.22,.9,.24,1)'}); });
 }
+
+// ---------- servings wheel (scroll to pick, like MyFitnessPal) ----------
+const QW_ROW=40, FRACS=[[0,'–'],[.125,'⅛'],[.25,'¼'],[1/3,'⅓'],[.5,'½'],[2/3,'⅔'],[.75,'¾']], DECS=[0,.1,.2,.25,.3,.4,.5,.6,.7,.75,.8,.9];
+let qwMode='frac';
+function qtyLabel(q){ q=+q||0; const w=Math.floor(q+1e-6), r=q-w, f=FRACS.find(x=>x[0]&&Math.abs(x[0]-r)<.01);
+  if(r<.01) return String(w); if(f) return (w?w+' ':'')+f[1]; return String(+q.toFixed(2)); }
+function qwParts(){ return qwMode==='frac'?FRACS.map(x=>x[0]):DECS; }
+function qwLabels(){ return qwMode==='frac'?FRACS.map(x=>x[1]):DECS.map(d=>d?('.'+String(d).split('.')[1]):'.0'); }
+function qwBuild(){
+  const q=detail?detail.qty:1, w=Math.floor(q+1e-6), r=q-w, parts=qwParts();
+  let bi=0,best=9; parts.forEach((p,i)=>{ const d=Math.abs(p-r); if(d<best){best=d;bi=i;} });
+  $('qwA').innerHTML=Array.from({length:61},(_,i)=>`<div>${i}</div>`).join('');
+  $('qwB').innerHTML=qwLabels().map(l=>`<div>${l}</div>`).join('');
+  document.querySelectorAll('#qwMode button').forEach(b=>b.classList.toggle('on',b.dataset.m===qwMode));
+  requestAnimationFrame(()=>{ $('qwA').scrollTop=Math.min(w,60)*QW_ROW; $('qwB').scrollTop=bi*QW_ROW; });
+}
+function qwRead(){
+  const a=Math.round($('qwA').scrollTop/QW_ROW), b=Math.round($('qwB').scrollTop/QW_ROW), parts=qwParts();
+  let q=Math.max(0,Math.min(60,a))+(parts[Math.max(0,Math.min(parts.length-1,b))]||0);
+  if(q<=0) q=qwMode==='frac'?.125:.1;   // "0" isn't a serving
+  setQty(q);
+}
+function setQty(q){ $('dQty').value=+(+q).toFixed(3); $('dQtyBtn').textContent=qtyLabel(q); renderDetail(); }
+function setQwMode(m){ qwMode=m; try{ localStorage.setItem('hm.qw',m); }catch(e){} qwBuild(); }
+function toggleQtyWheel(on){ on=on??!document.body.classList.contains('qw-open'); document.body.classList.toggle('qw-open',on); if(on) qwBuild(); }
+(()=>{ try{ qwMode=localStorage.getItem('hm.qw')||'frac'; }catch(e){}
+  let t; const onScroll=()=>{ cancelAnimationFrame(t); t=requestAnimationFrame(qwRead); };
+  $('qwA').addEventListener('scroll',onScroll,{passive:true}); $('qwB').addEventListener('scroll',onScroll,{passive:true}); })();
 function stepQty(d){ const q=$('dQty'); q.value=Math.max(.25,Math.round(((parseFloat(q.value)||1)+d)*4)/4); renderDetail(); }
 function addToDiary(){
   const meal=$('dMeal').value, serv=detail.servs[detail.si], qty=detail.qty;
@@ -2296,6 +2392,7 @@ function openMealLog(id){
       closeAdd(); undoToast(`Added ${ml.n} to ${m} · ${fmtN(t.cal)} cal`,()=>{ const d=dayRec(date); d.meals[m]=(d.meals[m]||[]).filter(e=>!ids.includes(e.id)); saveStore(); refreshLog(); }); }});
 }
 function myRow(x,i){
+  if(x.vr){ const c=venueCal(x); return `<button class="rrow" style="--d:${Math.min(i,12)*22}ms" onclick="openDetail(${i})"><div class="rmain"><div class="rn">${esc(x.n)}</div><div class="rs2"><span class="rb rs">Restaurant</span>${esc(x.b)}${x.where?' · '+esc(x.where):''}${x.build?' · build your own':''}</div></div><div class="rcal"><b>${c??'–'}</b><span>cal</span></div></button>`; }
   if(x.items){ const t=mealNut(x); return `<button class="rrow" style="--d:${Math.min(i,12)*22}ms" onclick="openMealLog('${x.id}')"><div class="rmain"><div class="rn">${esc(x.n)}</div><div class="rs2"><span class="rb my">Meal</span>${x.items.length} item${x.items.length>1?'s':''}</div></div><div class="rcal"><b>${fmtN(t.cal)}</b><span>cal</span></div></button>`; }
   return resultRow(x,i);
 }
@@ -2313,7 +2410,8 @@ if(isStandalone()) keepData();
 
 function renderInstallCard(){
   const el=$('installCard'); if(!el) return;
-  const show=!isStandalone()&&!STORE.installDismissed&&(isIOS||installEvt||/Android/i.test(navigator.userAgent));
+  const native=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());
+  const show=!native&&!isStandalone()&&!STORE.installDismissed&&(isIOS||installEvt||/Android/i.test(navigator.userAgent));
   el.hidden=!show; if(!show) return;
   el.innerHTML=`<img src="icons/icon-192.png" alt="" width="44" height="44"><div><b>Get the app</b><span>Add HokieMacros to your home screen. It opens full screen, works offline and keeps your log safe.</span></div>
     <button class="ibtn pressable" onclick="installApp()">${installEvt?'Install':'How'}</button><button class="ix" onclick="STORE.installDismissed=true;saveStore();renderInstallCard()" aria-label="Dismiss">×</button>`;

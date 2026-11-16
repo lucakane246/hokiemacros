@@ -203,6 +203,8 @@ function fatsecret_(p) {
   const props = PropertiesService.getScriptProperties();
   const key = props.getProperty('FS_KEY'), secret = props.getProperty('FS_SECRET');
   if (!key || !secret) return { ok: false, error: 'not-configured' };
+  if (p.fs === 'ping') return { ok: true, pong: Date.now() };   // wakes the script up so the next search is quick
+  if (p.fs === 'foods') return foodsBatch_(String(p.ids || ''), key, secret);
   let params;
   const q = String(p.q || '').slice(0, 80).trim();
   if (p.fs === 'search') {
@@ -262,3 +264,22 @@ function signedQuery_(params, key, secret) {
 
 // Run this from the editor after adding the keys: it should log a few apples.
 function testFatSecret() { Logger.log(JSON.stringify(fatsecret_({ fs: 'search', q: 'apple', n: '3' }), null, 1)); }
+
+
+// Many foods in one request (a whole restaurant menu). Each food is cached on its own for 6 hours,
+// and the ones not in the cache are fetched from FatSecret in parallel.
+function foodsBatch_(idList, key, secret) {
+  const ids = [...new Set(idList.split(',').filter(x => /^\d+$/.test(x)))].slice(0, 80);
+  const cache = CacheService.getScriptCache(), out = {}, miss = [];
+  const hits = cache.getAll(ids.map(id => 'fsf:' + id));
+  ids.forEach(id => { const h = hits['fsf:' + id]; if (h) out[id] = JSON.parse(h); else miss.push(id); });
+  if (miss.length) {
+    const reqs = miss.map(id => ({ url: FS_URL + '?' + signedQuery_({ method: 'food.get.v4', food_id: id, format: 'json', region: 'US' }, key, secret), muteHttpExceptions: true }));
+    const res = UrlFetchApp.fetchAll(reqs), put = {};
+    res.forEach((r, i) => {
+      try { const b = JSON.parse(r.getContentText()); if (b.food) { const f = slimFood_(b.food, false); out[miss[i]] = f; put['fsf:' + miss[i]] = JSON.stringify(f); } } catch (e) {}
+    });
+    if (Object.keys(put).length) cache.putAll(put, 21600);
+  }
+  return { ok: true, foods: out };
+}
