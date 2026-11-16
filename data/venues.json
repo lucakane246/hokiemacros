@@ -78,7 +78,15 @@
        },
        {
         "n": "Grilled Chicken Club Sandwich",
-        "fs": 68722052
+        "k": {
+         "cal": 520,
+         "p": 37,
+         "c": 45,
+         "f": 22,
+         "sod": 1055,
+         "fib": 3,
+         "sug": 12
+        }
        },
        {
         "n": "Chick-fil-A Nuggets (8 ct)",
@@ -235,7 +243,16 @@
         "fs": 104059078
        },
        {
-        "n": "Frosted Lemonade"
+        "n": "Frosted Lemonade",
+        "k": {
+         "cal": 350,
+         "p": 7,
+         "c": 67,
+         "f": 7,
+         "sod": 135,
+         "fib": 0,
+         "sug": 65
+        }
        },
        {
         "n": "Cookies & Cream Milkshake",
@@ -1611,11 +1628,11 @@
            {
             "n": "Pork Carnitas",
             "k": {
-             "cal": 110,
+             "cal": 100,
              "p": 14,
-             "c": 0,
+             "c": 1,
              "f": 4.5,
-             "sod": 560
+             "sod": 570
             }
            },
            {
@@ -1753,10 +1770,11 @@
            {
             "n": "Salsa Verde",
             "k": {
-             "cal": 10,
+             "cal": 5,
              "p": 0,
-             "c": 0,
-             "f": 0
+             "c": 1,
+             "f": 0,
+             "sod": 240
             }
            },
            {
@@ -1903,11 +1921,11 @@
            {
             "n": "Pork Carnitas",
             "k": {
-             "cal": 110,
+             "cal": 100,
              "p": 14,
-             "c": 0,
+             "c": 1,
              "f": 4.5,
-             "sod": 560
+             "sod": 570
             }
            },
            {
@@ -2045,10 +2063,11 @@
            {
             "n": "Salsa Verde",
             "k": {
-             "cal": 10,
+             "cal": 5,
              "p": 0,
-             "c": 0,
-             "f": 0
+             "c": 1,
+             "f": 0,
+             "sod": 240
             }
            },
            {
@@ -2221,11 +2240,11 @@
            {
             "n": "Pork Carnitas",
             "k": {
-             "cal": 110,
+             "cal": 100,
              "p": 14,
-             "c": 0,
+             "c": 1,
              "f": 4.5,
-             "sod": 560
+             "sod": 570
             }
            },
            {
@@ -2328,10 +2347,11 @@
            {
             "n": "Salsa Verde",
             "k": {
-             "cal": 10,
+             "cal": 5,
              "p": 0,
-             "c": 0,
-             "f": 0
+             "c": 1,
+             "f": 0,
+             "sod": 240
             }
            },
            {
@@ -2492,11 +2512,11 @@
            {
             "n": "Pork Carnitas",
             "k": {
-             "cal": 110,
+             "cal": 100,
              "p": 14,
-             "c": 0,
+             "c": 1,
              "f": 4.5,
-             "sod": 560
+             "sod": 570
             }
            },
            {
@@ -2573,10 +2593,11 @@
            {
             "n": "Salsa Verde",
             "k": {
-             "cal": 10,
+             "cal": 5,
              "p": 0,
-             "c": 0,
-             "f": 0
+             "c": 1,
+             "f": 0,
+             "sod": 240
             }
            },
            {
@@ -2733,11 +2754,11 @@
            {
             "n": "Pork Carnitas",
             "k": {
-             "cal": 110,
+             "cal": 100,
              "p": 14,
-             "c": 0,
+             "c": 1,
              "f": 4.5,
-             "sod": 560
+             "sod": 570
             }
            },
            {
@@ -2840,10 +2861,11 @@
            {
             "n": "Salsa Verde",
             "k": {
-             "cal": 10,
+             "cal": 5,
              "p": 0,
-             "c": 0,
-             "f": 0
+             "c": 1,
+             "f": 0,
+             "sod": 240
             }
            },
            {
@@ -2954,21 +2976,61 @@
       "name": "Sides",
       "items": [
        {
-        "n": "Chips & Queso"
+        "n": "Chips & Queso",
+        "k": {
+         "cal": 730,
+         "p": 13,
+         "c": 80,
+         "f": 43,
+         "sod": 890,
+         "fib": 0,
+         "sug": 4
+        },
+        "note": "4 oz chips + 4 oz 3-cheese queso"
        },
        {
-        "n": "Chips & Guacamole"
+        "n": "Chips & Guacamole",
+        "k": {
+         "cal": 730,
+         "p": 9,
+         "c": 84,
+         "f": 41,
+         "sod": 600,
+         "fib": 7,
+         "sug": 3
+        },
+        "est": "Estimated: 4 oz chips + 4 oz guacamole"
        },
        {
-        "n": "Chips & Salsa"
+        "n": "Chips & Salsa",
+        "k": {
+         "cal": 580,
+         "p": 7,
+         "c": 79,
+         "f": 26,
+         "sod": 1060,
+         "fib": 0,
+         "sug": 2
+        },
+        "est": "Estimated: 4 oz chips + 4 oz roasted tomato salsa"
        },
        {
-        "n": "Chips"
+        "n": "Chips",
+        "k": {
+         "cal": 560,
+         "p": 7,
+         "c": 75,
+         "f": 26,
+         "sod": 220,
+         "fib": 0,
+         "sug": 2
+        },
+        "note": "4 oz bag"
        }
       ]
      }
     ],
-    "nsrc": "Qdoba’s 2026 nutrition guide"
+    "nsrc": "Qdoba’s nutrition guide (Nov 2026)"
    }
   ],
   "06": [
@@ -3047,7 +3109,15 @@
        },
        {
         "n": "Grilled Chicken Club Sandwich",
-        "fs": 68722052
+        "k": {
+         "cal": 520,
+         "p": 37,
+         "c": 45,
+         "f": 22,
+         "sod": 1055,
+         "fib": 3,
+         "sug": 12
+        }
        },
        {
         "n": "Chick-fil-A Nuggets (8 ct)",
@@ -3204,7 +3274,16 @@
         "fs": 104059078
        },
        {
-        "n": "Frosted Lemonade"
+        "n": "Frosted Lemonade",
+        "k": {
+         "cal": 350,
+         "p": 7,
+         "c": 67,
+         "f": 7,
+         "sod": 135,
+         "fib": 0,
+         "sug": 65
+        }
        },
        {
         "n": "Cookies & Cream Milkshake",
