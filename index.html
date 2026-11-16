@@ -312,7 +312,7 @@ body.add-open .addscreen{transform:none;visibility:visible}
 body.detail-open .dscrim{opacity:1;pointer-events:auto}
 .dsheet{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:430px;z-index:27;background:var(--surface);border:1px solid var(--hair-2);border-bottom:none;border-radius:28px 28px 0 0;
   padding:10px 18px calc(var(--safe-b) + 18px);transform:translateY(105%);transition:transform .55s var(--ease);max-height:92vh;overflow-y:auto}
-body.detail-open .dsheet{transform:none}
+body.detail-open .dsheet:not(.asheet){transform:none}
 .dsheet h3{font-size:21px;font-weight:800;letter-spacing:-.4px;line-height:1.2}
 .dsrc{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:13px;font-weight:600;margin-top:6px}
 .dgrid{display:grid;grid-template-columns:1.5fr 1fr;gap:10px;margin-top:16px}
@@ -348,6 +348,37 @@ body.about-open .asheet{transform:none}
 .atext p{margin-bottom:10px}.atext b{color:var(--text);font-weight:700}
 .atext h4{color:var(--text);font-size:15px;font-weight:800;margin:16px 0 6px}
 .atext .fine{color:var(--muted);font-size:12.5px;margin-top:14px}
+
+/* ---------- logging ---------- */
+.left-n.over b{color:var(--fat)} .left-n.over span{color:var(--fat)}
+.fill.over{background:linear-gradient(90deg,#b84a6a,var(--fat))}
+.eq .res.over .n{color:var(--fat)}
+.mini-v.soon{color:var(--faint)}
+.day{background:none;border:none;font:inherit;cursor:pointer}
+.day:disabled{cursor:default}
+.streak.cold svg{filter:grayscale(1) brightness(.6)}
+.copyln{display:flex;align-items:center;gap:7px;color:var(--orange-hi);font-weight:650;font-size:13.5px;padding:0}
+.copyrow{display:flex;align-items:center;gap:9px;width:100%;padding:12px 18px;border-top:1px solid var(--hair);color:var(--text-2);font-weight:650;font-size:14px;text-align:left}
+.copyrow span{margin-left:auto;color:var(--muted);font-weight:600;font-size:13px}
+.copyrow svg{color:var(--orange-hi)}
+.swipe{position:relative;overflow:hidden;border-top:1px solid var(--hair);touch-action:pan-y;transition:height .26s var(--ease),opacity .26s}
+.swipe.gone{height:0!important;opacity:0}
+.swipe .del{position:absolute;right:0;top:0;bottom:0;width:92px;background:linear-gradient(90deg,#c2476b,#a8354f);color:#fff;font-weight:750;font-size:14px}
+.swipe .fg{position:relative;background:var(--surface);border-top:none!important;transition:transform .35s var(--ease);cursor:pointer;user-select:none;-webkit-user-select:none}
+.swipe .fg:active{background:var(--surface-2)}
+.item .it{min-width:0;flex:1;padding-right:10px}
+.item .it .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.water button{flex:1;height:34px;border-radius:9px;background:rgba(105,195,178,.12);border:1px solid rgba(105,195,178,.18);position:relative;overflow:hidden;padding:0}
+.water button::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#7fd4c3,#3f9c8b);transform:translateY(100%);transition:transform .45s var(--spring)}
+.water button.f::after{transform:none}
+.ddate{color:var(--orange-hi);font-size:12.5px;font-weight:700;margin-top:4px}
+.ddate:empty{display:none}
+.dadd.editing{grid-template-columns:auto 1fr 1.4fr}
+.dadd>*,.dgrid>*{min-width:0}
+.dsheet{overflow-x:hidden}
+.delbtn{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:rgba(226,109,143,.14);color:var(--fat);align-self:end}
+.toast.has-undo{pointer-events:auto;display:flex;align-items:center;gap:14px;padding-right:8px}
+.toast .undo{color:var(--orange-hi);font-weight:800;padding:6px 10px;border-radius:99px;background:rgba(238,138,60,.14)}
 </style>
 </head>
 <body>
@@ -369,14 +400,14 @@ body.about-open .asheet{transform:none}
   <div class="card rise" style="--i:2">
     <div class="label">Calories</div>
     <div class="cal-top">
-      <div class="big"><span data-count="1540">0</span><small>/ 2,200</small></div>
-      <div class="left-n"><b data-count="910">0</b><span>remaining</span></div>
+      <div class="big"><span id="calFood" data-count="0">0</span><small id="calGoalSmall">/ 2,200</small></div>
+      <div class="left-n"><b id="calLeft" data-count="0">0</b><span id="calLeftLbl">remaining</span></div>
     </div>
-    <div class="track"><div class="fill" data-w="70"></div></div>
+    <div class="track"><div class="fill" id="calFill" data-w="0"></div></div>
     <div class="cal-stats">
-      <div><b>2,200</b><span>Goal</span></div>
-      <div><b>1,540</b><span>Food</span></div>
-      <div><b>250</b><span>Exercise</span></div>
+      <div><b id="statGoal">2,200</b><span>Goal</span></div>
+      <div><b id="statFood">0</b><span>Food</span></div>
+      <div><b id="statEx">0</b><span>Exercise</span></div>
     </div>
   </div>
 
@@ -397,14 +428,13 @@ body.about-open .asheet{transform:none}
   <div class="duo rise" style="--i:11">
     <div class="card">
       <div class="mini-h"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--protein)" stroke-width="2.2" stroke-linecap="round"><path d="M13 4a2 2 0 1 0 0 .01M9 20l2-6 3 2v5M8 11l3-3 3 2 3 1M11 14l-2-3"/></svg>Steps</div>
-      <div class="mini-v"><span data-count="6482">0</span></div>
-      <div class="track" style="height:6px;margin-top:12px"><div class="fill" data-w="65" style="background:linear-gradient(90deg,#3f9c8b,var(--protein))"></div></div>
-      <div class="label" style="margin-top:8px;font-size:12px">Goal 10,000</div>
+      <div class="mini-v soon">–</div>
+      <div class="label" style="margin-top:12px;font-size:12px;line-height:1.45">Step tracking<br>coming soon</div>
     </div>
     <div class="card">
       <div class="mini-h"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rose)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z"/></svg>Exercise</div>
-      <div class="mini-v"><span data-count="250">0</span><small>cal</small></div>
-      <div class="label" style="margin-top:12px;font-size:12px;line-height:1.45">42 min · Weights<br>War Memorial Hall</div>
+      <div class="mini-v">0<small>cal</small></div>
+      <div class="label" style="margin-top:12px;font-size:12px;line-height:1.45">Exercise logging<br>coming soon</div>
     </div>
   </div>
 </section>
@@ -413,22 +443,22 @@ body.about-open .asheet{transform:none}
 <section class="page" id="v-diary" data-title="Diary">
   <div class="top rise" style="--i:0"><div class="title">Diary</div></div>
   <div class="datebar rise" style="--i:1">
-    <button aria-label="Previous day"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
-    <b>Today</b>
-    <button aria-label="Next day"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
+    <button aria-label="Previous day" onclick="shiftDay(-1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <b id="diaryDate">Today</b>
+    <button aria-label="Next day" onclick="shiftDay(1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
   </div>
   <div class="card rise" style="--i:2">
     <div class="label">Calories remaining</div>
     <div class="eq">
-      <div><div class="n">2,200</div><div class="l">Goal</div></div><span class="op">−</span>
-      <div><div class="n">1,540</div><div class="l">Food</div></div><span class="op">+</span>
-      <div><div class="n">250</div><div class="l">Exercise</div></div><span class="op">=</span>
-      <div class="res"><div class="n">910</div><div class="l">Remaining</div></div>
+      <div><div class="n" id="dqGoal">2,200</div><div class="l">Goal</div></div><span class="op">−</span>
+      <div><div class="n" id="dqFood">0</div><div class="l">Food</div></div><span class="op">+</span>
+      <div><div class="n" id="dqEx">0</div><div class="l">Exercise</div></div><span class="op">=</span>
+      <div class="res"><div class="n" id="dqLeft">2,200</div><div class="l">Remaining</div></div>
     </div>
   </div>
   <div id="meals"></div>
   <div class="card rise" style="--i:8">
-    <div class="mealrow" style="justify-content:space-between"><h3>Water</h3><span class="label" style="font-size:14px">40 / 64 oz</span></div>
+    <div class="mealrow" style="justify-content:space-between"><h3>Water</h3><span class="label" style="font-size:14px" id="waterLbl">0 / 64 oz</span></div>
     <div class="water" id="water"></div>
   </div>
 </section>
@@ -512,7 +542,7 @@ body.about-open .asheet{transform:none}
 <section class="addscreen" id="addScreen" aria-label="Add food">
   <div class="addtop">
     <button class="iconbtn" onclick="closeAdd()" aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-    <h2>Add food</h2><span style="width:40px"></span>
+    <h2 id="addTitle">Add food</h2><span style="width:40px"></span>
   </div>
   <div class="mchips" id="addMeal"></div>
   <label class="search">
@@ -530,7 +560,7 @@ body.about-open .asheet{transform:none}
 <div class="dsheet" role="dialog" aria-label="Food details">
   <div class="grab"></div>
   <h3 id="dName"></h3>
-  <div class="dsrc" id="dSrc"></div>
+  <div class="dsrc" id="dSrc"></div><div class="ddate" id="dDate"></div>
   <div class="dgrid">
     <label class="field"><span>Serving</span><select id="dServ" onchange="renderDetail()"></select></label>
     <div class="field qty"><span>Servings</span><div class="stepper"><button onclick="stepQty(-.5)" aria-label="Fewer">−</button><input id="dQty" inputmode="decimal" value="1" oninput="renderDetail()"><button onclick="stepQty(.5)" aria-label="More">+</button></div></div>
@@ -541,8 +571,9 @@ body.about-open .asheet{transform:none}
   </div>
   <div class="dmore" id="dMore"></div>
   <div class="dadd">
+    <button class="delbtn pressable" id="dDelete" onclick="deleteFromDetail()" aria-label="Delete entry"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
     <label class="field"><span>Meal</span><select id="dMeal"></select></label>
-    <button class="primary pressable" onclick="addToDiary()">Add to diary</button>
+    <button class="primary pressable" id="dPrimary" onclick="addToDiary()">Add to diary</button>
   </div>
 </div>
 
@@ -608,47 +639,21 @@ function syncNavbar(){ const p=$('v-'+cur); navbar.classList.toggle('show',cur!=
 document.querySelectorAll('.page').forEach(p=>p.addEventListener('scroll',()=>{if(p.id==='v-'+cur) syncNavbar()},{passive:true}));
 
 // ---------- Today ----------
-const days=['S','M','T','W','T','F','S'], todayIdx=new Date().getDay();
-const dayFill=[.82,.95,.7,.88,1,.6,.74];
-$('week').innerHTML=days.map((d,i)=>{
-  const C=2*Math.PI*14;
-  return `<div class="day ${i===todayIdx?'today':''}"><span class="dot"></span>${d}
-    <svg class="ringd" viewBox="0 0 34 34"><circle class="bgc" cx="17" cy="17" r="14" ${i>todayIdx?'stroke-dasharray="2 4"':''}/>
-    <circle class="fgc" cx="17" cy="17" r="14" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-p="${i<todayIdx?dayFill[i]:i===todayIdx?.7:0}"/></svg></div>`}).join('')
- + `<div class="streak"><svg viewBox="0 0 30 36"><path d="M15 1c2 6 11 10 11 21a11 11 0 0 1-22 0c0-5 3-8 5-10 0 4 2 6 4 6 0-6-2-11 2-17z" fill="url(#gFlame)"/></svg><b>4</b></div>`;
-function animateWeek(){ document.querySelectorAll('#week .fgc').forEach((c,i)=>{const C=2*Math.PI*14; c.style.transition='none'; c.style.strokeDashoffset=C; c.getBoundingClientRect(); c.style.transition=''; setTimeout(()=>c.style.strokeDashoffset=C*(1-c.dataset.p),150+i*60)}); }
+function animateWeek(){ const C=2*Math.PI*14; document.querySelectorAll('#week .fgc').forEach((c,i)=>{ c.style.transition='none'; c.style.strokeDashoffset=C; c.getBoundingClientRect(); c.style.transition=''; setTimeout(()=>c.style.strokeDashoffset=C*(1-c.dataset.p),150+i*60)}); }
 
-const MAC=[{k:'Carbs',c:'var(--carb)',g:187,goal:275},{k:'Fat',c:'var(--fat)',g:54,goal:73},{k:'Protein',c:'var(--protein)',g:78,goal:110}];
+const MAC=[{k:'Carbs',c:'var(--carb)',g:0,goal:275},{k:'Fat',c:'var(--fat)',g:0,goal:73},{k:'Protein',c:'var(--protein)',g:0,goal:110}];
 let macPct=false;
 function setMacros(){
-  const tot=MAC.reduce((s,m)=>s+m.g*(m.k==='Fat'?9:4),0);
+  const tot=MAC.reduce((s,m)=>s+m.g*(m.k==='Fat'?9:4),0)||1;
   $('macros').innerHTML=MAC.map(m=>{const pct=Math.round(m.g*(m.k==='Fat'?9:4)/tot*100);
     return `<div class="mac"><div class="k">${m.k}<i style="background:${m.c}"></i></div>
-      <div class="v">${macPct?pct+'<small>%</small>':m.g+'<small>/ '+m.goal+'g</small>'}</div></div>`}).join('');
+      <div class="v">${macPct?pct+'<small>%</small>':Math.round(m.g)+'<small>/ '+Math.round(m.goal)+'g</small>'}</div></div>`}).join('');
   const bars=$('stack').children;
-  MAC.forEach((m,i)=>{bars[i].style.flexGrow=0.001; setTimeout(()=>bars[i].style.flexGrow=macPct?m.g*(m.k==='Fat'?9:4):m.g/m.goal,80)});
+  const any=MAC.some(m=>m.g>0);
+  MAC.forEach((m,i)=>{bars[i].style.flexGrow=0.001; bars[i].style.opacity=any?1:.18; setTimeout(()=>bars[i].style.flexGrow=any?(macPct?m.g*(m.k==='Fat'?9:4):Math.min(1.5,m.g/m.goal)):1,80)});
 }
 function swapMacros(){ macPct=!macPct; $('swapBtn').classList.toggle('flip',macPct);
   const el=$('macros'); el.animate([{opacity:1,transform:'none'},{opacity:0,transform:'translateY(-6px)'}],{duration:140,easing:'ease-in'}).onfinish=()=>{setMacros(); el.animate([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:320,easing:'cubic-bezier(.22,.9,.24,1)'})}; }
-
-const meals=[
-  {name:'Breakfast',ic:'#F2A95B',bg:'rgba(242,169,91,.14)',path:'M5 11h11v3a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5zM16 12h1.5a2.5 2.5 0 0 1 0 5H16M8 4v3M11 3v4M14 4v3',items:[['Scrambled Eggs','Owens Food Court · 1 serving',190],['Hash Brown Patty','Owens Food Court · 1 patty',150],['Orange Juice','8 fl oz',110]]},
-  {name:'Lunch',ic:'#69C3B2',bg:'rgba(105,195,178,.14)',path:'M4 13h16a8 8 0 0 1-16 0zM12 9V5M8 9.5 6.5 6M16 9.5 17.5 6',items:[['Grilled Chicken Wrap','Turner Place · 1 wrap',520],['Side Salad, Ranch','1 bowl',140]]},
-  {name:'Dinner',ic:'#E26D8F',bg:'rgba(226,109,143,.14)',path:'M4 12a8 8 0 0 0 16 0zM3 12h18M9 8c0-2 2-2 2-4M13 8c0-2 2-2 2-4',items:[['Pasta Marinara','D2 · 1.5 cups',330]]},
-  {name:'Snacks',ic:'#B79BE8',bg:'rgba(183,155,232,.14)',path:'M8 8c-2.5 1-4 3.5-4 6.5C4 18 6.5 21 9.5 21c1 0 1.7-.4 2.5-.4s1.5.4 2.5.4c3 0 5.5-3 5.5-6.5 0-3-1.5-5.5-4-6.5-1.5-.5-3 0-4 .5-1-.5-2.5-1-4-.5zM12 8.5c0-2.5 1-4 3-5',items:[['Banana','1 medium',100]]},
-];
-const kc=m=>m.items.reduce((s,i)=>s+i[2],0);
-const micon=m=>`<div class="micon" style="background:${m.bg}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${m.ic}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${m.path}"/></svg></div>`;
-$('mealCards').innerHTML=meals.map((m,i)=>`<div class="card rise" style="--i:${7+i}">
-  <div class="mealrow">${micon(m)}<div><h3>${m.name}</h3><div class="meta">${kc(m)} cal</div></div><button class="logbtn pressable" onclick="openAdd('${m.name}')">Log</button></div>
-  <div class="mealsum">${m.items.slice(0,2).map(x=>x[0]).join(', ')}${m.items.length>2?` <span class="muted">+ ${m.items.length-2} more</span>`:''}</div></div>`).join('');
-
-// ---------- Diary ----------
-$('meals').innerHTML=meals.map((m,i)=>`<div class="card meal rise" style="--i:${3+i}">
-  <div class="mh"><div class="mealrow" style="gap:12px">${micon(m)}<h3>${m.name}</h3></div><span class="kc">${kc(m)}</span></div>
-  ${m.items.map(x=>`<div class="item"><div><div class="nm">${x[0]}</div><div class="ds">${x[1]}</div></div><div class="kc">${x[2]}</div></div>`).join('')}
-  <button class="add" onclick="openAdd('${m.name}')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add food</button></div>`).join('');
-$('water').innerHTML=Array.from({length:8},(_,k)=>`<i class="${k<5?'f':''}" style="--k:${k}"></i>`).join('');
 
 // ================= live data: menus, nutrition, hours =================
 // The real app reads data/dining.json, which a GitHub Action refreshes every morning
@@ -755,7 +760,7 @@ function foodRow(id){
   const tag=(x.t||[]).includes('vegan')?'<span class="vtag">Vegan</span>':(x.t||[]).includes('vegetarian')?'<span class="vtag">Vegetarian</span>':'';
   const nut=x.cal!=null?`<div class="mm"><span><b style="color:var(--protein)">P</b>${x.p??'–'}g</span><span><b style="color:var(--carb)">C</b>${x.c??'–'}g</span><span><b style="color:var(--fat)">F</b>${x.f??'–'}g</span>${tag}</div>`:(tag?`<div class="mm">${tag}</div>`:'');
   return `<div class="food"><div><div class="nm">${esc(x.n)}</div><div class="kc">${x.cal!=null?x.cal+' cal · ':''}${esc(x.s)}</div>${nut}</div>
-    <button class="plus" onclick="openDiningItem('${id}')" aria-label="Add ${esc(x.n)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>`;
+    <button class="plus" data-id="${id}" onclick="openDiningItem('${id}')" aria-label="Add ${esc(x.n)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>`;
 }
 function renderMenu(){
   const st=statusOf([{key:hall}]);
@@ -854,13 +859,16 @@ function defaultServing(f){
 }
 const per=(f,serv,qty=1)=>{const m=f.vt?qty:(serv.g/100)*qty, k=f.k||{}; const r=v=>v==null?null:Math.round(v*m*10)/10; return {cal:k.cal==null?null:Math.round(k.cal*m),p:r(k.p),c:r(k.c),f:r(k.f),fib:r(k.fib),sug:r(k.sug),sod:k.sod==null?null:Math.round(k.sod*m)}};
 
-function openAdd(meal){
-  addMeal=meal||(()=>{const m=etNow().min;return m<630?'Breakfast':m<960?'Lunch':m<1290?'Dinner':'Snacks'})();
+const mealNow=()=>{const m=etNow().min;return m<630?'Breakfast':m<960?'Lunch':m<1290?'Dinner':'Snacks'};
+let addDate=null;
+function openAdd(meal,date){
+  addMeal=meal||mealNow(); addDate=date||todayISO(); addQ='';
   toggleSheet(false);
   document.body.classList.add('add-open');
   renderAddMeal(); setAddTab(addTab);
+  $('addTitle').textContent=addDate===todayISO()?'Add food':'Add food · '+relDay(addDate);
   const inp=$('addInput'); inp.value=addQ; setTimeout(()=>inp.focus(),380);
-  loadFoods().then(()=>renderResults());
+  renderResults(); loadFoods().then(()=>renderResults());
 }
 function closeAdd(){ document.body.classList.remove('add-open'); closeDetail(); $('addInput').blur(); }
 function renderAddMeal(){ $('addMeal').innerHTML=MEALS.map(m=>`<button class="mchip ${m===addMeal?'on':''}" onclick="addMeal='${m}';renderAddMeal()">${m}</button>`).join(''); }
@@ -881,7 +889,9 @@ function renderResults(){
   const box=$('addResults'), q=addQ.trim();
   if(!q){
     const tips=['banana','eggs','chicken breast','olive oil','oatmeal','McChicken','burrito','pizza'];
-    box.innerHTML=`<div class="ahint"><h4>Search VT dining, everyday foods and restaurants</h4>
+    lastResults=STORE.recent.slice(0,12);
+    box.innerHTML=(lastResults.length?`<div class="station">Recent</div><div class="card list0 rlist">${lastResults.map(resultRow).join('')}</div>`:'')
+      +`<div class="ahint"${lastResults.length?' style="padding-top:18px"':''}><h4>${lastResults.length?'Or try':'Search VT dining, everyday foods and restaurants'}</h4>
       <div class="tips">${tips.map(t=>`<button class="chip" onclick="$('addInput').value='${t}';onAddInput('${t}');renderResults()">${t}</button>`).join('')}</div></div>`;
     return;
   }
@@ -896,19 +906,29 @@ function openDetail(i){ showDetail(lastResults[i]); }
 function openDiningItem(id){
   const x=DATA.items[id]; if(!x) return;
   const f=diningIndex().find(d=>d.id===id)||{id,n:x.n,b:VENUE[hall]||'',station:'',k:{cal:x.cal,p:x.p,c:x.c,f:x.f,fib:x.fib,sug:x.sug,sod:x.sod},serving:x.s,vt:1,tags:x.t||[]};
-  addMeal=(()=>{const m=etNow().min;return m<630?'Breakfast':m<960?'Lunch':m<1290?'Dinner':'Snacks'})();
-  showDetail(f,true);
+  addMeal=mealNow(); addDate=todayISO();
+  showDetail(f,{standalone:true});
 }
-function showDetail(f,standalone){
-  detail={f,servs:f.vt?[{label:f.serving||'1 serving',g:null}]:[...(f.u||[]).map(([label,g])=>({label,g})),{label:'100 g',g:100},{label:'1 oz',g:28.35},{label:'1 g',g:1}],si:0,qty:1,standalone};
+const buildServs=f=>f.vt?[{label:f.serving||'1 serving',g:null}]:[...(f.u||[]).map(([label,g])=>({label,g})),{label:'100 g',g:100},{label:'1 oz',g:28.35},{label:'1 g',g:1}];
+function showDetail(f,opts={}){
+  const servs=buildServs(f);
+  let si=0, qty=1, meal=addMeal;
+  if(opts.entry){ const e=opts.entry.e; si=Math.max(0,servs.findIndex(x=>x.label===e.serv.label&&(x.g===e.serv.g||x.g==null))); if(si<0) si=0; qty=e.qty; meal=opts.entry.m;
+    if(!servs.some(x=>x.label===e.serv.label)){ servs.unshift({label:e.serv.label,g:e.serv.g}); si=0; } }
+  detail={f,servs,si,qty,standalone:opts.standalone,entry:opts.entry||null};
   $('dName').textContent=f.n;
-  $('dSrc').innerHTML=(f.vt?'<span class="rb vt">VT Dining</span>':f.r?'<span class="rb rs">Restaurant</span>':'<span class="rb us">USDA</span>')+srcLabel(f);
-  $('dServ').innerHTML=detail.servs.map((s,i)=>`<option value="${i}">${esc(s.label)}${s.g&&!/^\d+(\.\d+)? (g|oz)$/.test(s.label)?` (${Math.round(s.g)} g)`:''}</option>`).join('');
-  $('dServ').value=0; $('dQty').value=1;
-  $('dMeal').innerHTML=MEALS.map(m=>`<option ${m===addMeal?'selected':''}>${m}</option>`).join('');
+  $('dSrc').innerHTML=(f.vt?'<span class="rb vt">VT Dining</span>':f.r?'<span class="rb rs">Restaurant</span>':'<span class="rb us">USDA</span>')+(f.vt||f.b?srcLabel(f):esc(f.cat||''));
+  $('dServ').innerHTML=servs.map((s,i)=>`<option value="${i}">${esc(s.label)}${s.g&&!/^\d+(\.\d+)? (g|oz)$/.test(s.label)?` (${Math.round(s.g)} g)`:''}</option>`).join('');
+  $('dServ').value=si; $('dQty').value=+(+qty).toFixed(2);
+  $('dMeal').innerHTML=MEALS.map(m=>`<option ${m===meal?'selected':''}>${m}</option>`).join('');
+  const editing=!!opts.entry;
+  $('dPrimary').textContent=editing?'Save':'Add to diary';
+  $('dDelete').style.display=editing?'grid':'none'; $('dDelete').parentElement.classList.toggle('editing',editing);
+  $('dDate').textContent=editing?relDay(opts.entry.d):(addDate&&addDate!==todayISO()?relDay(addDate):'');
   renderDetail(true);
   document.body.classList.add('detail-open');
 }
+function openEdit(id){ const r=findEntry(id); if(r) showDetail(r.e.f,{entry:r}); }
 function closeDetail(){ document.body.classList.remove('detail-open'); }
 function renderDetail(first){
   const {f,servs}=detail; detail.si=+$('dServ').value||0; detail.qty=Math.max(.25,parseFloat($('dQty').value)||1);
@@ -925,7 +945,150 @@ function renderDetail(first){
   if(first) $('dRing').querySelectorAll('circle').forEach((c,i)=>{ if(!i) return; c.animate([{strokeDasharray:`0 ${C}`},{strokeDasharray:c.getAttribute('stroke-dasharray')}],{duration:700,easing:'cubic-bezier(.22,.9,.24,1)'}); });
 }
 function stepQty(d){ const q=$('dQty'); q.value=Math.max(.25,Math.round(((parseFloat(q.value)||1)+d)*4)/4); renderDetail(); }
-function addToDiary(){ const m=$('dMeal').value; toast(`Diary logging comes next. This would add to ${m}`); }
+function addToDiary(){
+  const meal=$('dMeal').value, serv=detail.servs[detail.si], qty=detail.qty;
+  if(detail.entry){                                     // editing an existing entry
+    const r=findEntry(detail.entry.e.id); if(!r) return closeDetail();
+    r.e.serv={label:serv.label,g:serv.g}; r.e.qty=qty;
+    if(meal!==r.m){ r.list.splice(r.i,1); (dayRec(r.d).meals[meal]=dayRec(r.d).meals[meal]||[]).push(r.e); }
+    saveStore(); refreshLog(); closeDetail(); toast('Saved'); return;
+  }
+  const date=addDate||todayISO();
+  addEntry(date,meal,detail.f,serv,qty);
+  const cal=per(detail.f,serv,qty).cal;
+  closeDetail(); if(!detail.standalone) closeAdd();
+  if(detail.standalone){ const b=document.querySelector(`#menu .plus[data-id="${detail.f.id}"]`); if(b){b.classList.add('done');setTimeout(()=>b.classList.remove('done'),1400);} }
+  undoToast(`Added to ${meal} · ${cal??0} cal`,()=>{ const list=entriesOf(date,meal); list.pop(); saveStore(); refreshLog(); });
+}
+function deleteFromDetail(){ const id=detail.entry&&detail.entry.e.id; closeDetail(); if(id) setTimeout(()=>deleteEntry(id),250); }
+
+// ================= food log (saved on this device) =================
+const STORE_KEY='hokiemacros.v1';
+let STORE=(()=>{try{return JSON.parse(localStorage.getItem(STORE_KEY))||{}}catch(e){return {}}})();
+STORE.days=STORE.days||{}; STORE.recent=STORE.recent||[];
+STORE.goals=Object.assign({cal:2200,p:110,c:275,f:73,water:8},STORE.goals||{});
+function saveStore(){ try{localStorage.setItem(STORE_KEY,JSON.stringify(STORE))}catch(e){ toast("Couldn't save. Is private browsing on?") } }
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const dayRec=d=>STORE.days[d]||(STORE.days[d]={meals:{},water:0});
+const entriesOf=(d,m)=>((STORE.days[d]||{}).meals||{})[m]||[];
+const todayISO=()=>etNow().date;
+let diaryDate=null;   // set on first render
+
+const MEAL_META={
+  Breakfast:{ic:'#F2A95B',bg:'rgba(242,169,91,.14)',path:'M5 11h11v3a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5zM16 12h1.5a2.5 2.5 0 0 1 0 5H16M8 4v3M11 3v4M14 4v3'},
+  Lunch:{ic:'#69C3B2',bg:'rgba(105,195,178,.14)',path:'M4 13h16a8 8 0 0 1-16 0zM12 9V5M8 9.5 6.5 6M16 9.5 17.5 6'},
+  Dinner:{ic:'#E26D8F',bg:'rgba(226,109,143,.14)',path:'M4 12a8 8 0 0 0 16 0zM3 12h18M9 8c0-2 2-2 2-4M13 8c0-2 2-2 2-4'},
+  Snacks:{ic:'#B79BE8',bg:'rgba(183,155,232,.14)',path:'M8 8c-2.5 1-4 3.5-4 6.5C4 18 6.5 21 9.5 21c1 0 1.7-.4 2.5-.4s1.5.4 2.5.4c3 0 5.5-3 5.5-6.5 0-3-1.5-5.5-4-6.5-1.5-.5-3 0-4 .5-1-.5-2.5-1-4-.5zM12 8.5c0-2.5 1-4 3-5'},
+};
+const micon=m=>{const x=MEAL_META[m];return `<div class="micon" style="background:${x.bg}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${x.ic}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${x.path}"/></svg></div>`};
+
+const entryNut=e=>per(e.f,e.serv,e.qty);
+function sumEntries(list){ const t={cal:0,p:0,c:0,f:0}; for(const e of list){const n=entryNut(e); for(const k in t) t[k]+=n[k]||0;} for(const k in t) t[k]=Math.round(t[k]*10)/10; t.cal=Math.round(t.cal); return t; }
+const dayTotals=d=>sumEntries(MEALS.flatMap(m=>entriesOf(d,m)));
+const mealTotals=(d,m)=>sumEntries(entriesOf(d,m));
+const servLabel=e=>{const q=e.qty, s=e.serv.label; return (q===1?'':`${+q.toFixed(2)} × `)+s};
+const entrySub=e=>[e.f.vt?e.f.b:(e.f.b||''),servLabel(e)].filter(Boolean).join(' · ');
+const fmtN=n=>Math.round(n).toLocaleString();
+function relDay(d){ const t=todayISO(); if(d===t) return 'Today'; if(d===addDays(t,-1)) return 'Yesterday'; if(d===addDays(t,1)) return 'Tomorrow';
+  return new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}); }
+
+// ---------- add / edit / delete ----------
+function foodKey(f){ return f.vt?'vt:'+f.id:(f.id?'f:'+f.id:'n:'+(f.b||'')+f.n); }
+function slimFood(f){ const {_h,...rest}=f; return rest; }
+function rememberRecent(f){ const k=foodKey(f); STORE.recent=[slimFood(f),...STORE.recent.filter(x=>foodKey(x)!==k)].slice(0,25); }
+function addEntry(date,meal,f,serv,qty){
+  const day=dayRec(date); (day.meals[meal]=day.meals[meal]||[]).push({id:uid(),f:slimFood(f),serv:{label:serv.label,g:serv.g},qty,at:Date.now()});
+  rememberRecent(f); saveStore(); refreshLog();
+}
+function findEntry(id){ for(const [d,day] of Object.entries(STORE.days)) for(const [m,list] of Object.entries(day.meals||{})){ const i=list.findIndex(e=>e.id===id); if(i>=0) return {d,m,i,list,e:list[i]}; } return null; }
+function deleteEntry(id,silent){ const r=findEntry(id); if(!r) return; r.list.splice(r.i,1); saveStore(); refreshLog(); if(!silent) undoToast(`Removed ${r.e.f.n}`,()=>{ (dayRec(r.d).meals[r.m]=dayRec(r.d).meals[r.m]||[]).splice(r.i,0,r.e); saveStore(); refreshLog(); }); }
+function copyMeal(from,to,meal){
+  const src=entriesOf(from,meal); if(!src.length) return;
+  const day=dayRec(to); day.meals[meal]=(day.meals[meal]||[]).concat(src.map(e=>({...e,id:uid(),at:Date.now()})));
+  saveStore(); refreshLog(); toast(`Copied ${src.length} item${src.length>1?'s':''} to ${meal}`);
+}
+
+// toast with an Undo button
+let undoFn=null;
+function undoToast(msg,fn){ undoFn=fn; const t=$('toast'); t.innerHTML=`${esc(msg)}<button class="undo" onclick="doUndo()">Undo</button>`; t.classList.add('show','has-undo'); clearTimeout(tt); tt=setTimeout(()=>{t.classList.remove('show','has-undo');undoFn=null},4000); }
+function doUndo(){ if(undoFn){undoFn(); undoFn=null;} $('toast').classList.remove('show','has-undo'); }
+
+// ---------- Today ----------
+function setCount(id,v){ const el=$(id); if(!el) return; el.dataset.count=Math.round(v); el.textContent=fmtN(v); }
+function renderToday(){
+  const d=todayISO(), t=dayTotals(d), g=STORE.goals, ex=0, left=g.cal-t.cal+ex;
+  setCount('calFood',t.cal); setCount('calLeft',Math.abs(left));
+  $('calLeftLbl').textContent=left<0?'over':'remaining'; $('calLeft').parentElement.classList.toggle('over',left<0);
+  $('calGoalSmall').textContent='/ '+fmtN(g.cal);
+  $('statGoal').textContent=fmtN(g.cal); $('statFood').textContent=fmtN(t.cal); $('statEx').textContent=fmtN(ex);
+  const fill=$('calFill'); fill.dataset.w=Math.min(100,t.cal/g.cal*100); fill.style.width=fill.dataset.w+'%'; fill.classList.toggle('over',left<0);
+  MAC[0].g=t.c; MAC[1].g=t.f; MAC[2].g=t.p; MAC[0].goal=g.c; MAC[1].goal=g.f; MAC[2].goal=g.p; setMacros();
+  renderWeek(); renderMealCards();
+}
+function weekDates(){ const t=todayISO(), wd=new Date(t+'T12:00:00').getDay(); return Array.from({length:7},(_,i)=>addDays(t,i-wd)); }
+function streakCount(){ let d=todayISO(), n=0; if(!dayTotals(d).cal) d=addDays(d,-1); while(dayTotals(d).cal>0&&n<999){n++; d=addDays(d,-1);} return n; }
+function renderWeek(){
+  const t=todayISO(), C=2*Math.PI*14, letters=['S','M','T','W','T','F','S'];
+  $('week').innerHTML=weekDates().map((d,i)=>{const cal=dayTotals(d).cal, p=d>t?0:Math.min(1,cal/STORE.goals.cal);
+    return `<button class="day ${d===t?'today':''}" onclick="openDiaryOn('${d}')" ${d>t?'disabled':''}><span class="dot"></span>${letters[i]}
+    <svg class="ringd" viewBox="0 0 34 34"><circle class="bgc" cx="17" cy="17" r="14" ${d>t||(!cal&&d<t)?'stroke-dasharray="2 4"':''}/>
+    <circle class="fgc" cx="17" cy="17" r="14" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p)}" data-p="${p}"/></svg></button>`}).join('')
+   +`<div class="streak ${streakCount()?'':'cold'}"><svg viewBox="0 0 30 36"><path d="M15 1c2 6 11 10 11 21a11 11 0 0 1-22 0c0-5 3-8 5-10 0 4 2 6 4 6 0-6-2-11 2-17z" fill="url(#gFlame)"/></svg><b>${streakCount()}</b></div>`;
+}
+function renderMealCards(){
+  const d=todayISO(), y=addDays(d,-1);
+  $('mealCards').innerHTML=MEALS.map((m,i)=>{const list=entriesOf(d,m), t=mealTotals(d,m), yl=entriesOf(y,m);
+    const sum=list.length?`${list.slice(0,2).map(e=>esc(e.f.n)).join(', ')}${list.length>2?` <span class="muted">+ ${list.length-2} more</span>`:''}`
+      :yl.length?`<button class="copyln" onclick="copyMeal('${y}','${d}','${m}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>Copy yesterday's ${m.toLowerCase()} · ${fmtN(mealTotals(y,m).cal)} cal</button>`
+      :`<span class="muted">Nothing logged yet</span>`;
+    return `<div class="card rise" style="--i:${7+i}"><div class="mealrow">${micon(m)}<div><h3>${m}</h3><div class="meta">${list.length?fmtN(t.cal)+' cal':'Recommended ' + fmtN(STORE.goals.cal*{Breakfast:.25,Lunch:.3,Dinner:.35,Snacks:.1}[m])+' cal'}</div></div>
+      <button class="logbtn pressable" onclick="openAdd('${m}','${d}')">Log</button></div><div class="mealsum">${sum}</div></div>`}).join('');
+}
+
+// ---------- Diary ----------
+function openDiaryOn(d){ diaryDate=d; renderDiary(); go('diary'); }
+function shiftDay(n){ const nd=addDays(diaryDate,n); if(nd>addDays(todayISO(),7)) return; diaryDate=nd; renderDiary(true); }
+function renderDiary(slide){
+  if(!diaryDate) diaryDate=todayISO();
+  const d=diaryDate, t=dayTotals(d), g=STORE.goals, left=g.cal-t.cal;
+  $('diaryDate').textContent=relDay(d);
+  $('dqGoal').textContent=fmtN(g.cal); $('dqFood').textContent=fmtN(t.cal); $('dqEx').textContent='0';
+  $('dqLeft').textContent=fmtN(left); $('dqLeft').parentElement.classList.toggle('over',left<0);
+  const y=addDays(d,-1);
+  $('meals').innerHTML=MEALS.map((m,i)=>{const list=entriesOf(d,m), mt=mealTotals(d,m), yl=entriesOf(y,m);
+    return `<div class="card meal ${slide?'':'rise'}" style="--i:${3+i}">
+      <div class="mh"><div class="mealrow" style="gap:12px">${micon(m)}<h3>${m}</h3></div><span class="kc">${list.length?fmtN(mt.cal):''}</span></div>
+      ${list.map(e=>{const n=entryNut(e);return `<div class="swipe" data-id="${e.id}"><button class="del" onclick="swipeDelete('${e.id}',this)">Delete</button>
+        <div class="item fg"><div class="it"><div class="nm">${esc(e.f.n)}</div><div class="ds">${esc(entrySub(e))}</div></div><div class="kc">${fmtN(n.cal||0)}</div></div></div>`}).join('')}
+      ${!list.length&&yl.length?`<button class="copyrow" onclick="copyMeal('${y}','${d}','${m}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>Copy ${relDay(y)==='Yesterday'?"yesterday's":relDay(y)+"'s"} ${m.toLowerCase()} <span>${fmtN(mealTotals(y,m).cal)} cal</span></button>`:''}
+      <button class="add" onclick="openAdd('${m}','${d}')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add food</button></div>`}).join('');
+  if(slide) $('meals').animate([{opacity:.3,transform:`translateX(${slide>0?12:-12}px)`},{opacity:1,transform:'none'}],{duration:320,easing:'cubic-bezier(.22,.9,.24,1)'});
+  const w=dayRec(d).water||0, goal=STORE.goals.water;
+  $('waterLbl').textContent=`${w*8} / ${goal*8} oz`;
+  $('water').innerHTML=Array.from({length:goal},(_,k)=>`<button class="${k<w?'f':''}" style="--k:${k}" onclick="setWater(${k<w&&k===w-1?k:k+1})" aria-label="${k+1} glasses"></button>`).join('');
+  wireSwipes();
+}
+function setWater(n){ dayRec(diaryDate).water=n; saveStore(); renderDiary(); }
+
+// swipe left on a diary item to reveal Delete; tap to edit
+function wireSwipes(){
+  document.querySelectorAll('#meals .swipe').forEach(row=>{
+    const fg=row.querySelector('.fg'); let x0=null,y0=0,dx=0,dragging=false,base=0;
+    fg.addEventListener('pointerdown',e=>{ x0=e.clientX; y0=e.clientY; dx=0; dragging=false; base=row.classList.contains('open')?-92:0; fg.style.transition='none'; });
+    fg.addEventListener('pointermove',e=>{ if(x0===null) return; const mx=e.clientX-x0, my=e.clientY-y0;
+      if(!dragging&&Math.abs(mx)>8&&Math.abs(mx)>Math.abs(my)){ dragging=true; fg.setPointerCapture(e.pointerId); closeOtherSwipes(row); }
+      if(dragging){ dx=Math.min(0,Math.max(-120,base+mx)); fg.style.transform=`translateX(${dx}px)`; } });
+    const end=()=>{ if(x0===null) return; fg.style.transition=''; x0=null;
+      if(dragging){ const open=dx<-46; row.classList.toggle('open',open); fg.style.transform=open?'translateX(-92px)':''; }
+      else if(row.classList.contains('open')){ row.classList.remove('open'); fg.style.transform=''; }
+      else openEdit(row.dataset.id); };
+    fg.addEventListener('pointerup',end); fg.addEventListener('pointercancel',()=>{x0=null;fg.style.transition='';fg.style.transform=row.classList.contains('open')?'translateX(-92px)':''});
+  });
+}
+function closeOtherSwipes(keep){ document.querySelectorAll('#meals .swipe.open').forEach(r=>{ if(r!==keep){ r.classList.remove('open'); r.querySelector('.fg').style.transform=''; } }); }
+function swipeDelete(id,btn){ const row=btn.closest('.swipe'); row.style.height=row.offsetHeight+'px'; row.offsetHeight; row.classList.add('gone'); setTimeout(()=>deleteEntry(id),260); }
+
+function refreshLog(){ renderToday(); renderDiary(); }
 
 // ---------- Today: dining hall cards ----------
 const HALLCARDS=[
@@ -958,10 +1121,10 @@ function closeAbout(){document.body.classList.remove('about-open')}
 const OPTS=[['Search food','#EE8A3C','M4 13h16a8 8 0 0 1-16 0zM12 9V5'],['Scan','#B4466C','M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2M7 12h10'],['Water','#69C3B2','M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z'],['Exercise','#E26D8F','M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z'],['Weight','#F2A95B','M5 20h14l-2-12H7zM9 8a3 3 0 0 1 6 0'],['Quick add','#9b8cf0','M13 3 4 14h7l-1 7 9-11h-7z']];
 $('opts').innerHTML=OPTS.map((o,k)=>`<button class="opt" style="--k:${k}" onclick="toggleSheet(false);${k===0?"openAdd()":"toast('Coming soon')"}"><span class="oi" style="background:${o[1]}26"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${o[1]}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${o[2]}"/></svg></span>${o[0]}</button>`).join('');
 function toggleSheet(on){ document.body.classList.toggle('sheet-open',on); }
-let tt; function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1800)}
+let tt; function toast(m){const t=$('toast');t.classList.remove('has-undo');undoFn=null;t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1800)}
 
 // first paint
-$('v-today').classList.add('active'); requestAnimationFrame(()=>enter($('v-today')));
+refreshLog(); $('v-today').classList.add('active'); requestAnimationFrame(()=>enter($('v-today')));
 function onData(){
   renderHallCards(); hall='15'; mealIdx=pickMealFor(hall); renderDining(); refreshPins(); if(popIdx>=0) openPop(popIdx);
   const t=DATA.updated?new Date(DATA.updated):null;
