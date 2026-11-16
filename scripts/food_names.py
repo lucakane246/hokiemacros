@@ -147,8 +147,12 @@ def clean(name, brand=None):
     hl = head.lower()
     hl = SINGULAR.get(hl, hl)
     rest = ", ".join(parts[1:]).lower()
-    grain = (hl in GRAIN_HEADS or any(re.search(r"\b" + g + r"\b", hl) for g in ("rice", "pasta", "spaghetti", "macaroni", "noodles?"))) \
-        and not re.search(r"\b(snap|string|green|yellow|wax|canned|refried|baked|squash|links|wasabi|cakes?|pudding|milk|bran|flour|crackers|chips|cereal|bread|salad|soup)\b", hl + " " + rest)
+    # a plain grain/pasta/dried bean - not a dish that contains one ("Beef and rice", "Spaghetti sauce")
+    grain = bool(re.fullmatch(r"([a-z0-9%-]+ ){0,2}(rice|pasta|spaghetti|macaroni|noodles|quinoa|couscous|barley|bulgur|"
+                              r"beans|lentils|chickpeas|peas|farro|millet|buckwheat groats|orzo|penne|fettuccine|linguine)", hl)) \
+        and not re.search(r"\b(snap|string|green|yellow|wax|canned|refried|baked|squash|links|wasabi|cakes?|pudding|milk|"
+                          r"bran|flour|crackers|chips|cereal|bread|salad|soup|with|and|sauce|curry|casserole|pilaf|dressing|"
+                          r"paper|croquette|mixture|flavored|fried|stewed|dirty|spanish|sweet|chow|stuffed|from)\b", hl + " " + rest)
     method = dry = False
     quals = []
     for q in parts[1:]:
