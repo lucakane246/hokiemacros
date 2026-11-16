@@ -1729,7 +1729,7 @@ function renderRec(){
 
 // ================= student-reported item prices =================
 // Submissions go to a Google Sheet (backend/Code.gs). Nothing shows here until the moderator approves it.
-const PRICE_API='';   // Apps Script web app URL; empty = reporting turned off
+const PRICE_API='https://script.google.com/macros/s/AKfycbz9X4QvC0E4pXrvOfSZbl-lVMpBhuEwc40ONvf0hnYrJvwz1hp--i2Zj9iDyzguo8MDvg/exec';   // Apps Script web app URL; empty = reporting turned off
 STORE.priceSubs=STORE.priceSubs||{};
 STORE.device=STORE.device||(crypto.randomUUID?crypto.randomUUID():'d'+Date.now().toString(16)+Math.random().toString(16).slice(2));
 const AYCE=new Set(['15','39']);
