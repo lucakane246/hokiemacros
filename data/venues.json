@@ -1459,7 +1459,30 @@
       "items": [
        {
         "n": "Chips",
-        "price": 2.29
+        "price": 2.29,
+        "k": {
+         "cal": 220,
+         "p": 3,
+         "c": 22,
+         "f": 13,
+         "sod": 190
+        },
+        "g": 42,
+        "note": "Kettle Brand Backyard Barbeque, 1.5 oz bag",
+        "u": [
+         [
+          "1.5 oz bag",
+          42
+         ],
+         [
+          "1 oz bag",
+          28
+         ],
+         [
+          "2 oz bag",
+          56
+         ]
+        ]
        },
        {
         "n": "Muffin",

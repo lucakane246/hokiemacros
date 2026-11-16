@@ -1119,7 +1119,9 @@ function fillXNutrition(){
 }
 function openXItem(ri,si,ii){
   const r=xRests(hall)[ri], it=r.sections[si].items[ii], label=`${r.name} ${it.n}`;
-  if(it.k&&!it.build){ addMeal=mealNow(); addDate=todayISO(); return showDetail({id:'xk'+ri+'_'+si+'_'+ii,n:it.n,b:r.name,k:it.k,u:[['1 order',100]],nog:true,src:'X'},{standalone:true}); }
+  if(it.k&&!it.build){ addMeal=mealNow(); addDate=todayISO();
+    const k=it.g?Object.fromEntries(Object.entries(it.k).map(([a,v])=>[a,v*100/it.g])):it.k;   // items with a gram weight offer other sizes
+    return showDetail({id:'xk'+ri+'_'+si+'_'+ii,n:it.n,b:r.name,k,u:it.u||[['1 order',100]],nog:true,src:'X'},{standalone:true}); }
   if(it.fs&&!it.build){ fsCombo(it.fs).then(f=>{ if(!f) return openQuickAdd(null,null,label);
       addMeal=mealNow(); addDate=todayISO(); showDetail({...f,n:it.n,b:r.name},{standalone:true}); }); return; }
   if(!it.build) return openQuickAdd(null,null,label,`${it.price!=null?money(it.price)+' at ':'From '}${r.name}. Nutrition for ${r.name} arrives soon; for now, enter what you know.`);
