@@ -587,6 +587,8 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 .hconnect span{display:flex;flex-direction:column;gap:2px}.hconnect small{color:var(--muted);font-size:12.5px}
 .ordiv{display:flex;align-items:center;gap:10px;margin:16px 0 6px;color:var(--faint);font-size:12px}.ordiv:before,.ordiv:after{content:"";flex:1;height:1px;background:rgba(255,255,255,.08)}
 .linkbtn{background:none;border:0;color:var(--muted);font:inherit;font-size:13.5px;text-decoration:underline;padding:8px 0;cursor:pointer}
+.fsbadge{display:block;text-align:center;margin:12px 0 4px;font-size:12px;color:var(--muted);text-decoration:none}.fsbadge b{color:#3fa34d;font-weight:800;letter-spacing:-.2px}
+.fsload{padding:18px 0}
 .xd{font-size:12.5px;color:var(--muted);margin:2px 0 3px;line-height:1.35}
 .xsrc{color:var(--muted);font-size:12.5px;font-weight:600;margin:-2px 0 10px}
 .xgrp{padding:2px 0 4px}.xgrp+.xgrp{border-top:1px solid var(--hair);padding-top:12px}
@@ -827,7 +829,8 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
     <p><b>Dining menus, nutrition and hours:</b> VT Dining Services, refreshed every morning.<br>
        <b>Gym and pool hours:</b> VT Recreational Sports.<br>
        <b>Everyday and restaurant foods:</b> U.S. Department of Agriculture, Agricultural Research Service, FoodData Central (fdc.nal.usda.gov).<br>
-       <b>Map:</b> © OpenStreetMap contributors and Virginia aerial imagery.</p>
+       <b>Map:</b> © OpenStreetMap contributors and Virginia aerial imagery.<br>
+       <b>Brand and restaurant foods:</b> <a href="https://www.fatsecret.com" target="_blank" rel="noopener">Powered by fatsecret</a>.</p>
     <p>Menus and hours can change without notice. Check signs in the dining center, especially for allergens.</p>
     <h4>Not medical advice</h4>
     <p>Calorie and nutrient numbers are estimates. HokieMacros isn't a substitute for advice from a doctor or registered dietitian.</p>
@@ -1286,7 +1289,7 @@ function setAddTab(t){ addTab=t; const i=['all','vt','foods','rest'].indexOf(t);
   document.querySelectorAll('#addTabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t)); renderResults(); }
 let addTimer; function onAddInput(v){ addQ=v; clearTimeout(addTimer); addTimer=setTimeout(renderResults,90); }
 
-const srcLabel=f=>f.my?(f.b?esc(f.b):'My food'):f.vt?`${esc(f.b)} · ${esc(f.station)}`:f.b?esc(f.b):f.src==='V'?'USDA · as eaten':'USDA';
+const srcLabel=f=>f.src==='F'?(f.b?esc(f.b):'fatsecret'):f.my?(f.b?esc(f.b):'My food'):f.vt?`${esc(f.b)} · ${esc(f.station)}`:f.b?esc(f.b):f.src==='V'?'USDA · as eaten':'USDA';
 function resultRow(f,i){
   const sv=defaultServing(f), n=per(f,sv);
   const badge=f.my?'<span class="rb my">Mine</span>':f.vt?'<span class="rb vt">VT</span>':f.r?'<span class="rb rs">Restaurant</span>':'';
@@ -1310,12 +1313,50 @@ function renderResults(){
   }
   if(!FOODS){ box.innerHTML='<div class="ahint"><div class="spin"></div></div>'; return; }
   lastResults=searchFoods(q,addTab);
-  box.innerHTML=lastResults.length?`<div class="card list0 rlist">${lastResults.map(myRow).join('')}</div>`
-    :`<div class="ahint"><h4>No matches for “${esc(q)}”</h4><p>Try a simpler word, like “chicken” or “yogurt”.</p></div>`;
+  const useFs=FS_ON&&addTab!=='vt', fsr=useFs&&fsCache.get(q.toLowerCase());
+  const local=lastResults.slice(0,fsr&&fsr.length?25:80);
+  lastResults=local.concat(fsr||[]);
+  box.innerHTML=(local.length?`<div class="card list0 rlist">${local.map(myRow).join('')}</div>`:'')
+    +(useFs?(fsr?(fsr.length?`<div class="station fshead">More foods &amp; brands</div><div class="card list0 rlist">${fsr.map((x,j)=>myRow(x,local.length+j)).join('')}</div>${FS_BADGE}`:'')
+      :`<div class="ahint fsload"><div class="spin"></div></div>`):'')
+    +(!local.length&&(!useFs||(fsr&&!fsr.length))?`<div class="ahint"><h4>No matches for “${esc(q)}”</h4><p>Try a simpler word, like “chicken” or “yogurt”.</p></div>`:'');
+  if(useFs&&!fsr) fsSearch(q);
+}
+
+
+// ================= FatSecret (through our Apps Script proxy; the keys never reach the app) =================
+let FS_ON=true; const fsCache=new Map(); let fsTimer=null, fsSeq=0;
+const FS_BADGE=`<a class="fsbadge" href="https://www.fatsecret.com" target="_blank" rel="noopener">Powered by <b>fatsecret</b></a>`;
+function fsGet(qs){ return fetch(`${PRICE_API}?${qs}`).then(r=>r.json()); }
+function fsSearch(q){
+  clearTimeout(fsTimer); const key=q.toLowerCase(), seq=++fsSeq;
+  fsTimer=setTimeout(()=>{
+    fsGet(`fs=search&n=25&q=${encodeURIComponent(q)}`).then(j=>{
+      if(!j||!j.ok){ if(j&&j.error==='not-configured') FS_ON=false; fsCache.set(key,[]); }
+      else fsCache.set(key,(j.foods||[]).map(fsToFood).filter(Boolean).map(f=>({...f,fsBrief:1})));
+    }).catch(()=>fsCache.set(key,[])).finally(()=>{ if(seq===fsSeq&&addQ.trim().toLowerCase()===key) renderResults(); });
+  },320);
+}
+// FatSecret gives nutrients per serving; the app works per 100 g. Servings without a gram weight
+// are converted through their calories relative to a serving that has one.
+function fsToFood(x){
+  const sv=(x.sv||[]).filter(v=>v.cal!=null&&!isNaN(v.cal)); if(!sv.length) return null;
+  const base=sv.find(v=>v.def&&v.g)||sv.find(v=>v.g)||null;
+  const nog=!base, b=base||sv.find(v=>v.def)||sv[0], bg=base?base.g:100, m=100/bg;
+  const k={cal:b.cal*m,p:b.p*m,c:b.c*m,f:b.f*m,fib:b.fib==null?null:b.fib*m,sug:b.sug==null?null:b.sug*m,sod:b.sod==null?null:b.sod*m};
+  const gOf=v=>v.g||(b.cal?v.cal/b.cal*bg:null);
+  const ordered=[b,...sv.filter(v=>v!==b)];
+  const u=ordered.map(v=>[v.d.replace(/^1 serving$/,'1 serving'),gOf(v)]).filter(([,g])=>g>0);
+  return {id:'fs'+x.id,fsid:x.id,n:x.n,b:x.b,k,u,nog,r:x.t==='Brand'?1:0,src:'F'};
+}
+function openFsFood(x){
+  fsGet(`fs=food&id=${encodeURIComponent(x.fsid)}`).then(j=>{
+    const f=j&&j.ok&&j.food&&fsToFood(j.food); showDetail(f||{...x,fsBrief:0});
+  }).catch(()=>showDetail({...x,fsBrief:0}));
 }
 
 // ---------- food detail ----------
-function openDetail(i){ const x=lastResults[i]; if(x.items) return openMealLog(x.id); showDetail(x); }
+function openDetail(i){ const x=lastResults[i]; if(x.items) return openMealLog(x.id); if(x.fsBrief) return openFsFood(x); showDetail(x); }
 function openDiningItem(id,h){
   const x=DATA.items[id]; if(!x) return; h=h||hall;
   // always tie the item to the hall it was opened from (the same dish can be on several menus)
@@ -1324,7 +1365,7 @@ function openDiningItem(id,h){
   addMeal=mealNow(); addDate=todayISO();
   showDetail(f,{standalone:true});
 }
-const buildServs=f=>f.my?myServs(f):f.vt?[{label:f.serving||'1 serving',g:null}]:[...(f.u||[]).map(([label,g])=>({label,g})),{label:'100 g',g:100},{label:'1 oz',g:28.35},{label:'1 g',g:1}];
+const buildServs=f=>f.my?myServs(f):f.vt?[{label:f.serving||'1 serving',g:null}]:f.nog?(f.u||[]).map(([label,g])=>({label,g})):[...(f.u||[]).map(([label,g])=>({label,g})),{label:'100 g',g:100},{label:'1 oz',g:28.35},{label:'1 g',g:1}];
 function showDetail(f,opts={}){
   const servs=buildServs(f);
   let si=0, qty=1, meal=addMeal;

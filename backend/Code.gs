@@ -144,6 +144,7 @@ const OCC_LOG = 'Occupancy log';
 // Approved prices (read by the app's daily data job), or live gym occupancy with ?occ=1.
 function doGet(e) {
   if (e && e.parameter && e.parameter.occ) return json_(occupancy_());
+  if (e && e.parameter && e.parameter.fs) return json_(fatsecret_(e.parameter));
   const a = approvedPrices_(), out = {};
   for (const k in a) out[k] = { p: a[k].p, d: Utilities.formatDate(new Date(a[k].t), 'America/New_York', 'yyyy-MM-dd') };
   return json_({ ok: true, updated: new Date().toISOString(), prices: out });
@@ -189,3 +190,75 @@ function setup() {
 }
 
 if (typeof module !== 'undefined') module.exports = { judge, median, RULES };
+
+
+// ---------------- FatSecret proxy ----------------
+// The app never sees the FatSecret keys. They live in Project Settings -> Script Properties as FS_KEY and FS_SECRET
+// (the OAuth 1.0 "Consumer Key" and "Shared Secret" from platform.fatsecret.com -> Generate / View API Keys).
+// OAuth 1.0 is used because it has no IP allow-list, and Apps Script doesn't run from a fixed address.
+// Results are cached for 6 hours (FatSecret allows caching up to 24).
+const FS_URL = 'https://platform.fatsecret.com/rest/server.api';
+
+function fatsecret_(p) {
+  const props = PropertiesService.getScriptProperties();
+  const key = props.getProperty('FS_KEY'), secret = props.getProperty('FS_SECRET');
+  if (!key || !secret) return { ok: false, error: 'not-configured' };
+  let params;
+  const q = String(p.q || '').slice(0, 80).trim();
+  if (p.fs === 'search') {
+    if (!q) return { ok: true, foods: [] };
+    params = { method: 'foods.search.v3', search_expression: q, max_results: String(Math.min(+p.n || 20, 50)), page_number: String(+p.page || 0), format: 'json', region: 'US' };
+  } else if (p.fs === 'food') {
+    if (!/^\d+$/.test(String(p.id || ''))) return { ok: false, error: 'bad-id' };
+    params = { method: 'food.get.v4', food_id: String(p.id), format: 'json', region: 'US' };
+  } else if (p.fs === 'ac') {
+    if (!q) return { ok: true, suggestions: [] };
+    params = { method: 'foods.autocomplete.v2', expression: q, max_results: '8', format: 'json', region: 'US' };
+  } else return { ok: false, error: 'bad-call' };
+
+  const ck = 'fs:' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, JSON.stringify(params)));
+  const cache = CacheService.getScriptCache(), hit = cache.get(ck);
+  if (hit) return JSON.parse(hit);
+
+  const res = UrlFetchApp.fetch(FS_URL + '?' + signedQuery_(params, key, secret), { method: 'get', muteHttpExceptions: true });
+  let body; try { body = JSON.parse(res.getContentText()); } catch (err) { return { ok: false, error: 'bad-response' }; }
+  if (body.error) return { ok: false, error: 'fatsecret', code: body.error.code, message: body.error.message };
+
+  let out;
+  if (p.fs === 'search') {
+    const r = (body.foods_search && body.foods_search.results && body.foods_search.results.food) || [];
+    out = { ok: true, foods: [].concat(r).map(f => slimFood_(f, true)) };
+  } else if (p.fs === 'food') {
+    out = { ok: true, food: slimFood_(body.food || {}, false) };
+  } else {
+    const s = (body.suggestions && body.suggestions.suggestion) || [];
+    out = { ok: true, suggestions: [].concat(s) };
+  }
+  const str = JSON.stringify(out);
+  if (str.length < 90000) cache.put(ck, str, 21600);
+  return out;
+}
+
+function slimFood_(f, brief) {
+  const sv = [].concat((f.servings && f.servings.serving) || []).map(x => ({
+    id: x.serving_id, d: x.serving_description, g: x.metric_serving_unit === 'g' || x.metric_serving_unit === 'ml' ? +x.metric_serving_amount || null : null,
+    def: x.is_default === '1', cal: +x.calories, p: +x.protein, c: +x.carbohydrate, f: +x.fat,
+    fib: x.fiber != null ? +x.fiber : null, sug: x.sugar != null ? +x.sugar : null, sod: x.sodium != null ? +x.sodium : null
+  }));
+  return { id: f.food_id, n: f.food_name, b: f.brand_name || '', t: f.food_type, sv: brief ? sv.filter(x => x.def).concat(sv).slice(0, 1) : sv };
+}
+
+function signedQuery_(params, key, secret) {
+  const all = Object.assign({}, params, {
+    oauth_consumer_key: key, oauth_nonce: Utilities.getUuid().replace(/-/g, ''), oauth_signature_method: 'HMAC-SHA1',
+    oauth_timestamp: String(Math.floor(Date.now() / 1000)), oauth_version: '1.0'
+  });
+  const enc = s => encodeURIComponent(s).replace(/[!'()*]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());
+  const norm = Object.keys(all).sort().map(k => enc(k) + '=' + enc(all[k])).join('&');
+  const base = ['GET', enc(FS_URL), enc(norm)].join('&');
+  const sig = Utilities.base64Encode(Utilities.computeHmacSignature(Utilities.MacAlgorithm.HMAC_SHA_1, base, enc(secret) + '&'));
+  return norm + '&oauth_signature=' + enc(sig);
+}
+
+// Run this from the editor after adding the keys: it should log a few apples.
+function testFatSecret() { Logger.log(JSON.stringify(fatsecret_({ fs: 'search', q: 'apple', n: '3' }), null, 1)); }
