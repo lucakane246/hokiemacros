@@ -60,6 +60,9 @@ jobs:
           $B -c "Add :UISupportedInterfaceOrientations array" $P
           $B -c "Add :UISupportedInterfaceOrientations:0 string UIInterfaceOrientationPortrait" $P
           $B -c "Set :UIRequiresFullScreen true" $P 2>/dev/null || $B -c "Add :UIRequiresFullScreen bool true" $P
+          $B -c "Add :NSHealthShareUsageDescription string 'Reads your step count from Apple Health so your daily steps fill in automatically.'" $P
+          $B -c "Add :NSHealthUpdateUsageDescription string 'HokieMacros does not write to Apple Health; iOS requires this description for apps that use HealthKit.'" $P
+          cp App.entitlements ios/App/App/App.entitlements
       - name: API key
         run: |
           mkdir -p ~/private_keys
@@ -72,7 +75,7 @@ jobs:
             -archivePath $RUNNER_TEMP/App.xcarchive archive \
             -allowProvisioningUpdates \
             -authenticationKeyPath ~/private_keys/AuthKey_$ASC_KEY_ID.p8 -authenticationKeyID $ASC_KEY_ID -authenticationKeyIssuerID $ASC_ISSUER_ID \
-            DEVELOPMENT_TEAM=$APPLE_TEAM_ID CODE_SIGN_STYLE=Automatic PRODUCT_BUNDLE_IDENTIFIER=io.github.lucakane246.hokiemacros \
+            DEVELOPMENT_TEAM=$APPLE_TEAM_ID CODE_SIGN_STYLE=Automatic CODE_SIGN_ENTITLEMENTS=App/App.entitlements PRODUCT_BUNDLE_IDENTIFIER=io.github.lucakane246.hokiemacros \
             | tail -40
           test -d $RUNNER_TEMP/App.xcarchive
       - name: Upload to TestFlight
