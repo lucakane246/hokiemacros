@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#120c0f">
+<title>HokieMacros</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#110b0e; --bg-2:#160f13;
+  --surface:#1c1418; --surface-2:#251b20; --surface-3:#2f2329;
+  --hair:rgba(255,255,255,.06); --hair-2:rgba(255,255,255,.1);
+  --text:#F6F0F2; --text-2:#CDBFC5; --muted:#988a91; --faint:#6b5d64;
+  --maroon:#8A2447; --maroon-hi:#B4466C; --rose:#E46E90;
+  --orange:#EE8A3C; --orange-hi:#F7A35C; --orange-deep:#D2611C;
+  --carb:#F2A95B; --fat:#E26D8F; --protein:#69C3B2; --green:#5FCB8F;
+  --r-lg:22px; --r-md:16px; --r-sm:12px;
+  --ease:cubic-bezier(.22,.9,.24,1); --spring:cubic-bezier(.34,1.4,.5,1);
+  --safe-t:env(safe-area-inset-top); --safe-b:env(safe-area-inset-bottom);
+  --tabbar:64px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg)}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,system-ui,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased;overflow:hidden;font-feature-settings:"tnum" 1,"cv11" 1}
+button{font-family:inherit;color:inherit;border:none;background:none;cursor:pointer}
+*{scrollbar-width:none}*::-webkit-scrollbar{display:none}
+
+/* ---------- pages + transitions ---------- */
+.page{position:fixed;top:0;bottom:0;left:0;right:0;margin:0 auto;max-width:430px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
+  padding:calc(var(--safe-t) + 54px) 16px calc(var(--tabbar) + var(--safe-b) + 28px);
+  background:radial-gradient(130% 55% at 50% -12%,rgba(138,36,71,.55),rgba(138,36,71,.12) 45%,transparent 70%),var(--bg);
+  background-attachment:local;
+  opacity:0;pointer-events:none;transform:translate3d(var(--from,24px),0,0) scale(.985);
+  transition:opacity .28s ease,transform .5s var(--ease);will-change:transform,opacity}
+.page.active{opacity:1;pointer-events:auto;transform:none;z-index:2}
+.page.leaving{transform:translate3d(var(--to,-24px),0,0) scale(.985)}
+#v-map{padding:0;overflow:hidden;background:#2a2e56}
+
+/* staggered entrance for blocks on the page that just opened */
+.rise{opacity:0;transform:translateY(14px)}
+.page.enter .rise{animation:rise .62s var(--ease) forwards;animation-delay:calc(var(--i,0) * 55ms + 60ms)}
+@keyframes rise{to{opacity:1;transform:none}}
+
+/* compact nav bar that fades in once the large title scrolls away */
+.navbar{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:430px;z-index:5;height:calc(var(--safe-t) + 48px);padding-top:var(--safe-t);
+  display:flex;align-items:center;justify-content:center;pointer-events:none;
+  background:rgba(17,11,14,.0);border-bottom:1px solid transparent;transition:background .25s,border-color .25s,backdrop-filter .25s}
+.navbar span{font-weight:700;font-size:16px;letter-spacing:-.2px;opacity:0;transform:translateY(6px);transition:opacity .25s,transform .35s var(--ease)}
+.navbar.show{background:rgba(17,11,14,.72);backdrop-filter:saturate(160%) blur(22px);-webkit-backdrop-filter:saturate(160%) blur(22px);border-bottom-color:var(--hair)}
+.navbar.show span{opacity:1;transform:none}
+
+/* ---------- type + layout primitives ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;margin:0 2px 18px}
+.title{font-size:34px;font-weight:800;letter-spacing:-.9px;line-height:1.05;display:flex;align-items:center;gap:8px}
+.title .caret{width:18px;height:18px;color:var(--text-2);margin-top:4px}
+.avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:15px;
+  background:linear-gradient(145deg,var(--maroon-hi),var(--maroon));box-shadow:0 0 0 1px var(--hair-2) inset,0 6px 18px rgba(138,36,71,.45)}
+.card{background:var(--surface);border-radius:var(--r-lg);padding:18px;margin-bottom:12px;border:1px solid var(--hair);position:relative;overflow:hidden}
+.label{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.1px}
+.section-h{display:flex;align-items:baseline;justify-content:space-between;margin:26px 4px 12px}
+.section-h h2{font-size:21px;font-weight:800;letter-spacing:-.4px}
+.link{color:var(--orange-hi);font-weight:650;font-size:14.5px}
+.pressable{transition:transform .18s var(--ease),background .2s}
+.pressable:active{transform:scale(.97)}
+.muted{color:var(--muted)}
+
+/* ---------- Today ---------- */
+.week{display:flex;align-items:flex-end;gap:0;margin:0 0 20px;padding:0 2px}
+.day{flex:1;display:flex;flex-direction:column;align-items:center;gap:9px;font-size:12px;font-weight:650;color:var(--muted)}
+.day.today{color:var(--text)}
+.day .dot{width:4px;height:4px;border-radius:50%;background:transparent;margin-bottom:-4px}
+.day.today .dot{background:var(--orange)}
+.ringd{width:34px;height:34px}
+.ringd circle{fill:none;stroke-width:3.2}
+.ringd .bgc{stroke:rgba(255,255,255,.12)}
+.ringd .fgc{stroke:url(#gOrange);stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset 1.1s var(--ease)}
+.streak{width:48px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;border-left:1px solid var(--hair-2);margin-left:6px;padding-left:6px;height:52px;position:relative}
+.streak svg{width:30px;height:36px}
+.streak b{position:absolute;bottom:3px;font-size:11px;font-weight:800;color:#2a1208}
+
+.cal-top{display:flex;align-items:flex-end;justify-content:space-between;margin-top:10px}
+.big{font-size:40px;font-weight:800;letter-spacing:-1.4px;line-height:1}
+.big small{font-size:16px;font-weight:600;color:var(--muted);letter-spacing:0;margin-left:4px}
+.left-n{text-align:right}
+.left-n b{font-size:24px;font-weight:800;letter-spacing:-.6px}
+.left-n span{display:block;font-size:12.5px;color:var(--muted);font-weight:600;margin-top:2px}
+.track{height:10px;border-radius:99px;background:rgba(255,255,255,.07);margin-top:16px;overflow:hidden;position:relative}
+.fill{height:100%;border-radius:99px;width:0;overflow:hidden;background:linear-gradient(90deg,var(--orange-deep),var(--orange),var(--orange-hi));transition:width 1.2s var(--ease);position:relative}
+.fill::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:translateX(-100%);animation:sheen 2.6s 1.2s ease-in-out infinite}
+@keyframes sheen{60%,100%{transform:translateX(100%)}}
+.cal-stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:16px;padding-top:14px;border-top:1px solid var(--hair)}
+.cal-stats div{display:flex;flex-direction:column;gap:3px}
+.cal-stats div+div{padding-left:14px;border-left:1px solid var(--hair)}
+.cal-stats b{font-size:16px;font-weight:750}
+.cal-stats span{font-size:12px;color:var(--muted);font-weight:600}
+
+.macros{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:2px}
+.mac .k{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:650;color:var(--text-2)}
+.mac .k i{width:7px;height:7px;border-radius:50%}
+.mac .v{font-size:24px;font-weight:800;letter-spacing:-.6px;margin-top:6px}
+.mac .v small{font-size:13px;color:var(--muted);font-weight:600;letter-spacing:0;margin-left:2px}
+.stack{display:flex;gap:4px;height:10px;margin-top:16px}
+.stack i{border-radius:99px;transition:flex-grow 1.1s var(--ease);flex-grow:0.001}
+.swap{position:absolute;right:14px;top:14px;width:34px;height:34px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;color:var(--text-2);border:1px solid var(--hair)}
+.swap svg{transition:transform .45s var(--spring)}
+.swap.flip svg{transform:rotate(180deg)}
+
+.carousel{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:0 16px 4px;scroll-padding:0 16px}
+.hallcard{flex:0 0 74%;scroll-snap-align:start;height:150px;border-radius:var(--r-lg);position:relative;overflow:hidden;padding:16px;display:flex;flex-direction:column;justify-content:flex-end;border:1px solid var(--hair);text-align:left}
+.hallcard .art{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hallcard::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,.5));z-index:0}
+.hallcard>*:not(.art){position:relative;z-index:1}
+.hallcard .tag{position:absolute;top:14px;left:14px;font-size:11px;font-weight:750;letter-spacing:.3px;padding:5px 9px;border-radius:99px;background:rgba(0,0,0,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.hallcard h3{font-size:19px;font-weight:800;letter-spacing:-.4px}
+.hallcard p{font-size:13px;color:rgba(255,255,255,.75);font-weight:550;margin-top:3px}
+
+.mealrow{display:flex;align-items:center;gap:14px}
+.micon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;flex-shrink:0}
+.mealrow h3{font-size:17px;font-weight:700;letter-spacing:-.2px}
+.mealrow .meta{font-size:13px;color:var(--muted);margin-top:2px;font-weight:550}
+.logbtn{margin-left:auto;padding:9px 18px;border-radius:99px;background:rgba(238,138,60,.14);color:var(--orange-hi);font-weight:750;font-size:14.5px}
+.mealsum{margin-top:14px;padding-top:13px;border-top:1px solid var(--hair);font-size:13.5px;color:var(--text-2);font-weight:550;line-height:1.4}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.duo .card{margin-bottom:0}
+.mini-h{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--text-2)}
+.mini-v{font-size:26px;font-weight:800;letter-spacing:-.7px;margin-top:12px}
+.mini-v small{font-size:13px;color:var(--muted);font-weight:600;margin-left:3px;letter-spacing:0}
+
+/* ---------- Diary ---------- */
+.datebar{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--hair);border-radius:99px;padding:5px;margin-bottom:12px}
+.datebar button{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:var(--text-2)}
+.datebar button:active{background:var(--surface-2)}
+.datebar b{font-size:15px;font-weight:700}
+.eq{display:flex;align-items:flex-start;justify-content:space-between;text-align:center;margin-top:12px}
+.eq div{flex:1}.eq .n{font-weight:800;font-size:18px;letter-spacing:-.3px}.eq .l{font-size:11.5px;color:var(--muted);margin-top:3px;font-weight:600}
+.eq .op{flex:0 0 12px;color:var(--faint);font-weight:700;padding-top:2px}
+.eq .res .n{color:var(--orange-hi);font-size:20px}
+.meal{padding:0}
+.meal .mh{display:flex;justify-content:space-between;align-items:center;padding:16px 18px 12px}
+.meal .mh h3{font-size:17px;font-weight:750;letter-spacing:-.2px}.meal .mh .kc{font-weight:750;color:var(--text-2)}
+.item{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-top:1px solid var(--hair)}
+.item .nm{font-size:15px;font-weight:600}.item .ds{font-size:12.5px;color:var(--muted);margin-top:3px;font-weight:550}
+.item .kc{font-size:15px;font-weight:650;color:var(--text-2)}
+.add{display:flex;align-items:center;gap:8px;width:100%;padding:14px 18px;border-top:1px solid var(--hair);color:var(--orange-hi);font-weight:700;font-size:14.5px}
+.water{display:flex;gap:8px;margin-top:14px}
+.water i{flex:1;height:34px;border-radius:9px;background:rgba(105,195,178,.12);border:1px solid rgba(105,195,178,.18);position:relative;overflow:hidden}
+.water i.f::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#7fd4c3,#3f9c8b);transform:translateY(100%);animation:fillup .7s var(--ease) forwards;animation-delay:calc(var(--k)*70ms + 300ms)}
+@keyframes fillup{to{transform:none}}
+
+/* ---------- Dining ---------- */
+.search{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:12px 14px;margin-bottom:14px;color:var(--muted)}
+.search input{border:none;outline:none;flex:1;font:inherit;font-size:15.5px;background:none;color:var(--text)}
+.search input::placeholder{color:var(--faint)}
+.chips{display:flex;gap:8px;overflow-x:auto;margin:0 -16px 14px;padding:0 16px}
+.chip{white-space:nowrap;padding:9px 15px;border-radius:99px;background:var(--surface);border:1px solid var(--hair);font-size:14px;font-weight:650;color:var(--text-2);transition:background .3s,color .3s,border-color .3s,transform .18s var(--ease)}
+.chip:active{transform:scale(.95)}
+.chip.on{background:var(--text);color:#1a1115;border-color:transparent}
+.segment{position:relative;display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border:1px solid var(--hair);border-radius:13px;padding:3px;margin-bottom:16px}
+.segment .thumb{position:absolute;top:3px;bottom:3px;left:3px;width:calc((100% - 6px)/4);border-radius:10px;background:var(--surface-3);box-shadow:0 2px 10px rgba(0,0,0,.35);transition:transform .45s var(--spring)}
+.segment button{position:relative;z-index:1;padding:8px 0;font-size:13px;font-weight:700;color:var(--muted);transition:color .3s}
+.segment button.on{color:var(--text)}
+.menuhead{display:flex;align-items:center;justify-content:space-between;margin:4px 4px 10px}
+.menuhead h2{font-size:21px;font-weight:800;letter-spacing:-.4px}
+.badge{font-size:11.5px;font-weight:750;padding:5px 10px;border-radius:99px;background:rgba(95,203,143,.14);color:var(--green);display:flex;align-items:center;gap:6px}
+.badge i{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(95,203,143,.6);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 7px rgba(95,203,143,0)}100%{box-shadow:0 0 0 0 rgba(95,203,143,0)}}
+.station{font-size:12px;font-weight:750;letter-spacing:1px;color:var(--faint);text-transform:uppercase;margin:18px 6px 8px}
+.food{display:flex;align-items:center;gap:12px;padding:14px 16px;border-top:1px solid var(--hair)}
+.food:first-child{border-top:none}
+.food .nm{font-size:15.5px;font-weight:650}
+.food .kc{font-size:13px;color:var(--muted);font-weight:600;margin-top:3px}
+.food .mm{display:flex;gap:6px;margin-top:7px}
+.food .mm span{font-size:11px;font-weight:700;padding:3px 7px;border-radius:7px;background:var(--surface-2);color:var(--text-2)}
+.food .mm span b{font-weight:800;margin-right:3px}
+.plus{margin-left:auto;width:36px;height:36px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;background:rgba(238,138,60,.14);color:var(--orange-hi);transition:transform .35s var(--spring),background .3s,color .3s}
+.plus.done{background:var(--orange);color:#fff;transform:rotate(360deg) scale(1.05)}
+.list0{padding:0}
+.note{font-size:12px;color:var(--faint);text-align:center;margin:18px 20px 0;line-height:1.5}
+
+/* ---------- More ---------- */
+.profile{display:flex;align-items:center;gap:14px}
+.profile .avatar{width:58px;height:58px;font-size:22px}
+.profile h3{font-size:19px;font-weight:800;letter-spacing:-.3px}
+.group{padding:0}
+.row{display:flex;align-items:center;gap:14px;padding:13px 16px;width:100%;text-align:left;font-size:15.5px;font-weight:600}
+.row+.row{border-top:1px solid var(--hair)}
+.row:active{background:var(--surface-2)}
+.sq{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;flex-shrink:0}
+.row .chev{margin-left:auto;color:var(--faint)}
+
+/* ---------- tab bar ---------- */
+nav{position:fixed;bottom:0;left:0;right:0;margin:0 auto;max-width:430px;z-index:20;height:calc(var(--tabbar) + var(--safe-b));padding:6px 6px var(--safe-b);
+  display:flex;align-items:flex-start;justify-content:space-around;background:rgba(17,11,14,.78);backdrop-filter:saturate(170%) blur(24px);-webkit-backdrop-filter:saturate(170%) blur(24px);border-top:1px solid var(--hair)}
+nav .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:4px;font-size:10.5px;font-weight:650;color:var(--faint);transition:color .3s}
+nav .tab svg{width:25px;height:25px;transition:transform .45s var(--spring)}
+nav .tab.on{color:var(--text)}
+nav .tab.on svg{transform:translateY(-1px) scale(1.06)}
+nav .tab .ic-fill{opacity:0;transition:opacity .3s}
+nav .tab.on .ic-fill{opacity:1}
+.fabwrap{flex:1;display:flex;justify-content:center}
+.fab{width:58px;height:58px;border-radius:50%;margin-top:-22px;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(145deg,var(--orange-hi),var(--orange-deep));box-shadow:0 0 0 5px var(--bg),0 10px 26px rgba(238,138,60,.45);transition:transform .45s var(--spring)}
+.fab svg{transition:transform .45s var(--spring)}
+.fab:active{transform:scale(.92)}
+body.sheet-open .fab svg{transform:rotate(135deg)}
+
+/* ---------- sheet ---------- */
+.scrim{position:fixed;inset:0;z-index:15;background:rgba(5,2,4,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .35s}
+body.sheet-open .scrim{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;margin:0 auto;max-width:430px;bottom:0;z-index:16;background:var(--surface);border-radius:28px 28px 0 0;border:1px solid var(--hair-2);border-bottom:none;
+  padding:10px 18px calc(var(--tabbar) + var(--safe-b) + 18px);transform:translateY(105%);transition:transform .55s var(--ease)}
+body.sheet-open .sheet{transform:none}
+.grab{width:38px;height:5px;background:var(--surface-3);border-radius:3px;margin:0 auto 18px}
+.sheet h4{font-size:13px;font-weight:700;color:var(--muted);margin:0 4px 12px;letter-spacing:.3px;text-transform:uppercase}
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.opt{background:var(--surface-2);border-radius:18px;padding:18px 6px 14px;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:13px;font-weight:650;border:1px solid var(--hair);
+  opacity:0;transform:translateY(16px) scale(.96);transition:opacity .35s,transform .5s var(--spring)}
+body.sheet-open .opt{opacity:1;transform:none;transition-delay:calc(var(--k)*35ms + 80ms)}
+.opt .oi{width:46px;height:46px;border-radius:15px;display:grid;place-items:center}
+
+/* ---------- toast ---------- */
+.toast{position:fixed;left:50%;bottom:calc(var(--tabbar) + var(--safe-b) + 18px);z-index:30;transform:translate(-50%,20px) scale(.96);opacity:0;
+  background:rgba(37,27,32,.92);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--hair-2);color:var(--text);
+  font-size:14px;font-weight:650;padding:11px 18px;border-radius:99px;white-space:nowrap;transition:opacity .3s,transform .45s var(--spring);pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.toast.show{opacity:1;transform:translate(-50%,0) scale(1)}
+
+/* ---------- map ---------- */
+.mapcard{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;overscroll-behavior:none;cursor:grab;position:absolute;inset:0;overflow:hidden;background:#2a2e56;touch-action:none}
+#mapInner{position:absolute;left:0;top:0;width:3200px;height:3200px;transform-origin:0 0;cursor:grab}
+#mapInner.drag{cursor:grabbing}
+.pin{position:absolute;width:34px;height:48px;transform-origin:50% 100%;padding:0;cursor:pointer;filter:drop-shadow(0 3px 4px rgba(0,0,0,.45))}
+.pin svg{display:block;width:100%;height:100%}
+.pin svg path{transition:fill .25s}
+.pin.sel path{fill:var(--maroon-hi)}
+.lbl{position:absolute;left:0;top:0;transform-origin:0 0;white-space:nowrap;pointer-events:none;font-weight:700;font-size:11px;color:#eef0ff;text-shadow:0 0 3px #15183a,0 0 3px #15183a,0 1px 2px #15183a;display:none}
+.lbl.land{font-size:15px;font-weight:800;letter-spacing:2px;color:rgba(214,218,255,.7)}
+#tiles img{position:absolute;display:block;user-select:none;-webkit-user-drag:none;pointer-events:none}
+.satbtn{position:absolute;left:16px;top:calc(var(--safe-t) + 14px);z-index:3;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:var(--text-2);
+  background:rgba(23,16,20,.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--hair-2);box-shadow:0 6px 20px rgba(0,0,0,.35);transition:background .3s,color .3s,transform .18s}
+.satbtn:active{transform:scale(.93)}
+.satbtn.on{background:linear-gradient(145deg,var(--orange-hi),var(--orange-deep));color:#fff;border-color:transparent}
+#attrib{position:absolute;left:12px;bottom:calc(var(--tabbar) + var(--safe-b) + 10px);z-index:2;font-size:10px;color:rgba(255,255,255,.75);text-shadow:0 1px 2px #000}
+#attrib a{color:inherit}
+.pop{position:absolute;left:12px;right:12px;bottom:calc(var(--tabbar) + var(--safe-b) + 12px);z-index:4;padding:18px;border-radius:22px;
+  background:rgba(28,20,24,.88);backdrop-filter:saturate(160%) blur(24px);-webkit-backdrop-filter:saturate(160%) blur(24px);border:1px solid var(--hair-2);box-shadow:0 16px 40px rgba(0,0,0,.5);
+  opacity:0;transform:translateY(24px) scale(.97);pointer-events:none;transition:opacity .3s,transform .5s var(--spring)}
+.pop.show{opacity:1;transform:none;pointer-events:auto}
+.pop .x{position:absolute;right:12px;top:12px;width:30px;height:30px;border-radius:50%;background:var(--surface-3);color:var(--text-2);font-size:18px;line-height:30px}
+.pop h3{font-size:19px;font-weight:800;letter-spacing:-.3px;margin-right:36px}
+.pop .sub{font-size:13.5px;color:var(--muted);font-weight:600;margin-top:3px}
+.pop .venues{font-size:13px;color:var(--text-2);margin-top:8px;font-weight:550}
+.pop .hrs{margin-top:14px;padding:12px 14px;background:rgba(255,255,255,.05);border-radius:14px;font-size:14px;font-weight:600}
+.pop .hrs b{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+
+.hstat{font-size:13px;color:var(--muted);font-weight:600;margin-top:3px}
+.badge.closed{background:rgba(226,109,143,.14);color:var(--fat)}
+.badge.closed i{background:var(--fat);animation:none}
+.badge:empty{display:none}
+.vtag{background:rgba(95,203,143,.12)!important;color:var(--green)!important}
+.empty{text-align:center;color:var(--text-2);font-weight:650;padding:28px 18px;display:flex;flex-direction:column;gap:6px}
+.empty span{color:var(--muted);font-weight:600;font-size:13.5px}
+.hallcard .tag{display:flex;align-items:center;gap:6px}
+.sd{width:7px;height:7px;border-radius:50%;background:var(--fat)}.sd.on{background:var(--green)}
+.hallcard.is-closed .art{filter:saturate(.35) brightness(.75)}
+.pin.closed svg path{fill:#8d8590}
+.pin.closed svg circle{fill:#3a3438}
+.pin.closed{filter:drop-shadow(0 3px 4px rgba(0,0,0,.35)) opacity(.92)}
+.pin.closed.sel svg path{fill:#b9b1bd}
+.pstatus{display:flex;align-items:center;gap:7px;margin-top:10px;font-size:14px;font-weight:750}
+.pstatus i{width:8px;height:8px;border-radius:50%}
+.pstatus span{color:var(--text-2);font-weight:600}
+.pstatus.open{color:var(--green)}.pstatus.open i{background:var(--green)}
+.pstatus.shut{color:var(--fat)}.pstatus.shut i{background:var(--fat)}
+.pop .hrs{padding:6px 14px}
+.hv{padding:8px 0}.hv+.hv{border-top:1px solid var(--hair)}
+.hn{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:750;margin-bottom:4px}
+.hl{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:2px 0}
+.hl span{color:var(--text-2);font-weight:600}
+.pop .hrs .hl b{display:inline;font-size:14px;font-weight:700;color:var(--text);text-transform:none;letter-spacing:0;margin:0}
+.popmenu{margin-top:12px;width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;border-radius:14px;background:rgba(238,138,60,.14);color:var(--orange-hi);font-weight:750;font-size:14.5px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="gOrange" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F7A35C"/><stop offset="1" stop-color="#D2611C"/></linearGradient>
+  <linearGradient id="gFlame" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFC27A"/><stop offset="1" stop-color="#E5651C"/></linearGradient>
+</defs></svg>
+
+<div class="navbar" id="navbar"><span id="navTitle">Today</span></div>
+
+<!-- ============ TODAY ============ -->
+<section class="page" id="v-today" data-title="Today">
+  <div class="top rise" style="--i:0">
+    <div class="title">Today <svg class="caret" viewBox="0 0 24 24" fill="currentColor"><path d="M6 9l6 6 6-6z"/></svg></div>
+    <button class="avatar pressable" onclick="go('more')" aria-label="Your profile">H</button>
+  </div>
+  <div class="week rise" style="--i:1" id="week"></div>
+
+  <div class="card rise" style="--i:2">
+    <div class="label">Calories</div>
+    <div class="cal-top">
+      <div class="big"><span data-count="1540">0</span><small>/ 2,200</small></div>
+      <div class="left-n"><b data-count="910">0</b><span>remaining</span></div>
+    </div>
+    <div class="track"><div class="fill" data-w="70"></div></div>
+    <div class="cal-stats">
+      <div><b>2,200</b><span>Goal</span></div>
+      <div><b>1,540</b><span>Food</span></div>
+      <div><b>250</b><span>Exercise</span></div>
+    </div>
+  </div>
+
+  <div class="card rise" style="--i:3" id="macroCard">
+    <button class="swap" id="swapBtn" onclick="swapMacros()" aria-label="Switch between grams and percent">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14l-4-4M20 16H6l4 4"/></svg>
+    </button>
+    <div class="macros" id="macros"></div>
+    <div class="stack" id="stack"><i style="background:var(--carb)"></i><i style="background:var(--fat)"></i><i style="background:var(--protein)"></i></div>
+  </div>
+
+  <div class="section-h rise" style="--i:4"><h2>Dining halls</h2><button class="link" onclick="go('map')">See map</button></div>
+  <div class="carousel rise" style="--i:5" id="hallCards"></div>
+
+  <div class="section-h rise" style="--i:6"><h2>Meals</h2><button class="link" onclick="go('diary')">View diary</button></div>
+  <div id="mealCards"></div>
+
+  <div class="duo rise" style="--i:11">
+    <div class="card">
+      <div class="mini-h"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--protein)" stroke-width="2.2" stroke-linecap="round"><path d="M13 4a2 2 0 1 0 0 .01M9 20l2-6 3 2v5M8 11l3-3 3 2 3 1M11 14l-2-3"/></svg>Steps</div>
+      <div class="mini-v"><span data-count="6482">0</span></div>
+      <div class="track" style="height:6px;margin-top:12px"><div class="fill" data-w="65" style="background:linear-gradient(90deg,#3f9c8b,var(--protein))"></div></div>
+      <div class="label" style="margin-top:8px;font-size:12px">Goal 10,000</div>
+    </div>
+    <div class="card">
+      <div class="mini-h"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rose)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z"/></svg>Exercise</div>
+      <div class="mini-v"><span data-count="250">0</span><small>cal</small></div>
+      <div class="label" style="margin-top:12px;font-size:12px;line-height:1.45">42 min · Weights<br>War Memorial Hall</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DIARY ============ -->
+<section class="page" id="v-diary" data-title="Diary">
+  <div class="top rise" style="--i:0"><div class="title">Diary</div></div>
+  <div class="datebar rise" style="--i:1">
+    <button aria-label="Previous day"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <b>Today</b>
+    <button aria-label="Next day"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
+  </div>
+  <div class="card rise" style="--i:2">
+    <div class="label">Calories remaining</div>
+    <div class="eq">
+      <div><div class="n">2,200</div><div class="l">Goal</div></div><span class="op">−</span>
+      <div><div class="n">1,540</div><div class="l">Food</div></div><span class="op">+</span>
+      <div><div class="n">250</div><div class="l">Exercise</div></div><span class="op">=</span>
+      <div class="res"><div class="n">910</div><div class="l">Remaining</div></div>
+    </div>
+  </div>
+  <div id="meals"></div>
+  <div class="card rise" style="--i:8">
+    <div class="mealrow" style="justify-content:space-between"><h3>Water</h3><span class="label" style="font-size:14px">40 / 64 oz</span></div>
+    <div class="water" id="water"></div>
+  </div>
+</section>
+
+<!-- ============ DINING ============ -->
+<section class="page" id="v-dining" data-title="Dining">
+  <div class="top rise" style="--i:0"><div class="title">Dining</div></div>
+  <label class="search rise" style="--i:1">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input placeholder="Search menus" aria-label="Search menus">
+  </label>
+  <div class="chips rise" style="--i:2" id="halls"></div>
+  <div class="segment rise" style="--i:3" id="periods"><div class="thumb" id="thumb"></div></div>
+  <div class="menuhead rise" style="--i:4"><div><h2 id="menuTitle">D2</h2><div class="hstat" id="hallStatus"></div></div><span class="badge" id="hallBadge"></span></div>
+  <div id="menu"></div>
+  <p class="note" id="dataNote"></p>
+</section>
+
+    <!-- MAP -->
+    <section class="page" id="v-map" data-title="Map">
+      <div class="mapcard" id="mapcard">
+        <button class="satbtn" id="satBtn" onclick="toggleSat()" aria-label="Satellite view" aria-pressed="false">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><g transform="rotate(-45 12 12)"><rect x="9.5" y="9.5" width="5" height="5" rx="1.2" fill="currentColor"/><rect x="2" y="7.5" width="4.5" height="9" rx=".8" fill="currentColor" fill-opacity=".3"/><rect x="17.5" y="7.5" width="4.5" height="9" rx=".8" fill="currentColor" fill-opacity=".3"/><path d="M6.5 12h3M14.5 12h3M12 14.5v3"/></g></svg>
+        </button>
+        <div id="attrib"></div>
+        <div id="mapInner">
+          <img id="satImg" data-src="campus.jpg" width="3200" height="3200" alt="Aerial view of Virginia Tech campus" draggable="false" style="display:block;user-select:none;-webkit-user-drag:none">
+          <div id="cleanWrap" style="position:absolute;left:506px;top:-474px;width:2739px;height:2582px;overflow:hidden"><img id="cleanImg" src="campus-clean.webp" alt="Map of Virginia Tech campus" draggable="false" style="position:absolute;left:0;top:0;width:100%;height:100%;user-select:none;-webkit-user-drag:none"><div id="tiles"><div id="t1"></div><div id="t2"></div></div></div>
+          <div id="labels"></div>
+          <div id="pins"></div>
+        </div>
+        <div class="pop" id="pop">
+          <button class="x" onclick="closePop()" aria-label="Close">×</button>
+          <h3 id="popName"></h3>
+          <div class="sub" id="popBldg"></div>
+          <div class="pstatus" id="popStatus"></div>
+          <div class="hrs" id="popHrs"></div>
+          <button class="popmenu pressable" id="popMenu">See today's menu<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+    </section>
+
+
+
+<!-- ============ YOU ============ -->
+<section class="page" id="v-more" data-title="You">
+  <div class="top rise" style="--i:0">
+    <div class="title">You</div>
+  </div>
+  <div class="card rise profile" style="--i:1">
+    <div class="avatar">H</div>
+    <div><h3>Hokie</h3><div class="label" style="margin-top:3px">Major Meal Plan · Class of 2029</div></div>
+  </div>
+  <div class="card group rise" style="--i:2" id="grp1"></div>
+  <div class="card group rise" style="--i:3" id="grp2"></div>
+  <p class="note rise" style="--i:4">HokieMacros is free, ad-free and made by students.</p>
+</section>
+
+<!-- ============ TAB BAR ============ -->
+<nav>
+  <button class="tab on" data-v="today" onclick="go('today')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path class="ic-fill" d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5.5h-5V20H5a1 1 0 0 1-1-1z" fill="currentColor" stroke="none"/><path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5.5h-5V20H5a1 1 0 0 1-1-1z"/></svg>Today</button>
+  <button class="tab" data-v="diary" onclick="go('diary')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"><rect class="ic-fill" x="5" y="3.5" width="14" height="17" rx="2.5" fill="currentColor" fill-opacity=".22" stroke="none"/><rect x="5" y="3.5" width="14" height="17" rx="2.5"/><path d="M9 8.5h6M9 12h6M9 15.5h3.5"/></svg>Diary</button>
+  <div class="fabwrap"><button class="fab" onclick="toggleSheet()" aria-label="Log">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>
+  <button class="tab" data-v="dining" onclick="go('dining')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v8a2 2 0 0 0 2 2v8M11 3v8M3 3v6a4 4 0 0 0 4 4"/><path class="ic-fill" d="M17 21V3c2.5 0 4 2.5 4 6s-1.5 5-4 5z" fill="currentColor" stroke="none" fill-opacity=".35"/><path d="M17 21V3c2.5 0 4 2.5 4 6s-1.5 5-4 5"/></svg>Dining</button>
+  <button class="tab" data-v="map" onclick="go('map')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path class="ic-fill" d="M12 21.5s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z" fill="currentColor" stroke="none" fill-opacity=".25"/><path d="M12 21.5s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9.5" r="2.6"/></svg>Map</button>
+</nav>
+
+<!-- ============ LOG SHEET ============ -->
+<div class="scrim" onclick="toggleSheet(false)"></div>
+<div class="sheet" role="dialog" aria-label="Log">
+  <div class="grab"></div>
+  <h4>Log</h4>
+  <div class="opts" id="opts"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ================= app shell =================
+const ORDER=['today','diary','dining','map','more'];
+let cur='today';
+const $=id=>document.getElementById(id);
+const navbar=$('navbar'), navTitle=$('navTitle');
+
+function countUp(root){
+  root.querySelectorAll('[data-count]').forEach(el=>{
+    const to=+el.dataset.count, t0=performance.now(), d=1100;
+    const step=t=>{const p=Math.min(1,(t-t0)/d), e=1-Math.pow(1-p,4); el.textContent=Math.round(to*e).toLocaleString(); if(p<1) requestAnimationFrame(step)};
+    requestAnimationFrame(step);
+  });
+  root.querySelectorAll('.fill[data-w]').forEach(f=>{f.style.transition='none';f.style.width='0';f.offsetWidth;f.style.transition='';setTimeout(()=>f.style.width=f.dataset.w+'%',120)});
+}
+function enter(page){
+  page.classList.remove('enter'); void page.offsetWidth; page.classList.add('enter');
+  countUp(page);
+  if(page.id==='v-today'){ animateWeek(); setMacros(); }
+}
+function go(v){
+  if(v===cur) { const p=$('v-'+v); p.scrollTo({top:0,behavior:'smooth'}); return; }
+  const from=$('v-'+cur), to=$('v-'+v);
+  const dir=ORDER.indexOf(v)>ORDER.indexOf(cur)?1:-1;
+  from.style.setProperty('--to',(-28*dir)+'px'); to.style.setProperty('--from',(28*dir)+'px');
+  from.classList.add('leaving'); from.classList.remove('active');
+  to.classList.remove('leaving'); to.classList.add('active');
+  setTimeout(()=>from.classList.remove('leaving','enter'),520);
+  cur=v;
+  document.querySelectorAll('nav .tab').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  navTitle.textContent=to.dataset.title||''; syncNavbar();
+  enter(to);
+  if(v==='map'){ if(!mapReady){ mapReady=true; setTimeout(fitMap,40); setTimeout(fitMap,540);} else apply(); }
+}
+let mapReady=false;
+function syncNavbar(){ const p=$('v-'+cur); navbar.classList.toggle('show',cur!=='map' && p.scrollTop>38); navbar.style.display=cur==='map'?'none':'flex'; }
+document.querySelectorAll('.page').forEach(p=>p.addEventListener('scroll',()=>{if(p.id==='v-'+cur) syncNavbar()},{passive:true}));
+
+// ---------- Today ----------
+const days=['S','M','T','W','T','F','S'], todayIdx=new Date().getDay();
+const dayFill=[.82,.95,.7,.88,1,.6,.74];
+$('week').innerHTML=days.map((d,i)=>{
+  const C=2*Math.PI*14;
+  return `<div class="day ${i===todayIdx?'today':''}"><span class="dot"></span>${d}
+    <svg class="ringd" viewBox="0 0 34 34"><circle class="bgc" cx="17" cy="17" r="14" ${i>todayIdx?'stroke-dasharray="2 4"':''}/>
+    <circle class="fgc" cx="17" cy="17" r="14" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-p="${i<todayIdx?dayFill[i]:i===todayIdx?.7:0}"/></svg></div>`}).join('')
+ + `<div class="streak"><svg viewBox="0 0 30 36"><path d="M15 1c2 6 11 10 11 21a11 11 0 0 1-22 0c0-5 3-8 5-10 0 4 2 6 4 6 0-6-2-11 2-17z" fill="url(#gFlame)"/></svg><b>4</b></div>`;
+function animateWeek(){ document.querySelectorAll('#week .fgc').forEach((c,i)=>{const C=2*Math.PI*14; c.style.transition='none'; c.style.strokeDashoffset=C; c.getBoundingClientRect(); c.style.transition=''; setTimeout(()=>c.style.strokeDashoffset=C*(1-c.dataset.p),150+i*60)}); }
+
+const MAC=[{k:'Carbs',c:'var(--carb)',g:187,goal:275},{k:'Fat',c:'var(--fat)',g:54,goal:73},{k:'Protein',c:'var(--protein)',g:78,goal:110}];
+let macPct=false;
+function setMacros(){
+  const tot=MAC.reduce((s,m)=>s+m.g*(m.k==='Fat'?9:4),0);
+  $('macros').innerHTML=MAC.map(m=>{const pct=Math.round(m.g*(m.k==='Fat'?9:4)/tot*100);
+    return `<div class="mac"><div class="k">${m.k}<i style="background:${m.c}"></i></div>
+      <div class="v">${macPct?pct+'<small>%</small>':m.g+'<small>/ '+m.goal+'g</small>'}</div></div>`}).join('');
+  const bars=$('stack').children;
+  MAC.forEach((m,i)=>{bars[i].style.flexGrow=0.001; setTimeout(()=>bars[i].style.flexGrow=macPct?m.g*(m.k==='Fat'?9:4):m.g/m.goal,80)});
+}
+function swapMacros(){ macPct=!macPct; $('swapBtn').classList.toggle('flip',macPct);
+  const el=$('macros'); el.animate([{opacity:1,transform:'none'},{opacity:0,transform:'translateY(-6px)'}],{duration:140,easing:'ease-in'}).onfinish=()=>{setMacros(); el.animate([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:320,easing:'cubic-bezier(.22,.9,.24,1)'})}; }
+
+const meals=[
+  {name:'Breakfast',ic:'#F2A95B',bg:'rgba(242,169,91,.14)',path:'M5 11h11v3a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5zM16 12h1.5a2.5 2.5 0 0 1 0 5H16M8 4v3M11 3v4M14 4v3',items:[['Scrambled Eggs','Owens Food Court · 1 serving',190],['Hash Brown Patty','Owens Food Court · 1 patty',150],['Orange Juice','8 fl oz',110]]},
+  {name:'Lunch',ic:'#69C3B2',bg:'rgba(105,195,178,.14)',path:'M4 13h16a8 8 0 0 1-16 0zM12 9V5M8 9.5 6.5 6M16 9.5 17.5 6',items:[['Grilled Chicken Wrap','Turner Place · 1 wrap',520],['Side Salad, Ranch','1 bowl',140]]},
+  {name:'Dinner',ic:'#E26D8F',bg:'rgba(226,109,143,.14)',path:'M4 12a8 8 0 0 0 16 0zM3 12h18M9 8c0-2 2-2 2-4M13 8c0-2 2-2 2-4',items:[['Pasta Marinara','D2 · 1.5 cups',330]]},
+  {name:'Snacks',ic:'#B79BE8',bg:'rgba(183,155,232,.14)',path:'M8 8c-2.5 1-4 3.5-4 6.5C4 18 6.5 21 9.5 21c1 0 1.7-.4 2.5-.4s1.5.4 2.5.4c3 0 5.5-3 5.5-6.5 0-3-1.5-5.5-4-6.5-1.5-.5-3 0-4 .5-1-.5-2.5-1-4-.5zM12 8.5c0-2.5 1-4 3-5',items:[['Banana','1 medium',100]]},
+];
+const kc=m=>m.items.reduce((s,i)=>s+i[2],0);
+const micon=m=>`<div class="micon" style="background:${m.bg}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${m.ic}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${m.path}"/></svg></div>`;
+$('mealCards').innerHTML=meals.map((m,i)=>`<div class="card rise" style="--i:${7+i}">
+  <div class="mealrow">${micon(m)}<div><h3>${m.name}</h3><div class="meta">${kc(m)} cal</div></div><button class="logbtn pressable" onclick="openHall('15')">Log</button></div>
+  <div class="mealsum">${m.items.slice(0,2).map(x=>x[0]).join(', ')}${m.items.length>2?` <span class="muted">+ ${m.items.length-2} more</span>`:''}</div></div>`).join('');
+
+// ---------- Diary ----------
+$('meals').innerHTML=meals.map((m,i)=>`<div class="card meal rise" style="--i:${3+i}">
+  <div class="mh"><div class="mealrow" style="gap:12px">${micon(m)}<h3>${m.name}</h3></div><span class="kc">${kc(m)}</span></div>
+  ${m.items.map(x=>`<div class="item"><div><div class="nm">${x[0]}</div><div class="ds">${x[1]}</div></div><div class="kc">${x[2]}</div></div>`).join('')}
+  <button class="add" onclick="openHall('15')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add food</button></div>`).join('');
+$('water').innerHTML=Array.from({length:8},(_,k)=>`<i class="${k<5?'f':''}" style="--k:${k}"></i>`).join('');
+
+// ================= live data: menus, nutrition, hours =================
+// The real app reads data/dining.json, which a GitHub Action refreshes every morning
+// from VT Dining (FoodPro), VT's hours system and Rec Sports. Without that file
+// (e.g. this preview) the app falls back to a small built-in sample.
+const VENUE={ '15':'D2','72':"Deet's Place",'71':'DX','39':'Owens Food Court','09':'Hokie Grill','16':'West End','14':'Turner Place',
+  '06':'Perry Place','18':'Squires Food Court','01':"Ducky's",'19':'Viva Market','07':'Xpress Lane Market' };
+const CHIP_ORDER=['15','39','14','06','16','18','09','72','71','01','19','07'];
+let DATA=null, LIVE=false;
+
+function etNow(){
+  const p=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).map(x=>[x.type,x.value]));
+  return {date:`${p.year}-${p.month}-${p.day}`, min:(+p.hour%24)*60+(+p.minute)};
+}
+const toMin=t=>{const [h,m]=(t||'0:0').split(':').map(Number);return h*60+m};
+const fmtT=t=>{let [h,m]=t.split(':').map(Number);const ap=h>=12&&h<24?'PM':'AM';h=h%12||12;return `${h}:${String(m).padStart(2,'0')} ${ap}`};
+const addDays=(iso,n)=>{const d=new Date(iso+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)};
+const weekday=iso=>new Date(iso+'T12:00:00').toLocaleDateString('en-US',{weekday:'long'});
+
+// all time slots for a list of targets on a date: [{open,close,title,label,unit,who}]
+function slots(targets,date){
+  if(!DATA) return [];
+  return targets.flatMap(t=>((t.gym?DATA.gyms[t.key]:DATA.hours[t.key])||{})[date]||[]).map(s=>s);
+}
+function slotsOf(t,date){ return (((t.gym?DATA.gyms[t.key]:DATA.hours[t.key])||{})[date]||[]).map(s=>({...s,who:t})); }
+
+// open now? if not, when next?
+function statusOf(targets){
+  if(!DATA) return {known:false};
+  const {date,min}=etNow();
+  const all=d=>targets.flatMap(t=>slotsOf(t,d));
+  const span=s=>{const o=toMin(s.open);let c=toMin(s.close);if(c<=o)c+=1440;return [o,c]};
+  let until=null;
+  for(const s of all(date)){const [o,c]=span(s); if(min>=o&&min<c){ if(!until||c>until[0]) until=[c,s.close]; }}
+  for(const s of all(addDays(date,-1))){const [o,c]=span(s); if(c>1440&&min<c-1440){ if(!until) until=[c-1440,s.close]; }}
+  if(until) return {known:true,open:true,until:fmtT(until[1])};
+  const days=DATA.hoursDays||[];
+  for(let k=0;k<8;k++){
+    const d=addDays(date,k); if(days.length&&d>days[days.length-1]) break;
+    const next=all(d).map(span).filter(([o])=>k>0||o>min).sort((a,b)=>a[0]-b[0])[0];
+    if(next){const t=fmtT(`${Math.floor(next[0]/60)}:${next[0]%60}`);
+      return {known:true,open:false,next: k===0?`Opens at ${t}`:k===1?`Opens at ${t} tomorrow`:`Opens at ${t} ${weekday(d)}`};}
+  }
+  return {known:true,open:false,next:'Closed this week'};
+}
+const statusLine=st=>!st.known?'':st.open?`Open until ${st.until}`:st.next;
+
+// ---------- sample data for the preview ----------
+function sampleData(){
+  const {date}=etNow(), days=Array.from({length:8},(_,k)=>addDays(date,k));
+  const items={}, add=(id,n,s,cal,p,c,f,t=[])=>items[id]={n,s,cal,p,c,f,t,d:'',a:''};
+  add('s1','Cheeseburger','1 burger',540,29,38,31); add('s2','Seasoned Fries','1 cup',320,4,41,16,['vegan']); add('s3','Black Bean Burger','1 burger',410,17,52,14,['vegetarian']);
+  add('s4','Roast Chicken Breast','4 oz',210,38,0,6); add('s5','Mashed Potatoes','1/2 cup',160,3,22,7,['vegetarian']); add('s6','Steamed Broccoli','1 cup',55,4,11,1,['vegan']);
+  add('s7','Scrambled Eggs','3 oz',190,13,2,14,['vegetarian']); add('s8','Bacon','1 each',50,2,0,4.5); add('s9','Biscuit','1 biscuit',180,4,24,8,['vegetarian']);
+  const menu=[{meal:'Breakfast',sections:[{name:'Gauchos Breakfast',items:['s7','s8','s9']}]},{meal:'Lunch',sections:[{name:'Grill',items:['s1','s2','s3']}]},{meal:'Dinner',sections:[{name:'Homestyle',items:['s4','s5','s6']},{name:'Grill',items:['s1','s2']}]}];
+  const sched={'15':[['07:00','10:30','Breakfast'],['11:00','15:00','Lunch'],['16:30','21:00','Dinner']],'39':[['10:30','21:00','']],'14':[['07:00','20:00','']],'06':[['07:30','21:00','']],'16':[['11:00','21:00','']],
+    '18':[['07:30','16:00','']],'09':[['10:30','23:00','']],'72':[['07:00','22:00','']],'71':[['07:00','23:59','']],'01':[['10:00','18:00','']],'19':[['07:30','16:30','']],'07':[['08:00','22:00','']]};
+  const D={sample:true,updated:'',menuDays:days.slice(0,2),hoursDays:days,locations:CHIP_ORDER.map(n=>({num:n,name:VENUE[n]})),menus:{},items,hours:{},gyms:{}};
+  CHIP_ORDER.forEach(n=>{D.menus[n]={[days[0]]:menu,[days[1]]:menu}; D.hours[n]={};
+    days.forEach(d=>{const wk=new Date(d+'T12:00:00').getDay(); D.hours[n][d]=(wk===6&&n==='18')?[]:sched[n].map(([o,c,l])=>({open:o,close:c,label:l,title:`${fmtT(o)} - ${fmtT(c)}`,unit:VENUE[n]}))})});
+  [['McComas','06:00','23:00'],['McComas Pool','16:00','19:00'],['War Memorial','06:00','23:00']].forEach(([g,o,c])=>{D.gyms[g]={};days.forEach(d=>D.gyms[g][d]=[{open:o,close:c,label:'Regular Hours',title:`${fmtT(o)} - ${fmtT(c)}`,unit:g}])});
+  return D;
+}
+
+async function loadData(){
+  try{
+    const r=await fetch('data/dining.json',{cache:'no-cache'});
+    if(!r.ok) throw 0;
+    DATA=await r.json(); LIVE=true;
+  }catch(e){ DATA=sampleData(); LIVE=false; }
+  onData();
+}
+
+// ---------- Dining ----------
+let hall='15', mealIdx=0, query='';
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const todayMenu=n=>{const d=etNow().date; const m=DATA&&DATA.menus[n]; return m?(m[d]||m[DATA.menuDays[0]]||[]):[]};
+function hallsWithMenus(){ return CHIP_ORDER.filter(n=>DATA&&DATA.locations.some(l=>l.num===n)); }
+function pickMealFor(n){
+  const meals=todayMenu(n); if(meals.length<2) return 0;
+  const {date,min}=etNow(), names=meals.map(m=>m.meal.toLowerCase());
+  const cur=slotsOf({key:n},date).find(s=>min<toMin(s.close)&&s.label);   // the meal being served now, or next
+  if(cur){const i=names.indexOf(cur.label.toLowerCase()); if(i>=0) return i;}
+  const want=min<600?['breakfast']:min<900?['lunch','brunch']:['dinner','late'];
+  for(const w of want){const i=names.findIndex(x=>x.includes(w)); if(i>=0) return i;}
+  return 0;
+}
+function renderDining(){
+  if(!DATA) return;
+  $('halls').innerHTML=hallsWithMenus().map(n=>`<button class="chip ${n===hall?'on':''}" onclick="selectHall('${n}')">${esc(VENUE[n])}</button>`).join('');
+  const on=$('halls').querySelector('.on'); if(on) on.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+  const meals=todayMenu(hall), seg=$('periods');
+  seg.style.display=meals.length>1?'grid':'none';
+  seg.style.gridTemplateColumns=`repeat(${Math.max(1,meals.length)},1fr)`;
+  seg.querySelectorAll('button').forEach(b=>b.remove());
+  $('thumb').style.width=`calc((100% - 6px)/${Math.max(1,meals.length)})`;
+  seg.insertAdjacentHTML('beforeend',meals.map((m,i)=>`<button data-i="${i}" onclick="setPeriod(${i})">${esc(m.meal)}</button>`).join(''));
+  setPeriod(Math.min(mealIdx,Math.max(0,meals.length-1)));
+}
+function selectHall(n){ hall=n; mealIdx=pickMealFor(n); renderDining(); }
+function setPeriod(i){ mealIdx=i; $('thumb').style.transform=`translateX(${i*100}%)`; document.querySelectorAll('#periods button').forEach(b=>b.classList.toggle('on',+b.dataset.i===i)); renderMenu(); }
+function foodRow(id){
+  const x=DATA.items[id]; if(!x) return '';
+  const tag=(x.t||[]).includes('vegan')?'<span class="vtag">Vegan</span>':(x.t||[]).includes('vegetarian')?'<span class="vtag">Vegetarian</span>':'';
+  const nut=x.cal!=null?`<div class="mm"><span><b style="color:var(--protein)">P</b>${x.p??'–'}g</span><span><b style="color:var(--carb)">C</b>${x.c??'–'}g</span><span><b style="color:var(--fat)">F</b>${x.f??'–'}g</span>${tag}</div>`:(tag?`<div class="mm">${tag}</div>`:'');
+  return `<div class="food"><div><div class="nm">${esc(x.n)}</div><div class="kc">${x.cal!=null?x.cal+' cal · ':''}${esc(x.s)}</div>${nut}</div>
+    <button class="plus" onclick="addFood(this)" aria-label="Add ${esc(x.n)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>`;
+}
+function renderMenu(){
+  const st=statusOf([{key:hall}]);
+  $('menuTitle').textContent=VENUE[hall]||hall;
+  const b=$('hallBadge'); b.className='badge'+(st.open?'':' closed'); b.innerHTML=st.known?`<i></i>${st.open?'Open':'Closed'}`:'';
+  $('hallStatus').textContent=statusLine(st);
+  const meals=todayMenu(hall), m=$('menu'), q=query.trim().toLowerCase();
+  if(!meals.length){ m.innerHTML=`<div class="empty card">No menu posted for today.<span>${esc(statusLine(st))}</span></div>`; return; }
+  let sections=meals[mealIdx]?.sections||[];
+  if(q) sections=meals.flatMap(ml=>ml.sections.map(s=>({name:`${ml.meal} · ${s.name}`,items:s.items.filter(id=>(DATA.items[id]?.n||'').toLowerCase().includes(q))}))).filter(s=>s.items.length);
+  if(!sections.length){ m.innerHTML=`<div class="empty card">Nothing matches “${esc(query)}”.</div>`; return; }
+  m.innerHTML=sections.map((s,si)=>`<div class="station">${esc(s.name)}</div><div class="card list0" style="animation:rise .5s var(--ease) both;animation-delay:${Math.min(si,6)*50}ms;opacity:0">${s.items.map(foodRow).join('')}</div>`).join('');
+}
+function addFood(btn){ btn.classList.add('done'); btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'; toast('Food logging is coming soon'); }
+document.querySelector('#v-dining .search input').addEventListener('input',e=>{query=e.target.value;renderMenu()});
+
+// ---------- Today: dining hall cards ----------
+const HALLCARDS=[
+  {k:'15',n:'D2',b:'Dietrick Hall',g:['#8A2447','#3b0f22'],a:'#EE8A3C'},
+  {k:'39',n:'Owens Food Court',b:'Owens Hall',g:['#B25A1E','#45200b'],a:'#F7C27A'},
+  {k:'14',n:'Turner Place',b:'Lavery Hall',g:['#3c5a7a','#16212e'],a:'#9cc3e8'},
+  {k:'06',n:'Perry Place',b:'Hitt Hall',g:['#2f6b5f','#10261f'],a:'#9fe0cf'},
+  {k:'16',n:'West End',b:'Cochrane Hall',g:['#6b3f8a','#22142e'],a:'#d4a8f0'},
+  {k:'18',n:'Squires Food Court',b:'Squires Student Center',g:['#7a5a2a','#2a1d0b'],a:'#f2d18f'},
+];
+function renderHallCards(){
+  $('hallCards').innerHTML=HALLCARDS.map((h,i)=>{const st=statusOf([{key:h.k}]);
+    return `<button class="hallcard pressable ${st.known&&!st.open?'is-closed':''}" onclick="openHall('${h.k}')">
+  <svg class="art" viewBox="0 0 300 150" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="hg${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${h.g[0]}"/><stop offset="1" stop-color="${h.g[1]}"/></linearGradient>
+  <radialGradient id="hr${i}" cx=".85" cy=".1" r=".7"><stop offset="0" stop-color="${h.a}" stop-opacity=".55"/><stop offset="1" stop-color="${h.a}" stop-opacity="0"/></radialGradient></defs>
+  <rect width="300" height="150" fill="url(#hg${i})"/><rect width="300" height="150" fill="url(#hr${i})"/>
+  <g fill="none" stroke="${h.a}" stroke-opacity=".28" stroke-width="1.5"><circle cx="250" cy="30" r="38"/><circle cx="250" cy="30" r="62"/><circle cx="250" cy="30" r="88"/></g></svg>
+  <span class="tag">${st.known?`<i class="sd ${st.open?'on':''}"></i>${st.open?'Open':'Closed'}`:'Dining'}</span><h3>${h.n}</h3><p>${esc(statusLine(st)||h.b)}</p></button>`}).join('');
+}
+function openHall(n){ hall=n; mealIdx=pickMealFor(n); renderDining(); go('dining'); }
+
+// ---------- You ----------
+const rowsHTML=rows=>rows.map(r=>`<button class="row" onclick="toast('Coming soon')"><span class="sq" style="background:${r[1]}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${r[2]}"/></svg></span>${r[0]}<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>`).join('');
+$('grp1').innerHTML=rowsHTML([['Goals','#D2611C','M12 3a9 9 0 1 0 9 9M12 7a5 5 0 1 0 5 5M12 11a1 1 0 1 0 1 1M12 12l8-8'],['Nutrition','#3f9c8b','M4 20V10M10 20V4M16 20v-7M22 20H2'],['Progress','#8A2447','M3 17l6-6 4 4 8-8M15 7h6v6']]);
+$('grp2').innerHTML=rowsHTML([['Dining Dollars','#6b3f8a','M3 7h18v10H3zM12 12m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0'],['Settings','#5b5056','M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1L14.5 3h-5l-.3 2.6a7 7 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.3 2.6h5l.3-2.6a7 7 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6a7 7 0 0 0 .1-1z']]);
+
+// ---------- sheet + toast ----------
+const OPTS=[['Log food','#EE8A3C','M4 13h16a8 8 0 0 1-16 0zM12 9V5'],['Scan','#B4466C','M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2M7 12h10'],['Water','#69C3B2','M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z'],['Exercise','#E26D8F','M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z'],['Weight','#F2A95B','M5 20h14l-2-12H7zM9 8a3 3 0 0 1 6 0'],['Quick add','#9b8cf0','M13 3 4 14h7l-1 7 9-11h-7z']];
+$('opts').innerHTML=OPTS.map((o,k)=>`<button class="opt" style="--k:${k}" onclick="toggleSheet(false);${k===0?"go('dining')":"toast('Coming soon')"}"><span class="oi" style="background:${o[1]}26"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${o[1]}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${o[2]}"/></svg></span>${o[0]}</button>`).join('');
+function toggleSheet(on){ document.body.classList.toggle('sheet-open',on); }
+let tt; function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1800)}
+
+// first paint
+$('v-today').classList.add('active'); requestAnimationFrame(()=>enter($('v-today')));
+function onData(){
+  renderHallCards(); hall='15'; mealIdx=pickMealFor(hall); renderDining(); refreshPins(); if(popIdx>=0) openPop(popIdx);
+  const t=DATA.updated?new Date(DATA.updated):null;
+  $('dataNote').textContent=LIVE?`Menus, nutrition and hours from VT Dining Services and Rec Sports${t?' · updated '+t.toLocaleString('en-US',{weekday:'short',hour:'numeric',minute:'2-digit'}):''}.`
+    :'Preview with sample menus and hours. The live app loads real data from VT Dining Services every morning.';
+}
+loadData();
+setInterval(()=>{ if(!DATA) return; renderHallCards(); refreshPins(); if(popIdx>=0) openPop(popIdx); if(cur==='dining') renderMenu(); },60000);
+
+// ---------- campus map ----------
+const PIN = '<svg viewBox="0 0 24 34"><path d="M12 0C5.4 0 0 5.3 0 11.9c0 4.6 2.6 7.6 5 10.6 3.3 4 5.6 7.6 6.6 11.5h.8c1-3.9 3.3-7.5 6.6-11.5 2.4-3 5-6 5-10.6C24 5.3 18.6 0 12 0z" fill="#E5751F"/><circle cx="12" cy="11.5" r="4.6" fill="#111"/></svg>';
+const spots = [
+  {name:"D2 & Deet's Place", bldg:'Dietrick Hall', t:[{key:'15'},{key:'72'},{key:'71'}], x:1830, y:856},
+  {name:'Owens Food Court & Hokie Grill', bldg:'Owens Hall', t:[{key:'39'},{key:'09'}], x:1973, y:684},
+  {name:'West End', bldg:'Cochrane Hall', t:[{key:'16'}], x:1776, y:989},
+  {name:'Turner Place', bldg:'Lavery Hall', t:[{key:'14'}], x:1739, y:336},
+  {name:'Perry Place', bldg:'Hitt Hall', t:[{key:'06'}], x:1538, y:461},
+  {name:'Squires Food Court', bldg:'Squires Student Center', t:[{key:'18'}], x:2036, y:466},
+  {name:"Ducky's", bldg:'Graduate Life Center', t:[{key:'01'}], x:2059, y:556},
+  {name:'Viva Market & Viva Too', bldg:'Johnston Student Center · Goodwin Hall', t:[{key:'19'}], x:1635, y:488},
+  {name:'War Memorial Hall', bldg:'Rec Sports gym', t:[{key:'War Memorial',gym:true,label:'Gym'}], x:1863, y:704, gym:true},
+  {name:'McComas Hall', bldg:'Rec Sports gym & pool', t:[{key:'McComas',gym:true,label:'Gym'},{key:'McComas Pool',gym:true,label:'Pool'}], x:1749, y:1167, gym:true},
+];
+const pinsEl=document.getElementById('pins');
+pinsEl.innerHTML = spots.map((p,i)=>`<button class="pin" data-i="${i}" style="left:${p.x-17}px;top:${p.y-48}px" aria-label="${p.name}">${PIN}</button>`).join('');
+pinsEl.querySelectorAll('.pin').forEach(b=>{
+  b.addEventListener('pointerdown',e=>e.stopPropagation());
+  b.addEventListener('click',()=>openPop(+b.dataset.i));
+});
+function refreshPins(){ pinsEl.querySelectorAll('.pin').forEach(b=>{const st=statusOf(spots[+b.dataset.i].t); b.classList.toggle('closed',st.known&&!st.open)}); }
+let popIdx=-1;
+function openPop(i){
+  popIdx=i; const p=spots[i], st=statusOf(p.t), {date}=etNow();
+  pinsEl.querySelectorAll('.pin').forEach(b=>b.classList.toggle('sel',+b.dataset.i===i));
+  $('popName').textContent=p.name;
+  $('popBldg').textContent=p.bldg;
+  $('popStatus').className='pstatus'+(st.known?(st.open?' open':' shut'):'');
+  $('popStatus').innerHTML=st.known?`<i></i>${st.open?'Open':'Closed'}<span>${esc(st.open?'until '+st.until:st.next)}</span>`:'';
+  $('popHrs').innerHTML=p.t.map(t=>{
+    const sl=slotsOf(t,date), units=[...new Set(sl.map(s=>s.unit))];
+    const name=t.label||VENUE[t.key]||t.key;
+    const rows=sl.length?sl.map(s=>`<div class="hl"><span>${esc(units.length>1?s.unit.replace(/^.*?\s{2,}/,''):(s.label&&!/regular/i.test(s.label)?s.label:''))}</span><b>${fmtT(s.open)} – ${fmtT(s.close)}</b></div>`).join(''):`<div class="hl"><span></span><b class="muted">Closed today</b></div>`;
+    return `<div class="hv"><div class="hn">${esc(name)}</div>${rows}</div>`}).join('');
+  const menuBtn=$('popMenu'); menuBtn.style.display=p.gym?'none':'flex'; menuBtn.onclick=()=>{closePop();openHall(p.t[0].key)};
+  $('pop').classList.add('show');
+}
+function closePop(){popIdx=-1;$('pop').classList.remove('show');pinsEl.querySelectorAll('.pin').forEach(b=>b.classList.remove('sel'))}
+
+const card=document.getElementById('mapcard'), inner=document.getElementById('mapInner');
+const MW=3200;
+const CR=[506,-474,2739,2582]; // the clean map itself
+const BOUNDS={sat:[0,0,3200,3200],clean:CR};
+let mapStyle='clean',BX=BOUNDS.clean;
+let S=1,TX=0,TY=0,minS=.1;
+function apply(){
+  const r=card.getBoundingClientRect(), w=BX[2]*S, h=BX[3]*S;
+  TX = w<r.width ? (r.width-w)/2-BX[0]*S : Math.min(-BX[0]*S,Math.max(r.width-w-BX[0]*S,TX));
+  const NAV=navH(); // the map may slide up behind the (opaque) bottom bar, so nothing blank ever shows
+  TY = h<r.height-NAV ? (r.height-NAV-h)/2-BX[1]*S : Math.min(-BX[1]*S,Math.max(r.height-NAV-h-BX[1]*S,TY));
+  inner.style.transform=`translate(${TX}px,${TY}px) scale(${S})`;
+  pinsEl.querySelectorAll('.pin').forEach(b=>b.style.transform=`scale(${1/S})`);
+  if(typeof updateTiles==='function'){updateTiles();updateLabels();}
+}
+
+// ---------- clean map: sharp tiles + zoom-dependent labels ----------
+const LEVELS=[{dir:'t1',u:256,cols:11,rows:11,need:0.8},{dir:'t2',u:256,cols:11,rows:11,need:2.1}];
+const tilesEl=document.getElementById('tiles'), tileCache={};
+function updateTiles(){
+  const show=mapStyle==='clean'; tilesEl.style.display=show?'block':'none'; if(!show) return;
+  const r=card.getBoundingClientRect(), dpr=window.devicePixelRatio||1;
+  const vx0=(-TX)/S-CR[0], vy0=(-TY)/S-CR[1], vx1=(r.width-TX)/S-CR[0], vy1=(r.height-TY)/S-CR[1];
+  for(const L of LEVELS){
+    const box=document.getElementById(L.dir), on=S*dpr>L.need; box.style.display=on?'block':'none'; if(!on) continue;
+    const i0=Math.max(0,Math.floor(vx0/L.u)), i1=Math.min(L.cols-1,Math.floor(vx1/L.u));
+    const j0=Math.max(0,Math.floor(vy0/L.u)), j1=Math.min(L.rows-1,Math.floor(vy1/L.u));
+    for(let j=j0;j<=j1;j++)for(let i=i0;i<=i1;i++){
+      const k=L.dir+'/'+i+'_'+j; if(tileCache[k]) continue;
+      const im=new Image(); im.decoding='async'; im.src=k+'.webp';
+      im.style.cssText=`left:${i*L.u}px;top:${j*L.u}px;width:${L.u+.5}px;height:${L.u+.5}px`;
+      box.appendChild(im); tileCache[k]=im;
+    }
+  }
+}
+const LAND=[{"n": "DRILLFIELD", "x": 1770.8, "y": 606.8, "a": 10000000}, {"n": "Duck Pond", "x": 1393.1, "y": 733.2, "a": 10000000}, {"n": "Lane Stadium", "x": 2011.8, "y": 1219.3, "a": 10000000}];
+const HALLS=[{"n": "Virginia-Maryland College of Veterinary Medicine", "x": 1418.4, "y": 1378.4, "a": 8000}, {"n": "Perry Street Parking Deck", "x": 1529.0, "y": 326.3, "a": 4494}, {"n": "Center for the Arts at Virginia Tech", "x": 2029.7, "y": 290.7, "a": 3865}, {"n": "Cassell Coliseum", "x": 1962.2, "y": 1006.2, "a": 3727}, {"n": "Rector Field House", "x": 1812.1, "y": 1281.9, "a": 3297}, {"n": "Virginia Tech Math Emporium", "x": 1020.2, "y": 163.9, "a": 3136}, {"n": "Burruss Hall", "x": 1677.8, "y": 493.9, "a": 3002}, {"n": "Virginia Tech Surplus Property", "x": 3168.3, "y": 1586.0, "a": 2696}, {"n": "Torgersen Hall", "x": 1916.9, "y": 446.4, "a": 2620}, {"n": "Southgate Center", "x": 2138.5, "y": 1307.5, "a": 2574}, {"n": "Gilbert Place", "x": 1817.4, "y": 137.2, "a": 2548}, {"n": "Creativity and Innovation District Residence Hall", "x": 2111.4, "y": 632.6, "a": 2520}, {"n": "Derring Hall", "x": 1566.3, "y": 486.3, "a": 2507}, {"n": "Alphin-Stuart Livestock Arena", "x": 654.0, "y": 1236.6, "a": 2430}, {"n": "Newman Library", "x": 1968.4, "y": 526.8, "a": 2209}, {"n": "Litton-Reaves Hall", "x": 1653.7, "y": 1078.0, "a": 2165}, {"n": "Surge Space Building", "x": 1723.4, "y": 184.9, "a": 2124}, {"n": "Steger Hall", "x": 1502.6, "y": 1116.5, "a": 2026}, {"n": "Burrows-Burleson Tennis Facility", "x": 1956.4, "y": 1603.9, "a": 1996}, {"n": "Goodwin Hall", "x": 1558.0, "y": 241.5, "a": 1990}, {"n": "Virginia Tech Swing Space", "x": 1990.5, "y": 2032.4, "a": 1971}, {"n": "Pritchard Hall", "x": 1919.3, "y": 874.8, "a": 1875}, {"n": "North End Center", "x": 1863.0, "y": 170.2, "a": 1740}, {"n": "Skelton Conference Center", "x": 1325.8, "y": 448.7, "a": 1728}, {"n": "Hahn-Hurst Basketball Practice Center", "x": 2021.2, "y": 944.4, "a": 1707}, {"n": "McBryde Hall", "x": 1806.3, "y": 385.4, "a": 1701}, {"n": "Data and Decision Sciences Building", "x": 1456.5, "y": 297.9, "a": 1655}, {"n": "North End Parking Garage", "x": 1888.0, "y": 145.7, "a": 1636}, {"n": "Hancock Hall", "x": 1657.6, "y": 414.1, "a": 1566}, {"n": "Pamplin Hall", "x": 1616.3, "y": 534.5, "a": 1511}, {"n": "Food Science and Technology Lab", "x": 1565.4, "y": 1204.8, "a": 1476}, {"n": "Wallace Hall", "x": 1636.0, "y": 967.0, "a": 1444}, {"n": "Virginia Tech Electric Service", "x": 2475.6, "y": 1742.3, "a": 1432}, {"n": "Seitz Hall", "x": 1673.6, "y": 824.5, "a": 1349}, {"n": "Hahn Hall North", "x": 1523.0, "y": 554.3, "a": 1334}, {"n": "Durham Hall", "x": 1684.0, "y": 297.4, "a": 1330}, {"n": "Holden Hall", "x": 1771.8, "y": 413.1, "a": 1323}, {"n": "Kelly Hall", "x": 1772.0, "y": 317.8, "a": 1282}, {"n": "Human and Agricultural Biosciences Building I", "x": 1423.9, "y": 1164.2, "a": 1255}, {"n": "Whittemore Hall", "x": 1648.4, "y": 340.1, "a": 1244}, {"n": "Thomas M. Murray Structural Engineering Laboratory", "x": 638.0, "y": 1807.4, "a": 1223}, {"n": "Virginia Tech Power Plant", "x": 1863.4, "y": 266.1, "a": 1187}, {"n": "The Inn at Virginia Tech", "x": 1260.4, "y": 434.8, "a": 1171}, {"n": "Undergraduate Science Laboratory Building", "x": 1451.5, "y": 420.2, "a": 1121}, {"n": "Davidson Hall", "x": 1591.8, "y": 658.9, "a": 1115}, {"n": "New Classroom Building", "x": 1482.8, "y": 465.5, "a": 1112}, {"n": "Merryman Athletic Center", "x": 1957.4, "y": 1082.3, "a": 1080}, {"n": "Slusher Wing", "x": 1809.7, "y": 790.1, "a": 1060}, {"n": "Cheatham Hall", "x": 1750.7, "y": 902.3, "a": 1039}, {"n": "Latham Hall", "x": 1740.1, "y": 844.8, "a": 1010}, {"n": "West Ambler Johnston Hall", "x": 1828.9, "y": 965.5, "a": 1009}, {"n": "Campbell Hall", "x": 1787.2, "y": 734.8, "a": 1000}, {"n": "New Hall West", "x": 1741.4, "y": 1032.2, "a": 976}, {"n": "Norris Hall", "x": 1723.5, "y": 439.3, "a": 972}, {"n": "University Gateway Center", "x": 1093.4, "y": 251.6, "a": 960}, {"n": "Pearson Hall East", "x": 1980.1, "y": 359.6, "a": 956}, {"n": "Hoge Hall", "x": 1999.2, "y": 860.9, "a": 954}, {"n": "Pearson Hall West", "x": 1920.1, "y": 409.4, "a": 946}, {"n": "Cowgill Hall", "x": 1620.5, "y": 430.8, "a": 939}, {"n": "Gilbert Place Parking Structure", "x": 1792.9, "y": 131.9, "a": 918}, {"n": "Hahn Hall South", "x": 1557.5, "y": 585.8, "a": 908}, {"n": "Corps Leadership and Military Science Building", "x": 1880.0, "y": 289.3, "a": 900}, {"n": "Vawter Hall", "x": 2053.8, "y": 660.3, "a": 887}, {"n": "Virginia Tech University Bookstore", "x": 2001.5, "y": 577.0, "a": 870}, {"n": "East Ambler Johnston Hall", "x": 1855.0, "y": 959.0, "a": 850}, {"n": "Harper Hall", "x": 1710.9, "y": 996.3, "a": 842}, {"n": "Payne Hall", "x": 1906.8, "y": 753.9, "a": 838}, {"n": "Shanks Hall", "x": 1932.9, "y": 300.5, "a": 838}, {"n": "Life Sciences I", "x": 1618.1, "y": 1125.0, "a": 807}, {"n": "West End Market", "x": 1777.5, "y": 945.9, "a": 774}, {"n": "Hillcrest Hall", "x": 1594.1, "y": 901.0, "a": 772}, {"n": "Campbell Arena", "x": 595.5, "y": 1278.9, "a": 760}, {"n": "ICTAS II", "x": 1550.7, "y": 1030.7, "a": 744}, {"n": "Peddrew-Yates Hall", "x": 1906.6, "y": 808.2, "a": 741}, {"n": "Upper Quad Hall North", "x": 1835.7, "y": 336.6, "a": 734}, {"n": "New Residence Hall East", "x": 1956.3, "y": 763.4, "a": 728}, {"n": "Robeson Hall", "x": 1584.3, "y": 576.0, "a": 712}, {"n": "Major Williams Hall", "x": 1870.8, "y": 348.0, "a": 687}, {"n": "Main Eggleston Hall", "x": 1904.5, "y": 628.3, "a": 685}, {"n": "Newman Hall", "x": 2040.3, "y": 728.5, "a": 675}, {"n": "Equitation Barn", "x": 681.5, "y": 1296.5, "a": 671}, {"n": "Engel Hall", "x": 1683.2, "y": 915.8, "a": 667}, {"n": "Football Locker Room", "x": 2014.4, "y": 1012.1, "a": 661}, {"n": "Henderson Hall", "x": 2112.5, "y": 398.8, "a": 661}, {"n": "Student Services Building", "x": 1788.6, "y": 1040.4, "a": 645}, {"n": "Williams Hall", "x": 1638.7, "y": 587.5, "a": 636}, {"n": "Smyth Hall", "x": 1712.0, "y": 804.9, "a": 631}, {"n": "Whitehurst Hall", "x": 2106.0, "y": 728.0, "a": 622}, {"n": "Lane Hall", "x": 1929.4, "y": 361.2, "a": 612}, {"n": "West Eggleston Hall", "x": 1898.6, "y": 672.8, "a": 608}, {"n": "Military Building", "x": 1823.7, "y": 283.9, "a": 608}, {"n": "Blacksburg Town Hall Annex", "x": 2316.3, "y": 713.0, "a": 595}, {"n": "Holtzman Alumni Center", "x": 1325.7, "y": 493.9, "a": 592}, {"n": "Marching Virginians Center", "x": 2203.0, "y": 1541.3, "a": 592}, {"n": "Archetecture Research and Demonstration Facility", "x": 684.9, "y": 1760.9, "a": 591}, {"n": "Hutcheson Hall", "x": 1717.7, "y": 765.2, "a": 588}, {"n": "Miles Hall", "x": 2095.6, "y": 779.8, "a": 588}, {"n": "O'Shaughnessy Hall", "x": 2011.7, "y": 788.5, "a": 582}, {"n": "Patton Hall", "x": 1775.0, "y": 486.6, "a": 574}, {"n": "Smith Career Center", "x": 1744.4, "y": 1079.4, "a": 572}, {"n": "Price Hall", "x": 1654.3, "y": 753.7, "a": 533}, {"n": "Jamerson Athletic Center", "x": 1992.0, "y": 1041.5, "a": 532}, {"n": "Visitors and Undergraduate Admissions Center", "x": 1041.1, "y": 346.3, "a": 520}, {"n": "Fleet Services", "x": 2290.9, "y": 1285.2, "a": 513}, {"n": "Fralin Life Science Institute", "x": 1685.1, "y": 888.0, "a": 509}, {"n": "Johnson Hall", "x": 2046.7, "y": 776.8, "a": 507}, {"n": "Conversation Aquaculture Center", "x": 917.4, "y": 1970.2, "a": 491}, {"n": "North Chiller Plant", "x": 1800.9, "y": 261.7, "a": 470}, {"n": "Armory", "x": 2168.6, "y": 490.2, "a": 382}, {"n": "The Pylons", "x": 1887.1, "y": 514.0, "a": 374}, {"n": "Fiber & Electro-Optics Research Center", "x": 647.9, "y": 1743.0, "a": 371}, {"n": "Mining and Minerals Engineering Research Facility", "x": 537.0, "y": 961.2, "a": 358}, {"n": "Pack Building", "x": 1617.2, "y": 122.1, "a": 348}, {"n": "Saunders Hall", "x": 1634.6, "y": 817.5, "a": 344}, {"n": "Bishop-Favrao Hall", "x": 1570.6, "y": 417.2, "a": 331}, {"n": "Architecture Annex", "x": 2142.9, "y": 541.4, "a": 330}, {"n": "East Eggleston Hall", "x": 1948.4, "y": 611.7, "a": 306}, {"n": "Deer Pens Building", "x": 760.8, "y": 1909.2, "a": 304}, {"n": "W. C. English Geotechnical Research Laboratory", "x": 622.4, "y": 1765.5, "a": 282}, {"n": "Media Building", "x": 2202.1, "y": 527.2, "a": 265}, {"n": "Transgenic Swine Unit", "x": 931.0, "y": 1678.1, "a": 264}, {"n": "Etgen Learning Center Animal Area", "x": 603.8, "y": 1318.8, "a": 255}, {"n": "Judging Pavilion", "x": 620.4, "y": 1336.8, "a": 253}, {"n": "Theatre 101", "x": 2139.7, "y": 412.6, "a": 246}, {"n": "Parking Services", "x": 1989.6, "y": 1517.6, "a": 239}, {"n": "Prices Fork Research Facility", "x": 749.1, "y": 1684.6, "a": 234}, {"n": "College of Liberal Arts and Human Sciences Building", "x": 1858.9, "y": 379.9, "a": 233}, {"n": "Dayspring Christian Academy Main Building", "x": 2728.1, "y": 372.8, "a": 226}, {"n": "Slusher Hall", "x": 1762.2, "y": 780.8, "a": 224}, {"n": "Old Security Building", "x": 1817.3, "y": 310.4, "a": 207}, {"n": "Solid Fuel Combustion Lab", "x": 677.8, "y": 1714.8, "a": 196}, {"n": "Kroehling Advanced Materials Foundry", "x": 740.0, "y": 1741.4, "a": 189}, {"n": "Ecosystem Simulation Lab", "x": 1170.9, "y": 1157.6, "a": 182}, {"n": "Virginia Tech Stability Wind Tunnel", "x": 1711.2, "y": 336.4, "a": 176}, {"n": "Wright House", "x": 1524.1, "y": 669.9, "a": 167}, {"n": "Thomas Connor House", "x": 2259.3, "y": 597.6, "a": 159}, {"n": "Research Aviary", "x": 947.5, "y": 2015.6, "a": 157}, {"n": "Sandy Hall", "x": 1688.4, "y": 747.8, "a": 154}, {"n": "Etgen Learning Center Classroom", "x": 618.0, "y": 1311.5, "a": 153}, {"n": "Virginia Tech Boat Shed", "x": 852.0, "y": 1978.5, "a": 151}, {"n": "Virginia Tech Electric Service Storage A", "x": 2495.0, "y": 1814.3, "a": 149}, {"n": "Solitude", "x": 1481.8, "y": 717.2, "a": 146}, {"n": "Vibrations Testing Laboratory", "x": 721.3, "y": 1748.9, "a": 146}, {"n": "Uncrewed Systems Laborary", "x": 704.1, "y": 1704.0, "a": 143}, {"n": "Virginia Tech Women's Center", "x": 2255.3, "y": 679.1, "a": 138}, {"n": "VT Engage", "x": 2170.6, "y": 940.9, "a": 138}, {"n": "Mussel Propagation Center", "x": 910.3, "y": 2022.5, "a": 133}, {"n": "Agnew Hall", "x": 1645.7, "y": 829.4, "a": 132}, {"n": "Media Annex", "x": 2163.3, "y": 527.2, "a": 130}, {"n": "Turfgrass Research Center", "x": 2352.3, "y": 1613.7, "a": 128}, {"n": "Fisheries Greenhouse", "x": 928.9, "y": 1976.7, "a": 117}, {"n": "Old Blacksburg Town Hall", "x": 2287.1, "y": 379.3, "a": 104}, {"n": "Student Opportunities & Achievement Resources Program House", "x": 2183.1, "y": 593.6, "a": 103}, {"n": "Virginia Tech Institute for Policy and Governance", "x": 2239.7, "y": 545.7, "a": 66}, {"n": "Drone Park Lab", "x": 1169.4, "y": 948.1, "a": 64}, {"n": "Isolation Swine Unit", "x": 634.1, "y": 1988.2, "a": 54}, {"n": "Virginia Tech Incinerator", "x": 523.9, "y": 405.4, "a": 53}, {"n": "St. Luke and Odd Fellows Hall", "x": 1870.1, "y": 93.9, "a": 44}, {"n": "Burchard Hall", "x": 1650.1, "y": 453.9, "a": 42}, {"n": "Orange Building", "x": 1997.9, "y": 1540.2, "a": 41}, {"n": "Virginia Tech Electric Service Storage C", "x": 2491.9, "y": 1843.4, "a": 26}, {"n": "Virginia Tech Electric Service Storage B", "x": 2492.8, "y": 1829.8, "a": 10}];
+const labelsEl=document.getElementById('labels');
+const LBL=[...LAND.map(l=>({...l,land:1})),...HALLS].map(l=>{const e=document.createElement('div');e.className='lbl'+(l.land?' land':'');e.textContent=l.n;labelsEl.appendChild(e);return {...l,e,w:0}});
+function updateLabels(){
+  const r=card.getBoundingClientRect(), placed=[];
+  // keep labels clear of the pins
+  spots.forEach(p=>{const x=p.x*S+TX,y=p.y*S+TY;placed.push([x-17,y-48,x+17,y+2])});
+  placed.push([0,0,80,120],[0,r.height-110,r.width,r.height]); // satellite button + tab bar // map buttons + credit line
+  for(const l of LBL){
+    let on = mapStyle==='clean' && (l.land ? S>=0.55 : S>=0.8 && (l.a*S*S>1400 || S>=1.4));
+    if(on){
+      const x=l.x*S+TX, y=l.y*S+TY;
+      if(!l.w) {l.e.style.display='block'; l.w=l.e.offsetWidth; l.h=l.e.offsetHeight;}
+      const bx=[x-l.w/2-3,y-l.h/2-2,x+l.w/2+3,y+l.h/2+2];
+      if(bx[0]<4||bx[2]>r.width-4||bx[1]<4||bx[3]>r.height-4) on=false;
+      else if(placed.some(p=>bx[0]<p[2]&&bx[2]>p[0]&&bx[1]<p[3]&&bx[3]>p[1])) on=false;
+      if(on){placed.push(bx); l.e.style.transform=`translate(${l.x}px,${l.y}px) scale(${1/S}) translate(-50%,-50%)`;}
+    }
+    l.e.style.display=on?'block':'none';
+  }
+}
+function navH(){return 0} // the map runs under the see-through tab bar
+function fitMap(){const r=card.getBoundingClientRect();if(!r.width)return;minS=Math.max(r.width/BX[2],(r.height-navH())/BX[3]);
+  // home view: frame the central campus (all dining pins) instead of the whole county tile
+  const xs=spots.map(p=>p.x), ys=spots.map(p=>p.y), pad=140;
+  const x0=Math.min(...xs)-pad,x1=Math.max(...xs)+pad,y0=Math.min(...ys)-pad-60,y1=Math.max(...ys)+pad;
+  const hv=r.height-90; S=Math.max(minS,Math.min(r.width/(x1-x0),hv/(y1-y0)));TX=r.width/2-(x0+x1)/2*S;TY=hv/2-(y0+y1)/2*S;apply()}
+function showAll(){S=minS;TX=0;TY=0;apply()}
+function toggleSat(){setStyle(mapStyle==='sat'?'clean':'sat')}
+function setStyle(st){
+  mapStyle=st;BX=BOUNDS[st];
+  const si=document.getElementById('satImg'); if(st==='sat'&&!si.src) si.src=si.dataset.src;
+  document.getElementById('satImg').style.display=st==='sat'?'block':'none';
+  document.getElementById('cleanWrap').style.display=st==='clean'?'block':'none';
+  const sb=document.getElementById('satBtn'); sb.classList.toggle('on',st==='sat'); sb.setAttribute('aria-pressed',st==='sat');
+  card.style.background=st==='clean'?'#2a2e56':'#4a5a3a';
+  document.getElementById('attrib').innerHTML=st==='clean'?'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors':'Aerial imagery, 2023';
+  const r=card.getBoundingClientRect();if(r.width){const cx=(r.width/2-TX)/S,cy=(r.height/2-TY)/S;minS=Math.max(r.width/BX[2],(r.height-navH())/BX[3]);if(S<minS)S=minS;TX=r.width/2-cx*S;TY=r.height/2-cy*S;apply()}
+}
+setStyle('clean');
+function zoomAt(f,cx,cy){const ns=Math.min(2,Math.max(minS,S*f));TX=cx-(cx-TX)*ns/S;TY=cy-(cy-TY)*ns/S;S=ns;apply()}
+function zoomBy(f){const r=card.getBoundingClientRect();zoomAt(f,r.width/2,r.height/2)}
+const pts=new Map();let pinch0=null;
+card.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
+card.addEventListener('mousedown',e=>{if(!e.target.closest('.pop,.satbtn,.pin'))e.preventDefault()});
+card.addEventListener('dragstart',e=>e.preventDefault());
+card.addEventListener('pointerdown',e=>{if(e.target.closest('.pop,.satbtn'))return;card.setPointerCapture(e.pointerId);pts.set(e.pointerId,{x:e.clientX,y:e.clientY});inner.classList.add('drag');if(pts.size===2){const [a,b]=[...pts.values()];pinch0={d:Math.hypot(a.x-b.x,a.y-b.y),s:S}}});
+card.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;const prev=pts.get(e.pointerId);pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(pts.size===1){TX+=e.clientX-prev.x;TY+=e.clientY-prev.y;apply()}
+  else if(pts.size===2&&pinch0){const [a,b]=[...pts.values()],r=card.getBoundingClientRect();zoomAt(pinch0.s*Math.hypot(a.x-b.x,a.y-b.y)/pinch0.d/S,(a.x+b.x)/2-r.left,(a.y+b.y)/2-r.top)}});
+const up=e=>{pts.delete(e.pointerId);if(pts.size<2)pinch0=null;if(!pts.size)inner.classList.remove('drag')};
+card.addEventListener('pointerup',up);card.addEventListener('pointercancel',up);
+card.addEventListener('wheel',e=>{e.preventDefault();const r=card.getBoundingClientRect();zoomAt(e.deltaY<0?1.15:1/1.15,e.clientX-r.left,e.clientY-r.top)},{passive:false});
+window.addEventListener('resize',()=>{if(document.getElementById('v-map').classList.contains('active'))fitMap()});
+
+
+</script>
+</body>
+</html>

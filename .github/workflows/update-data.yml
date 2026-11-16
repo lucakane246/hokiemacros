@@ -1,0 +1,41 @@
+name: Update dining data
+
+on:
+  schedule:
+    - cron: "17 9 * * *"    # 4:17 AM Eastern (5:17 AM in summer) - menus for the day
+    - cron: "47 15 * * *"   # 10:47 AM Eastern - picks up same-day hour changes
+  workflow_dispatch:         # "Run workflow" button on the Actions tab
+  push:
+    paths:
+      - "scripts/**"
+      - ".github/workflows/update-data.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fetch menus, nutrition and hours
+        run: python scripts/update_data.py
+      - name: Save the new data
+        run: |
+          git config user.name "hokiemacros-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/dining.json
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git commit -m "Update dining data $(TZ=America/New_York date +'%Y-%m-%d %H:%M')"
+            git push
+          fi
