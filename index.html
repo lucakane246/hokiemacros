@@ -3175,7 +3175,8 @@ function showPlaceOnMap(id){ const i=spots.findIndex(s=>s.night&&s.ids.includes(
 function openPlace(id){
   const p=NP[id];
   if(p.vt) return openHall(p.vt,1);
-  outSeg='food'; outPlace=id; if(cur!=='out') go('out');
+  if(cur!=='out') go('out');
+  outSeg='food'; outPlace=id;
   $('outThumb').style.transform='translateX(200%)'; document.querySelectorAll('#outSeg button').forEach(b=>b.classList.toggle('on',b.dataset.t==='food'));
   renderPlaceMenu(); setTimeout(()=>$('v-out').scrollTo({top:$('outSeg').offsetTop-70,behavior:'smooth'}),30);
 }
