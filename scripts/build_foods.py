@@ -10,6 +10,8 @@ Source: USDA FoodData Central (public domain, CC0) - https://fdc.nal.usda.gov
 Runs from GitHub Actions once a month (USDA updates twice a year). Standard library only.
 """
 import io, json, os, re, sys, time, urllib.request, zipfile
+sys.path.insert(0, os.path.dirname(__file__))
+import food_names
 
 PAGE = "https://fdc.nal.usda.gov/download-datasets"
 BASE = "https://fdc.nal.usda.gov/fdc-datasets/"
@@ -168,7 +170,7 @@ def convert(food, source):
 
 def main():
     urls = latest_urls()
-    out, seen = [], set()
+    groups, total = {}, 0
     for source in ("foundation", "sr", "survey"):
         foods = load_foods(urls[source])
         kept = 0
@@ -176,13 +178,25 @@ def main():
             rec = convert(f, {"foundation": "F", "sr": "S", "survey": "V"}[source])
             if not rec:
                 continue
-            key = (rec.get("b", ""), rec["n"].lower())
-            if key in seen:
+            total += 1
+            cleaned = food_names.clean(rec["n"], rec.get("b"))
+            if not cleaned:
                 continue
-            seen.add(key)
-            out.append(rec)
+            brand, disp, info = cleaned
+            rec.update(n=disp, _info=info, _orig=f.get("description") or "")
+            if brand:
+                rec["b"], rec["r"] = brand, 1
+            key = food_names.dedup_key(brand, disp)
+            groups[key] = food_names.pick_better(groups[key], rec) if key in groups else rec
             kept += 1
-        print(f"  {source}: kept {kept} of {len(foods)}")
+        print(f"  {source}: {kept} of {len(foods)}")
+    out = []
+    for rec in groups.values():
+        info = rec.pop("_info"); rec.pop("_orig", None)
+        if info["grain"] and info["dry"]:
+            rec["n"] += ", dry"           # only a dry version exists - say so, it's ~3x cooked calories
+        out.append(rec)
+    print(f"{total} USDA foods -> {len(out)} after cleaning names and removing cooking-style duplicates")
     if len(out) < 1000:
         print("Too few foods came back; keeping the previous file.", file=sys.stderr)
         sys.exit(1)
