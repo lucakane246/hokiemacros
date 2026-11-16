@@ -1096,7 +1096,7 @@ const xRests=h=>(VENUES&&VENUES.halls&&VENUES.halls[h])||[];
 function xRow(it,ri,si,ii){
   const opts=it.build?it.build.reduce((n,g)=>n+g.o.length,0):0, fid=it.fs?[].concat(it.fs).join('_'):'';
   return `<div class="food xfood"><div><div class="nm">${esc(it.n)}</div>${it.d?`<div class="xd">${esc(it.d)}</div>`:''}
-    <div class="kc">${it.price!=null?`<span class="pr">${money(it.price)}</span> · `:''}${fid?`<span class="xn" data-fs="${fid}">…</span>`:it.build&&it.build.every(g=>g.o.every(o=>o.k))?`<span class="xn">From <b>${fmtN(xsum([...(it.base?[it.base.k]:[]),...it.build.filter(g=>g.req).map(g=>g.o.reduce((m,o)=>o.k.cal<m.cal?o.k:m,g.o[0].k))]).cal)}</b> cal · adds up as you build</span>`:`<span class="soon">Nutrition coming soon</span>`}</div>
+    <div class="kc">${it.price!=null?`<span class="pr">${money(it.price)}</span> · `:''}${it.k?`<span class="xn">${it.est?'≈':''}<b>${fmtN(it.k.cal)}</b> cal · ${Math.round(it.k.p)}P ${Math.round(it.k.c)}C ${Math.round(it.k.f)}F</span>`:fid?`<span class="xn" data-fs="${fid}">…</span>`:it.build&&it.build.every(g=>g.o.every(o=>o.k))?`<span class="xn"><b>${fmtN(xsum([...(it.base?[it.base.k]:[]),...it.build.filter(g=>g.req).map(g=>g.o[0].k)]).cal)}</b> cal basic · adds up as you build</span>`:`<span class="soon">Nutrition coming soon</span>`}</div>
     ${it.build?`<button class="xbuild" onclick="openXItem(${ri},${si},${ii})">Build your own · ${it.build.length} steps, ${opts} choices ›</button>`:''}</div>
     <button class="plus" onclick="openXItem(${ri},${si},${ii})" aria-label="Log ${esc(it.n)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>`;
 }
@@ -1119,6 +1119,7 @@ function fillXNutrition(){
 }
 function openXItem(ri,si,ii){
   const r=xRests(hall)[ri], it=r.sections[si].items[ii], label=`${r.name} ${it.n}`;
+  if(it.k&&!it.build){ addMeal=mealNow(); addDate=todayISO(); return showDetail({id:'xk'+ri+'_'+si+'_'+ii,n:it.n,b:r.name,k:it.k,u:[['1 order',100]],nog:true,src:'X'},{standalone:true}); }
   if(it.fs&&!it.build){ fsCombo(it.fs).then(f=>{ if(!f) return openQuickAdd(null,null,label);
       addMeal=mealNow(); addDate=todayISO(); showDetail({...f,n:it.n,b:r.name},{standalone:true}); }); return; }
   if(!it.build) return openQuickAdd(null,null,label,`${it.price!=null?money(it.price)+' at ':'From '}${r.name}. Nutrition for ${r.name} arrives soon; for now, enter what you know.`);
@@ -1134,7 +1135,9 @@ function openXItem(ri,si,ii){
 // interactive build-your-own with per-ingredient nutrition (e.g. Qdoba)
 let xb=null;
 const xsum=ks=>{ const t={cal:0,p:0,c:0,f:0,sod:0}; let sod=true; for(const k of ks){ for(const x of ['cal','p','c','f']) t[x]+=+k[x]||0; if(k.sod==null&&k.cal) sod=false; else t.sod+=+k.sod||0; } if(!sod) t.sod=null; return t; };
-function xbKs(){ const ks=xb.it.base?[xb.it.base.k]:[]; xb.it.build.forEach((g,gi)=>xb.sel[gi].forEach(oi=>ks.push(g.o[oi].k))); return ks; }
+function xbKs(){ const ks=xb.it.base?[xb.it.base.k]:[];
+  xb.it.build.forEach((g,gi)=>{ const n=xb.sel[gi].length, m=g.split&&n>1?1/n:1; xb.sel[gi].forEach(oi=>{ const k=g.o[oi].k; ks.push(m===1?k:Object.fromEntries(Object.entries(k).map(([a,v])=>[a,v==null?v:v*m]))); }); });
+  return ks; }
 function xbRender(){
   const t=xsum(xbKs());
   $('xbTot').innerHTML=`<b>${fmtN(t.cal)}</b> cal<span>${Math.round(t.p)}g protein · ${Math.round(t.c)}g carbs · ${Math.round(t.f)}g fat</span>`;
@@ -1150,8 +1153,8 @@ function openBuilder(r,it){
   openForm({title:it.n,sub:`${r.name}${it.price!=null?' · '+money(it.price):''}`,saveLabel:'Log it',
     body:`<div class="xbtot" id="xbTot"></div>${it.base?`<p class="fnote" style="margin:-4px 0 10px">Includes ${esc(it.base.n)}.</p>`:''}`
       +it.build.map((g,gi)=>`<div class="xgrp"><div class="xgh"><b>${esc(g.g)}</b><span class="${g.req?'req':''}">${esc(g.rule)}${g.req?' · required':''}</span></div>
-      <div class="xopts">${g.o.map((o,oi)=>`<button class="xopt" id="xo${gi}_${oi}" onclick="xbTap(${gi},${oi})">${esc(o.n)}<small>${o.k.cal} cal</small></button>`).join('')}</div></div>`).join('')
-      +`<p class="fnote">Nutrition from ${esc(r.nsrc||r.name)}, using standard portions. Extra scoops add more.</p>`,
+      <div class="xopts">${g.o.map((o,oi)=>`<button class="xopt" id="xo${gi}_${oi}" onclick="xbTap(${gi},${oi})">${esc(o.n)}${o.p?` <em>+${money(o.p)}</em>`:''}<small>${o.incl?'included':(o.est?'≈':'')+o.k.cal+' cal'}</small></button>`).join('')}</div></div>`).join('')
+      +`<p class="fnote">Nutrition from ${esc(r.nsrc||r.name)}, using standard portions.${it.build.some(g=>g.split)?' Picking two masalas or proteins counts a half portion of each.':''}${it.build.some(g=>g.o.some(o=>o.incl))?' The wrap numbers already include its masala.':''}${(()=>{const e=[...new Set(it.build.flatMap(g=>g.o.filter(o=>o.est).map(o=>o.n.replace(/^Extra /,''))))];return e.length?` Items marked ≈ aren’t in the guide and are estimated (${esc(e.join(', '))}).`:''})()}</p>`,
     onOpen:()=>xbRender(),
     onSave:()=>{
       const miss=it.build.find((g,gi)=>g.req&&!xb.sel[gi].length); if(miss){ toast(`Pick a ${miss.g.toLowerCase()}`); return false; }

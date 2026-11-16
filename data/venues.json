@@ -247,12 +247,29 @@
           "req": true,
           "o": [
            {
-            "n": "White Rice"
+            "n": "White Rice",
+            "k": {
+             "cal": 330,
+             "p": 5,
+             "c": 61,
+             "f": 6,
+             "sod": 620,
+             "fib": 0,
+             "sug": 0
+            }
            },
            {
-            "n": "No Base"
+            "n": "No Base",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0,
+             "sod": 0
+            }
            }
-          ]
+          ],
+          "max": 1
          },
          {
           "g": "Masala",
@@ -260,21 +277,67 @@
           "req": true,
           "o": [
            {
-            "n": "Tikka Masala"
+            "n": "Tikka Masala",
+            "k": {
+             "cal": 330,
+             "p": 2,
+             "c": 16,
+             "f": 28,
+             "sod": 710,
+             "fib": 3,
+             "sug": 7
+            }
            },
            {
-            "n": "Chickpea Masala"
+            "n": "Chickpea Masala",
+            "k": {
+             "cal": 380,
+             "p": 16,
+             "c": 46,
+             "f": 19,
+             "sod": 780,
+             "fib": 7,
+             "sug": 7
+            }
            },
            {
-            "n": "Yellow Lentil Daal"
+            "n": "Yellow Lentil Daal",
+            "k": {
+             "cal": 250,
+             "p": 11,
+             "c": 31,
+             "f": 9,
+             "sod": 540,
+             "fib": 7,
+             "sug": 2
+            }
            },
            {
-            "n": "Butter Masala"
+            "n": "Butter Masala",
+            "k": {
+             "cal": 330,
+             "p": 2,
+             "c": 16,
+             "f": 28,
+             "sod": 710,
+             "fib": 3,
+             "sug": 7
+            },
+            "est": "Tikka Masala"
            },
            {
-            "n": "No Masala"
+            "n": "No Masala",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0,
+             "sod": 0
+            }
            }
-          ]
+          ],
+          "split": true,
+          "max": 2
          },
          {
           "g": "Extra masala",
@@ -282,21 +345,59 @@
           "o": [
            {
             "n": "Extra Tikka Masala",
-            "p": 2.75
+            "p": 2.75,
+            "k": {
+             "cal": 330,
+             "p": 2,
+             "c": 16,
+             "f": 28,
+             "sod": 710,
+             "fib": 3,
+             "sug": 7
+            }
            },
            {
             "n": "Extra Chickpea Masala",
-            "p": 2.75
+            "p": 2.75,
+            "k": {
+             "cal": 380,
+             "p": 16,
+             "c": 46,
+             "f": 19,
+             "sod": 780,
+             "fib": 7,
+             "sug": 7
+            }
            },
            {
             "n": "Extra Yellow Lentil Daal",
-            "p": 2.75
+            "p": 2.75,
+            "k": {
+             "cal": 250,
+             "p": 11,
+             "c": 31,
+             "f": 9,
+             "sod": 540,
+             "fib": 7,
+             "sug": 2
+            }
            },
            {
             "n": "Extra Butter Masala",
-            "p": 2.75
+            "p": 2.75,
+            "k": {
+             "cal": 330,
+             "p": 2,
+             "c": 16,
+             "f": 28,
+             "sod": 710,
+             "fib": 3,
+             "sug": 7
+            },
+            "est": "Tikka Masala"
            }
-          ]
+          ],
+          "max": 9
          },
          {
           "g": "Protein",
@@ -304,21 +405,67 @@
           "req": true,
           "o": [
            {
-            "n": "Chicken"
+            "n": "Chicken",
+            "k": {
+             "cal": 240,
+             "p": 36,
+             "c": 1,
+             "f": 9,
+             "sod": 470,
+             "fib": 0,
+             "sug": 0
+            }
            },
            {
-            "n": "Spicy Chicken"
+            "n": "Spicy Chicken",
+            "k": {
+             "cal": 240,
+             "p": 36,
+             "c": 1,
+             "f": 9,
+             "sod": 470,
+             "fib": 0,
+             "sug": 0
+            },
+            "est": "Chicken"
            },
            {
-            "n": "Paneer"
+            "n": "Paneer",
+            "k": {
+             "cal": 480,
+             "p": 33,
+             "c": 10,
+             "f": 34,
+             "sod": 290,
+             "fib": 3,
+             "sug": 2
+            }
            },
            {
-            "n": "Tofu"
+            "n": "Tofu",
+            "k": {
+             "cal": 230,
+             "p": 20,
+             "c": 0,
+             "f": 17,
+             "sod": 100,
+             "fib": 0,
+             "sug": 0
+            }
            },
            {
-            "n": "No Protein"
+            "n": "No Protein",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0,
+             "sod": 0
+            }
            }
-          ]
+          ],
+          "split": true,
+          "max": 2
          },
          {
           "g": "Extra protein",
@@ -326,39 +473,115 @@
           "o": [
            {
             "n": "Extra Chicken",
-            "p": 2.75
+            "p": 2.75,
+            "k": {
+             "cal": 240,
+             "p": 36,
+             "c": 1,
+             "f": 9,
+             "sod": 470,
+             "fib": 0,
+             "sug": 0
+            }
            },
            {
             "n": "Extra Spicy Chicken",
-            "p": 2.75
+            "p": 2.75,
+            "k": {
+             "cal": 240,
+             "p": 36,
+             "c": 1,
+             "f": 9,
+             "sod": 470,
+             "fib": 0,
+             "sug": 0
+            },
+            "est": "Chicken"
            },
            {
             "n": "Extra Paneer",
-            "p": 2.75
+            "p": 2.75,
+            "k": {
+             "cal": 480,
+             "p": 33,
+             "c": 10,
+             "f": 34,
+             "sod": 290,
+             "fib": 3,
+             "sug": 2
+            }
            },
            {
             "n": "Extra Tofu",
-            "p": 2.75
+            "p": 2.75,
+            "k": {
+             "cal": 230,
+             "p": 20,
+             "c": 0,
+             "f": 17,
+             "sod": 100,
+             "fib": 0,
+             "sug": 0
+            }
            }
-          ]
+          ],
+          "max": 9
          },
          {
           "g": "Signature sauce",
           "rule": "Up to 2",
           "o": [
            {
-            "n": "Choolaah Ranch"
+            "n": "Choolaah Ranch",
+            "k": {
+             "cal": 160,
+             "p": 0,
+             "c": 1,
+             "f": 18,
+             "sod": 180,
+             "fib": 0,
+             "sug": 1
+            }
            },
            {
-            "n": "Mint Yogurt"
+            "n": "Mint Yogurt",
+            "k": {
+             "cal": 20,
+             "p": 1,
+             "c": 3,
+             "f": 0.5,
+             "sod": 135,
+             "fib": 0,
+             "sug": 2
+            }
            },
            {
-            "n": "Spicy Mango"
+            "n": "Spicy Mango",
+            "k": {
+             "cal": 30,
+             "p": 0,
+             "c": 7,
+             "f": 0,
+             "sod": 15,
+             "fib": 3,
+             "sug": 6
+            }
            },
            {
-            "n": "Sweet Tango"
+            "n": "Sweet Tango",
+            "k": {
+             "cal": 25,
+             "p": 0,
+             "c": 6,
+             "f": 0,
+             "sod": 190,
+             "fib": 0,
+             "sug": 5
+            },
+            "est": "Tamarind Apple"
            }
-          ]
+          ],
+          "max": 2
          },
          {
           "g": "Extra sauce",
@@ -366,38 +589,102 @@
           "o": [
            {
             "n": "Extra Choolaah Ranch",
-            "p": 0.99
+            "p": 0.99,
+            "k": {
+             "cal": 160,
+             "p": 0,
+             "c": 1,
+             "f": 18,
+             "sod": 180,
+             "fib": 0,
+             "sug": 1
+            }
            },
            {
             "n": "Extra Mint Yogurt",
-            "p": 0.99
+            "p": 0.99,
+            "k": {
+             "cal": 20,
+             "p": 1,
+             "c": 3,
+             "f": 0.5,
+             "sod": 135,
+             "fib": 0,
+             "sug": 2
+            }
            },
            {
             "n": "Extra Spicy Mango",
-            "p": 0.99
+            "p": 0.99,
+            "k": {
+             "cal": 30,
+             "p": 0,
+             "c": 7,
+             "f": 0,
+             "sod": 15,
+             "fib": 3,
+             "sug": 6
+            }
            }
-          ]
+          ],
+          "max": 9
          },
          {
           "g": "Toppings",
           "rule": "As many as you like",
           "o": [
            {
-            "n": "Pickled Onions"
+            "n": "Pickled Onions",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 1,
+             "f": 0
+            },
+            "est": "estimate"
            },
            {
-            "n": "Red Onions"
+            "n": "Red Onions",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 1,
+             "f": 0
+            },
+            "est": "estimate"
            },
            {
-            "n": "Serrano Peppers"
+            "n": "Serrano Peppers",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            },
+            "est": "estimate"
            },
            {
-            "n": "Roasted Corn"
+            "n": "Roasted Corn",
+            "k": {
+             "cal": 30,
+             "p": 1,
+             "c": 6,
+             "f": 0.5
+            },
+            "est": "estimate"
            },
            {
-            "n": "Greens"
+            "n": "Greens",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 1,
+             "f": 0
+            },
+            "est": "estimate"
            }
-          ]
+          ],
+          "max": 9
          },
          {
           "g": "Extra toppings",
@@ -405,9 +692,17 @@
           "o": [
            {
             "n": "Extra Pickled Onions",
-            "p": 0.35
+            "p": 0.35,
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 1,
+             "f": 0
+            },
+            "est": "estimate"
            }
-          ]
+          ],
+          "max": 9
          }
         ]
        }
@@ -426,12 +721,26 @@
           "req": true,
           "o": [
            {
-            "n": "White Rice"
+            "n": "White Rice",
+            "k": {
+             "cal": 165,
+             "p": 2.5,
+             "c": 30.5,
+             "f": 3,
+             "sod": 310
+            }
            },
            {
-            "n": "No Base"
+            "n": "No Base",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            }
            }
-          ]
+          ],
+          "max": 1
          },
          {
           "g": "Masala",
@@ -439,21 +748,57 @@
           "req": true,
           "o": [
            {
-            "n": "Tikka Masala"
+            "n": "Tikka Masala",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            },
+            "incl": 1
            },
            {
-            "n": "Chickpea Masala"
+            "n": "Chickpea Masala",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            },
+            "incl": 1
            },
            {
-            "n": "Yellow Lentil Daal"
+            "n": "Yellow Lentil Daal",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            },
+            "incl": 1
            },
            {
-            "n": "Butter Masala"
+            "n": "Butter Masala",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            },
+            "incl": 1
            },
            {
-            "n": "No Masala"
+            "n": "No Masala",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            },
+            "incl": 1
            }
-          ]
+          ],
+          "max": 1
          },
          {
           "g": "Protein",
@@ -461,60 +806,181 @@
           "req": true,
           "o": [
            {
-            "n": "Chicken"
+            "n": "Chicken",
+            "k": {
+             "cal": 490,
+             "p": 31,
+             "c": 50,
+             "f": 18,
+             "sod": 920,
+             "fib": 2,
+             "sug": 7
+            }
            },
            {
-            "n": "Spicy Chicken"
+            "n": "Spicy Chicken",
+            "k": {
+             "cal": 490,
+             "p": 31,
+             "c": 50,
+             "f": 18,
+             "sod": 920,
+             "fib": 2,
+             "sug": 7
+            },
+            "est": "Chicken wrap"
            },
            {
-            "n": "Tofu"
+            "n": "Tofu",
+            "k": {
+             "cal": 480,
+             "p": 28,
+             "c": 43,
+             "f": 23,
+             "sod": 490
+            },
+            "est": "naan + tofu"
            },
            {
-            "n": "Paneer"
+            "n": "Paneer",
+            "k": {
+             "cal": 630,
+             "p": 29,
+             "c": 56,
+             "f": 32,
+             "sod": 810,
+             "fib": 3,
+             "sug": 8
+            }
            },
            {
-            "n": "No Protein"
+            "n": "No Protein",
+            "k": {
+             "cal": 250,
+             "p": 8,
+             "c": 43,
+             "f": 5,
+             "sod": 390,
+             "fib": 1,
+             "sug": 3
+            },
+            "est": "plain naan"
            }
-          ]
+          ],
+          "max": 1
          },
          {
           "g": "Toppings",
           "rule": "As many as you like",
           "o": [
            {
-            "n": "Pickled Onions"
+            "n": "Pickled Onions",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 1,
+             "f": 0
+            },
+            "est": "estimate"
            },
            {
-            "n": "Red Onions"
+            "n": "Red Onions",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 1,
+             "f": 0
+            },
+            "est": "estimate"
            },
            {
-            "n": "Serrano Peppers"
+            "n": "Serrano Peppers",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            },
+            "est": "estimate"
            },
            {
-            "n": "Roasted Corn"
+            "n": "Roasted Corn",
+            "k": {
+             "cal": 30,
+             "p": 1,
+             "c": 6,
+             "f": 0.5
+            },
+            "est": "estimate"
            },
            {
-            "n": "Greens"
+            "n": "Greens",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 1,
+             "f": 0
+            },
+            "est": "estimate"
            }
-          ]
+          ],
+          "max": 9
          },
          {
           "g": "Signature sauce",
           "rule": "Pick one",
           "o": [
            {
-            "n": "Choolaah Ranch"
+            "n": "Choolaah Ranch",
+            "k": {
+             "cal": 160,
+             "p": 0,
+             "c": 1,
+             "f": 18,
+             "sod": 180,
+             "fib": 0,
+             "sug": 1
+            }
            },
            {
-            "n": "Mint Yogurt"
+            "n": "Mint Yogurt",
+            "k": {
+             "cal": 20,
+             "p": 1,
+             "c": 3,
+             "f": 0.5,
+             "sod": 135,
+             "fib": 0,
+             "sug": 2
+            }
            },
            {
-            "n": "Spicy Mango"
+            "n": "Spicy Mango",
+            "k": {
+             "cal": 30,
+             "p": 0,
+             "c": 7,
+             "f": 0,
+             "sod": 15,
+             "fib": 3,
+             "sug": 6
+            }
            },
            {
-            "n": "Sweet Tango"
+            "n": "Sweet Tango",
+            "k": {
+             "cal": 25,
+             "p": 0,
+             "c": 6,
+             "f": 0,
+             "sod": 190,
+             "fib": 0,
+             "sug": 5
+            },
+            "est": "Tamarind Apple"
            }
-          ]
+          ],
+          "max": 1
          },
          {
           "g": "Extra sauce",
@@ -522,13 +988,32 @@
           "o": [
            {
             "n": "Extra Choolaah Ranch",
-            "p": 0.99
+            "p": 0.99,
+            "k": {
+             "cal": 160,
+             "p": 0,
+             "c": 1,
+             "f": 18,
+             "sod": 180,
+             "fib": 0,
+             "sug": 1
+            }
            },
            {
             "n": "Extra Mint Yogurt",
-            "p": 0.99
+            "p": 0.99,
+            "k": {
+             "cal": 20,
+             "p": 1,
+             "c": 3,
+             "f": 0.5,
+             "sod": 135,
+             "fib": 0,
+             "sug": 2
+            }
            }
-          ]
+          ],
+          "max": 9
          }
         ]
        }
@@ -542,11 +1027,29 @@
         "price": 1.75,
         "tags": [
          "vegan"
-        ]
+        ],
+        "k": {
+         "cal": 320,
+         "p": 6,
+         "c": 36,
+         "f": 16,
+         "sod": 450,
+         "fib": 3,
+         "sug": 4
+        }
        },
        {
         "n": "Naan",
-        "price": 2.1
+        "price": 2.1,
+        "k": {
+         "cal": 250,
+         "p": 8,
+         "c": 43,
+         "f": 5,
+         "sod": 390,
+         "fib": 1,
+         "sug": 3
+        }
        }
       ]
      },
@@ -555,19 +1058,56 @@
       "items": [
        {
         "n": "Choolaah Ranch",
-        "price": 0.99
+        "price": 0.99,
+        "k": {
+         "cal": 160,
+         "p": 0,
+         "c": 1,
+         "f": 18,
+         "sod": 180,
+         "fib": 0,
+         "sug": 1
+        }
        },
        {
         "n": "Mint Yogurt",
-        "price": 0.99
+        "price": 0.99,
+        "k": {
+         "cal": 20,
+         "p": 1,
+         "c": 3,
+         "f": 0.5,
+         "sod": 135,
+         "fib": 0,
+         "sug": 2
+        }
        },
        {
         "n": "Spicy Mango",
-        "price": 0.99
+        "price": 0.99,
+        "k": {
+         "cal": 30,
+         "p": 0,
+         "c": 7,
+         "f": 0,
+         "sod": 15,
+         "fib": 3,
+         "sug": 6
+        }
        },
        {
         "n": "Sweet Tango",
-        "price": 0.99
+        "price": 0.99,
+        "k": {
+         "cal": 25,
+         "p": 0,
+         "c": 6,
+         "f": 0,
+         "sod": 190,
+         "fib": 0,
+         "sug": 5
+        },
+        "est": "Tamarind Apple"
        }
       ]
      },
@@ -576,27 +1116,76 @@
       "items": [
        {
         "n": "Hot Chai",
-        "price": 5.95
+        "price": 5.95,
+        "k": {
+         "cal": 90,
+         "p": 2,
+         "c": 16,
+         "f": 2,
+         "sod": 45,
+         "fib": 0,
+         "sug": 15
+        }
        },
        {
         "n": "Chilled Chai",
-        "price": 5.95
+        "price": 5.95,
+        "k": {
+         "cal": 90,
+         "p": 2,
+         "c": 16,
+         "f": 2,
+         "sod": 45,
+         "fib": 0,
+         "sug": 15
+        },
+        "est": "Choolaah Chai"
        },
        {
         "n": "Mango Lassi",
-        "price": 5.95
+        "price": 5.95,
+        "k": {
+         "cal": 280,
+         "p": 11,
+         "c": 43,
+         "f": 7,
+         "sod": 130,
+         "fib": 8,
+         "sug": 40
+        }
        },
        {
         "n": "Mint Ginger Lemonade",
-        "price": 4.25
+        "price": 4.25,
+        "k": {
+         "cal": 130,
+         "p": 0,
+         "c": 33,
+         "f": 0,
+         "sod": 85,
+         "fib": 0,
+         "sug": 30
+        },
+        "est": "small size"
        },
        {
         "n": "Mango Lemonade",
-        "price": 4.25
+        "price": 4.25,
+        "k": {
+         "cal": 130,
+         "p": 1,
+         "c": 34,
+         "f": 0,
+         "sod": 10,
+         "fib": 7,
+         "sug": 31
+        },
+        "est": "small size"
        }
       ]
      }
-    ]
+    ],
+    "nsrc": "Choolaah’s nutrition guide (Apr 2023)"
    }
   ],
   "14": [
