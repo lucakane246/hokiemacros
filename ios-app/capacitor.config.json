@@ -12,5 +12,11 @@
     "contentInset": "never",
     "scrollEnabled": true,
     "limitsNavigationsToAppBoundDomains": false
+  },
+  "plugins": {
+    "StatusBar": {
+      "style": "DARK",
+      "overlaysWebView": true
+    }
   }
 }
