@@ -3,7 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#120c0f">
+<meta name="theme-color" content="#110b0e">
+<meta name="description" content="Free, ad-free calorie and macro tracker for Virginia Tech dining.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/favicon-64.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="HokieMacros">
 <title>HokieMacros</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -547,6 +555,20 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 .pickbar button{font:inherit;font-weight:800;font-size:13.5px;color:#0d1f17;background:var(--green);border-radius:10px;padding:8px 14px}
 .dmore .dedit{justify-content:center}.dedit button{font:inherit;font-size:13.5px;font-weight:700;color:var(--orange-hi)}
 .savemeal{display:block;width:100%;text-align:left;font:inherit;font-size:13px;font-weight:700;color:var(--muted);padding:10px 18px 0}
+
+/* ---------- install & settings ---------- */
+.installcard{display:flex;align-items:center;gap:12px;padding:14px 12px 14px 14px;position:relative}
+.installcard[hidden]{display:none}
+.installcard img{border-radius:11px;flex:none}
+.installcard div{flex:1;min-width:0}.installcard b{display:block;font-weight:750;font-size:15px}.installcard span{display:block;color:var(--muted);font-size:12.5px;line-height:1.35;margin-top:2px}
+.ibtn{flex:none;font:inherit;font-weight:800;font-size:13.5px;color:#1a0f08;background:linear-gradient(145deg,var(--orange-hi),var(--orange-deep));border-radius:11px;padding:9px 14px}
+.ix{position:absolute;top:4px;right:6px;width:24px;height:24px;color:var(--faint);font-size:18px;line-height:1}
+.isteps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:10px;font-size:15px;line-height:1.45;color:var(--text-2)}
+.isteps b{color:var(--text)}
+.setlist{padding:0}
+.setlist .row{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;text-align:left;padding:13px 16px;cursor:pointer;font:inherit;color:inherit}
+.setlist .row span{font-weight:700;font-size:15px}.setlist .row small{font-size:12.5px;color:var(--muted);font-weight:600}
+.setlist .row.danger span{color:var(--fat)}
 </style>
 </head>
 <body>
@@ -565,6 +587,7 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
   </div>
   <div class="week rise" style="--i:1" id="week"></div>
 
+  <div class="card installcard rise" style="--i:2" id="installCard" hidden></div>
   <button class="card setup pressable rise" style="--i:2" id="setupCard" onclick="openGoals()">
     <span class="sq"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M12 3a9 9 0 1 0 9 9M12 7a5 5 0 1 0 5 5M12 11a1 1 0 1 0 1 1M12 12l8-8"/></svg></span>
     <div><b>Set your goals</b><span>One minute to get a calorie and macro goal made for you.</span></div>
@@ -1288,10 +1311,11 @@ function relDay(d){ const t=todayISO(); if(d===t) return 'Today'; if(d===addDays
 function foodKey(f){ return f.my?'my:'+f.id:f.vt?'vt:'+f.id:(f.id?'f:'+f.id:'n:'+(f.b||'')+f.n); }
 function slimFood(f){ const {_h,...rest}=f; return rest; }
 function rememberRecent(f){ const k=foodKey(f); STORE.recent=[slimFood(f),...STORE.recent.filter(x=>foodKey(x)!==k)].slice(0,25); }
-function addEntry(date,meal,f,serv,qty){
+function addEntry_(date,meal,f,serv,qty){
   const day=dayRec(date); (day.meals[meal]=day.meals[meal]||[]).push({id:uid(),f:slimFood(f),serv:{label:serv.label,g:serv.g},qty,at:Date.now()});
   rememberRecent(f); saveStore(); refreshLog();
 }
+function addEntry(...a){ keepData(); return addEntry_(...a); }
 function findEntry(id){ for(const [d,day] of Object.entries(STORE.days)) for(const [m,list] of Object.entries(day.meals||{})){ const i=list.findIndex(e=>e.id===id); if(i>=0) return {d,m,i,list,e:list[i]}; } return null; }
 function deleteEntry(id,silent){ const r=findEntry(id); if(!r) return; r.list.splice(r.i,1); saveStore(); refreshLog(); if(!silent) undoToast(`Removed ${r.e.f.n}`,()=>{ (dayRec(r.d).meals[r.m]=dayRec(r.d).meals[r.m]||[]).splice(r.i,0,r.e); saveStore(); refreshLog(); }); }
 function copyMeal(from,to,meal){
@@ -1993,6 +2017,66 @@ function myRow(x,i){
   return resultRow(x,i);
 }
 
+// ================= installable app: offline, home screen, backups =================
+const isStandalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const isIOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+let installEvt=null;
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')) navigator.serviceWorker.register('sw.js').catch(()=>{});
+window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); installEvt=e; renderInstallCard(); });
+window.addEventListener('appinstalled',()=>{ installEvt=null; STORE.installDismissed=true; saveStore(); renderInstallCard(); toast('HokieMacros is on your home screen'); });
+// ask the browser not to clear your log when space runs low
+function keepData(){ try{ navigator.storage&&navigator.storage.persist&&navigator.storage.persist(); }catch(e){} }
+if(isStandalone()) keepData();
+
+function renderInstallCard(){
+  const el=$('installCard'); if(!el) return;
+  const show=!isStandalone()&&!STORE.installDismissed&&(isIOS||installEvt||/Android/i.test(navigator.userAgent));
+  el.hidden=!show; if(!show) return;
+  el.innerHTML=`<img src="icons/icon-192.png" alt="" width="44" height="44"><div><b>Get the app</b><span>Add HokieMacros to your home screen. It opens full screen, works offline and keeps your log safe.</span></div>
+    <button class="ibtn pressable" onclick="installApp()">${installEvt?'Install':'How'}</button><button class="ix" onclick="STORE.installDismissed=true;saveStore();renderInstallCard()" aria-label="Dismiss">×</button>`;
+}
+function installApp(){
+  if(installEvt){ installEvt.prompt(); installEvt.userChoice.finally(()=>{installEvt=null;renderInstallCard();}); return; }
+  const share='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 3v12M8 7l4-4 4 4M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg>';
+  openForm({title:'Add to Home Screen',sub:isIOS?'iPhone and iPad':'Android',saveLabel:'Got it',
+    body:isIOS?`<ol class="isteps"><li>Open this page in <b>Safari</b>.</li><li>Tap the Share button ${share} at the bottom of the screen.</li><li>Scroll down and tap <b>Add to Home Screen</b>, then <b>Add</b>.</li></ol><p class="fnote">Then open HokieMacros from your home screen. Home Screen apps aren’t cleared the way Safari clears websites you haven’t visited in a while.</p>${STORE.days&&Object.keys(STORE.days).length?'<p class="fnote">The home screen app starts with its own storage. To bring what you’ve logged here, tap <b>You → Settings → Back up my data</b> first, then <b>Restore from a backup</b> in the app.</p>':''}`
+      :`<ol class="isteps"><li>Tap the <b>⋮</b> menu in Chrome.</li><li>Tap <b>Add to Home screen</b> or <b>Install app</b>.</li></ol>`,
+    onSave:()=>{}});
+}
+
+// ---------- settings: backup, restore, erase ----------
+function openSettings(){
+  openForm({title:'Settings',sub:'Your data lives on this phone',saveLabel:'Done',
+    body:`<div class="card group setlist">
+        <button class="row" onclick="exportData()"><span>Back up my data</span><small>Download a file with your whole log</small></button>
+        <label class="row" for="importFile"><span>Restore from a backup</span><small>Replaces what’s on this phone</small></label>
+        ${isStandalone()?'':`<button class="row" onclick="closeForm();setTimeout(installApp,380)"><span>Add to Home Screen</span><small>Full screen, offline, safer storage</small></button>`}
+        <button class="row danger" onclick="eraseAll()"><span>Erase all data</span><small>Diary, goals, weights, foods and meals</small></button></div>
+      <input type="file" id="importFile" accept="application/json,.json" hidden onchange="importData(this.files[0])">
+      <p class="fnote">HokieMacros has no accounts. Nothing you log is sent anywhere, so a backup file is how you move it to a new phone.</p>`,
+    onSave:()=>{}});
+}
+function exportData(){
+  const blob=new Blob([JSON.stringify({app:'HokieMacros',version:1,exported:new Date().toISOString(),data:STORE},null,1)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`hokiemacros-backup-${todayISO()}.json`; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000); toast('Backup downloaded');
+}
+async function importData(file){
+  if(!file) return;
+  try{ const j=JSON.parse(await file.text()); const d=j&&j.app==='HokieMacros'?j.data:j;
+    if(!d||typeof d!=='object'||!d.days) throw 0;
+    const n=Object.keys(d.days).length;
+    closeForm(); setTimeout(()=>openForm({title:'Restore backup?',sub:`${n} day${n===1?'':'s'} of logs`,saveLabel:'Replace my data',
+      body:`<p class="fnote" style="font-size:14px">Everything on this phone will be replaced by the backup from ${esc((j.exported||'').slice(0,10)||'that file')}.</p>`,
+      onSave:()=>{ localStorage.setItem(STORE_KEY,JSON.stringify(d)); location.reload(); }}),380);
+  }catch(e){ toast('That file isn’t a HokieMacros backup'); }
+}
+function eraseAll(){
+  closeForm(); setTimeout(()=>openForm({title:'Erase everything?',sub:'This can’t be undone',saveLabel:'Erase all data',
+    body:`<p class="fnote" style="font-size:14px">Your diary, goals, weights, custom foods and meals will be deleted from this phone. Back up first if you might want them.</p>`,
+    onSave:()=>{ localStorage.removeItem(STORE_KEY); location.reload(); }}),380);
+}
+
 // ---------- Today: dining hall cards ----------
 const HALLCARDS=[
   {k:'15',n:'D2',b:'Dietrick Hall',g:['#8A2447','#3b0f22'],a:'#EE8A3C'},
@@ -2016,7 +2100,7 @@ function openHall(n){ hall=n; mealIdx=pickMealFor(n); renderDining(); go('dining
 // ---------- You ----------
 const rowsHTML=rows=>rows.map(r=>`<button class="row" onclick="${r[3]||"toast('Coming soon')"}"><span class="sq" style="background:${r[1]}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${r[2]}"/></svg></span>${r[0]}<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>`).join('');
 $('grp1').innerHTML=rowsHTML([['Goals','#D2611C','M12 3a9 9 0 1 0 9 9M12 7a5 5 0 1 0 5 5M12 11a1 1 0 1 0 1 1M12 12l8-8','openGoals()'],['Diet & allergies','#3f9c8b','M12 21c-4-3-8-6.5-8-11a5 5 0 0 1 8-4 5 5 0 0 1 8 4c0 4.5-4 8-8 11zM9 11h6','openPrefs()'],['Progress','#8A2447','M3 17l6-6 4 4 8-8M15 7h6v6','openProgress()']]);
-$('grp2').innerHTML=rowsHTML([['About & privacy','#3c5a7a','M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01',"openAbout()"],['Settings','#5b5056','M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1L14.5 3h-5l-.3 2.6a7 7 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.3 2.6h5l.3-2.6a7 7 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6a7 7 0 0 0 .1-1z']]);
+$('grp2').innerHTML=rowsHTML([['About & privacy','#3c5a7a','M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01',"openAbout()"],['Settings','#5b5056','M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1L14.5 3h-5l-.3 2.6a7 7 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.3 2.6h5l.3-2.6a7 7 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6a7 7 0 0 0 .1-1z',"openSettings()"]]);
 function openAbout(){document.body.classList.add('about-open')}
 function closeAbout(){document.body.classList.remove('about-open')}
 
@@ -2027,7 +2111,7 @@ function toggleSheet(on){ document.body.classList.toggle('sheet-open',on); }
 let tt; function toast(m){const t=$('toast');t.classList.remove('has-undo');undoFn=null;t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1800)}
 
 // first paint
-refreshLog(); renderProfile(); afterPrefs(); $('v-today').classList.add('active'); requestAnimationFrame(()=>enter($('v-today')));
+refreshLog(); renderProfile(); afterPrefs(); renderInstallCard(); $('v-today').classList.add('active'); requestAnimationFrame(()=>enter($('v-today')));
 function onData(){ try{renderRec()}catch(e){}
   renderHallCards(); hall='15'; mealIdx=pickMealFor(hall); renderDining(); refreshPins(); if(popIdx>=0) openPop(popIdx);
   const t=DATA.updated?new Date(DATA.updated):null;
