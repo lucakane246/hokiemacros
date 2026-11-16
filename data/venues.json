@@ -3925,46 +3925,165 @@
   "n_co": [
    {
     "name": "Cook Out",
-    "basis": "the standard Cook Out menu",
-    "nsrc": "FatSecret’s listing of the chain’s published nutrition",
+    "nsrc": "Cook Out’s nutrition guide",
     "sections": [
      {
       "name": "Burgers",
       "items": [
        {
-        "n": "Regular 1/4 lb · Cook Out Style",
-        "fs": [
-         119155735,
-         119155755
+        "n": "Char-Grilled Burger",
+        "d": "Pick a size, then a style",
+        "build": [
+         {
+          "g": "Size",
+          "rule": "Pick 1",
+          "req": true,
+          "max": 1,
+          "o": [
+           {
+            "n": "Regular 1/4 lb",
+            "k": {
+             "cal": 328.0,
+             "p": 22.0,
+             "c": 27.0,
+             "f": 14.0,
+             "fib": 0.0,
+             "sug": 4.0,
+             "sod": 340.0
+            }
+           },
+           {
+            "n": "Big Double",
+            "k": {
+             "cal": 311.0,
+             "p": 20.0,
+             "c": 27.0,
+             "f": 13.0,
+             "fib": 0.0,
+             "sug": 4.0,
+             "sod": 126.0
+            }
+           },
+           {
+            "n": "Small 1/8 lb",
+            "k": {
+             "cal": 245.0,
+             "p": 14.0,
+             "c": 27.0,
+             "f": 8.0,
+             "fib": 0.0,
+             "sug": 4.0,
+             "sod": 309.0
+            }
+           },
+           {
+            "n": "Huge 1/2 lb",
+            "k": {
+             "cal": 516.0,
+             "p": 40.0,
+             "c": 27.0,
+             "f": 26.0,
+             "fib": 0.0,
+             "sug": 4.0,
+             "sod": 410.0
+            }
+           }
+          ]
+         },
+         {
+          "g": "Style",
+          "rule": "Pick 1 (or plain)",
+          "max": 1,
+          "o": [
+           {
+            "n": "Cook Out Style",
+            "k": {
+             "cal": 123.0,
+             "p": 3.0,
+             "c": 7.0,
+             "f": 5.0,
+             "fib": 1.0,
+             "sug": 4.0,
+             "sod": 518.0
+            }
+           },
+           {
+            "n": "Everything",
+            "k": {
+             "cal": 91.0,
+             "p": 1.0,
+             "c": 5.0,
+             "f": 8.0,
+             "fib": 1.0,
+             "sug": 3.0,
+             "sod": 301.0
+            }
+           },
+           {
+            "n": "Cheddar Style",
+            "k": {
+             "cal": 233.0,
+             "p": 8.0,
+             "c": 5.0,
+             "f": 20.0,
+             "fib": 0.0,
+             "sug": 1.0,
+             "sod": 729.0
+            }
+           },
+           {
+            "n": "Out West Style",
+            "k": {
+             "cal": 202.0,
+             "p": 8.0,
+             "c": 4.0,
+             "f": 18.0,
+             "fib": 0.0,
+             "sug": 2.0,
+             "sod": 682.0
+            }
+           },
+           {
+            "n": "Steak Style",
+            "k": {
+             "cal": 91.0,
+             "p": 1.0,
+             "c": 5.0,
+             "f": 8.0,
+             "fib": 1.0,
+             "sug": 2.0,
+             "sod": 141.0
+            }
+           }
+          ]
+         }
         ]
+       },
+       {
+        "n": "Regular 1/4 lb · Cook Out Style",
+        "k": {
+         "cal": 451.0,
+         "p": 25.0,
+         "c": 34.0,
+         "f": 19.0,
+         "fib": 1.0,
+         "sug": 8.0,
+         "sod": 858.0
+        },
+        "d": "Burger + Cook Out Style toppings"
        },
        {
         "n": "Big Double · Cook Out Style",
-        "fs": [
-         119155744,
-         119155755
-        ]
-       },
-       {
-        "n": "Big Double · Cheddar Style",
-        "fs": [
-         119155744,
-         119155763
-        ]
-       },
-       {
-        "n": "Huge 1/2 lb · Cook Out Style",
-        "fs": [
-         119155741,
-         119155755
-        ]
-       },
-       {
-        "n": "Regular 1/4 lb · Everything",
-        "fs": [
-         119155735,
-         119155750
-        ]
+        "k": {
+         "cal": 434.0,
+         "p": 23.0,
+         "c": 34.0,
+         "f": 18.0,
+         "fib": 1.0,
+         "sug": 8.0,
+         "sod": 644.0
+        },
+        "d": "Burger + Cook Out Style toppings"
        }
       ]
      },
@@ -3972,8 +4091,16 @@
       "name": "Chicken",
       "items": [
        {
-        "n": "Chicken Strips (3 pc)",
-        "fs": 119155821,
+        "n": "Chicken Strips (3)",
+        "k": {
+         "cal": 660.0,
+         "p": 36.0,
+         "c": 60.0,
+         "f": 33.0,
+         "fib": 3.0,
+         "sug": 0.0,
+         "sod": 2130.0
+        },
         "ct": [
          3,
          "strip",
@@ -3981,61 +4108,309 @@
         ]
        },
        {
-        "n": "Char-Grilled Chicken Sandwich",
-        "fs": 119155768
-       },
-       {
-        "n": "Spicy Chicken Breast Sandwich",
-        "fs": 119155788
-       },
-       {
         "n": "Chicken Strip Sandwich",
-        "fs": 119155824
+        "k": {
+         "cal": 674.0,
+         "p": 28.0,
+         "c": 71.0,
+         "f": 32.0,
+         "fib": 2.0,
+         "sug": 7.0,
+         "sod": 1804.0
+        }
        },
        {
-        "n": "Chicken Nuggets",
-        "fs": 119155866
+        "n": "Char-Grilled Chicken Sandwich (Original Style)",
+        "k": {
+         "cal": 393.0,
+         "p": 25.0,
+         "c": 31.0,
+         "f": 18.0,
+         "fib": 0.0,
+         "sug": 7.0,
+         "sod": 624.0
+        }
+       },
+       {
+        "n": "Char-Grilled Chicken Sandwich (Barbeque Style)",
+        "k": {
+         "cal": 376.0,
+         "p": 25.0,
+         "c": 29.0,
+         "f": 17.0,
+         "fib": 0.0,
+         "sug": 5.0,
+         "sod": 714.0
+        }
+       },
+       {
+        "n": "Char-Grilled Chicken Sandwich (Cajun Style)",
+        "k": {
+         "cal": 377.0,
+         "p": 25.0,
+         "c": 29.0,
+         "f": 17.0,
+         "fib": 0.0,
+         "sug": 5.0,
+         "sod": 575.0
+        }
+       },
+       {
+        "n": "Char-Grilled Chicken Sandwich (Cheddar Style)",
+        "k": {
+         "cal": 534.0,
+         "p": 33.0,
+         "c": 32.0,
+         "f": 30.0,
+         "fib": 0.0,
+         "sug": 5.0,
+         "sod": 1245.0
+        }
+       },
+       {
+        "n": "Spicy Chicken Sandwich",
+        "k": {
+         "cal": 446.0,
+         "p": 21.0,
+         "c": 45.0,
+         "f": 18.0,
+         "fib": 2.0,
+         "sug": 5.0,
+         "sod": 1158.0
+        }
+       },
+       {
+        "n": "Spicy Chicken Sandwich (Cheese Style)",
+        "k": {
+         "cal": 634.0,
+         "p": 32.0,
+         "c": 46.0,
+         "f": 35.0,
+         "fib": 2.0,
+         "sug": 5.0,
+         "sod": 1942.0
+        }
        },
        {
         "n": "Cajun Wrap",
-        "fs": 119155813
+        "k": {
+         "cal": 501.0,
+         "p": 25.0,
+         "c": 44.0,
+         "f": 27.0,
+         "fib": 2.0,
+         "sug": 0.0,
+         "sod": 1285.0
+        }
        },
        {
         "n": "Ranch Wrap",
-        "fs": 119155816
+        "k": {
+         "cal": 522.0,
+         "p": 25.0,
+         "c": 44.0,
+         "f": 29.0,
+         "fib": 2.0,
+         "sug": 0.0,
+         "sod": 1273.0
+        }
        },
        {
         "n": "Honey Mustard Wrap",
-        "fs": 119155818
+        "k": {
+         "cal": 517.0,
+         "p": 25.0,
+         "c": 46.0,
+         "f": 28.0,
+         "fib": 2.0,
+         "sug": 2.0,
+         "sod": 1279.0
+        }
+       },
+       {
+        "n": "Bacon Ranch Wrap",
+        "k": {
+         "cal": 419.0,
+         "p": 20.0,
+         "c": 24.0,
+         "f": 28.0,
+         "fib": 1.0,
+         "sug": 0.0,
+         "sod": 1047.0
+        }
+       },
+       {
+        "n": "Chicken Nuggets (full order)",
+        "k": {
+         "cal": 240.0,
+         "p": 16.0,
+         "c": 12.0,
+         "f": 18.0,
+         "fib": 0.0,
+         "sug": 0.0,
+         "sod": 540.0
+        }
+       },
+       {
+        "n": "Chicken Nuggets (side)",
+        "k": {
+         "cal": 144.0,
+         "p": 10.0,
+         "c": 7.0,
+         "f": 11.0,
+         "fib": 0.0,
+         "sug": 0.0,
+         "sod": 324.0
+        }
        }
       ]
      },
      {
-      "name": "BBQ, Dogs & More",
+      "name": "BBQ, Dogs & Quesadillas",
       "items": [
        {
         "n": "BBQ Sandwich",
-        "fs": 119155794
+        "k": {
+         "cal": 368.0,
+         "p": 29.0,
+         "c": 35.0,
+         "f": 12.0,
+         "fib": 1.0,
+         "sug": 9.0,
+         "sod": 1103.0
+        }
        },
        {
         "n": "BBQ Plate",
-        "fs": 30272222
-       },
-       {
-        "n": "Cook Out Style Hot Dog",
-        "fs": 119155798
+        "k": {
+         "cal": 976.0,
+         "p": 35.0,
+         "c": 105.0,
+         "f": 43.0,
+         "fib": 10.0,
+         "sug": 21.0,
+         "sod": 2445.0
+        }
        },
        {
         "n": "Hot Dog",
-        "fs": 31778013
+        "k": {
+         "cal": 260.0,
+         "p": 8.0,
+         "c": 22.0,
+         "f": 15.0,
+         "fib": 0.0,
+         "sug": 3.0,
+         "sod": 600.0
+        }
+       },
+       {
+        "n": "Cook Out Style Hot Dog",
+        "k": {
+         "cal": 383.0,
+         "p": 11.0,
+         "c": 29.0,
+         "f": 20.0,
+         "fib": 1.0,
+         "sug": 7.0,
+         "sod": 1118.0
+        }
+       },
+       {
+        "n": "Mexi Hot Dog",
+        "k": {
+         "cal": 385.0,
+         "p": 12.0,
+         "c": 29.0,
+         "f": 19.0,
+         "fib": 1.0,
+         "sug": 5.0,
+         "sod": 1352.0
+        }
+       },
+       {
+        "n": "Bacon Cheddar Hot Dog",
+        "k": {
+         "cal": 523.0,
+         "p": 19.0,
+         "c": 47.0,
+         "f": 29.0,
+         "fib": 0.0,
+         "sug": 6.0,
+         "sod": 1494.0
+        }
+       },
+       {
+        "n": "Mustard Relish Hot Dog",
+        "k": {
+         "cal": 394.0,
+         "p": 11.0,
+         "c": 50.0,
+         "f": 16.0,
+         "fib": 0.0,
+         "sug": 10.0,
+         "sod": 1021.0
+        }
        },
        {
         "n": "Corn Dog",
-        "fs": 119155909
+        "k": {
+         "cal": 220.0,
+         "p": 5.0,
+         "c": 26.0,
+         "f": 11.0,
+         "fib": 0.0,
+         "sug": 7.0,
+         "sod": 440.0
+        }
        },
        {
-        "n": "Cheese Quesadillas",
-        "fs": 119155838
+        "n": "Cheese Quesadilla",
+        "k": {
+         "cal": 355.0,
+         "p": 13.0,
+         "c": 24.0,
+         "f": 23.0,
+         "fib": 1.0,
+         "sug": 1.0,
+         "sod": 644.0
+        }
+       },
+       {
+        "n": "Chicken Quesadilla",
+        "k": {
+         "cal": 449.0,
+         "p": 19.0,
+         "c": 31.0,
+         "f": 28.0,
+         "fib": 1.0,
+         "sug": 2.0,
+         "sod": 788.0
+        }
+       },
+       {
+        "n": "Beef Quesadilla",
+        "k": {
+         "cal": 514.0,
+         "p": 22.0,
+         "c": 42.0,
+         "f": 29.0,
+         "fib": 1.0,
+         "sug": 3.0,
+         "sod": 845.0
+        }
+       },
+       {
+        "n": "BLT Sandwich",
+        "k": {
+         "cal": 392.0,
+         "p": 15.0,
+         "c": 29.0,
+         "f": 25.0,
+         "fib": 0.0,
+         "sug": 5.0,
+         "sod": 1054.0
+        }
        }
       ]
      },
@@ -4043,77 +4418,1149 @@
       "name": "Sides",
       "items": [
        {
-        "n": "Fries (regular)",
-        "fs": 119155933
+        "n": "Regular Fries",
+        "k": {
+         "cal": 347.0,
+         "p": 4.0,
+         "c": 45.0,
+         "f": 17.0,
+         "fib": 4.0,
+         "sug": 0.0,
+         "sod": 687.0
+        }
        },
        {
-        "n": "Fries (large)",
-        "fs": 119155931
+        "n": "Large Fries",
+        "k": {
+         "cal": 694.0,
+         "p": 7.0,
+         "c": 89.0,
+         "f": 34.0,
+         "fib": 9.0,
+         "sug": 1.0,
+         "sod": 1374.0
+        }
        },
        {
-        "n": "Hushpuppies",
-        "fs": 119155925
+        "n": "Cook Out Fries",
+        "k": {
+         "cal": 465.0,
+         "p": 7.0,
+         "c": 49.0,
+         "f": 21.0,
+         "fib": 5.0,
+         "sug": 1.0,
+         "sod": 1335.0
+        }
        },
        {
-        "n": "Onion Rings",
-        "fs": 119155858
+        "n": "Hushpuppies (side)",
+        "k": {
+         "cal": 300.0,
+         "p": 2.0,
+         "c": 47.0,
+         "f": 9.0,
+         "fib": 5.0,
+         "sug": 11.0,
+         "sod": 720.0
+        }
        },
        {
-        "n": "Cheese Curds",
-        "fs": 119155956
+        "n": "Hushpuppies (full order)",
+        "k": {
+         "cal": 600.0,
+         "p": 3.0,
+         "c": 93.0,
+         "f": 18.0,
+         "fib": 9.0,
+         "sug": 21.0,
+         "sod": 1440.0
+        }
        },
        {
-        "n": "Cook Out Rounds",
-        "fs": 119155948
+        "n": "Onion Rings (side)",
+        "k": {
+         "cal": 128.0,
+         "p": 3.0,
+         "c": 28.0,
+         "f": 1.0,
+         "fib": 2.0,
+         "sug": 3.0,
+         "sod": 328.0
+        }
+       },
+       {
+        "n": "Onion Rings (full order)",
+        "k": {
+         "cal": 256.0,
+         "p": 6.0,
+         "c": 56.0,
+         "f": 2.0,
+         "fib": 3.0,
+         "sug": 6.0,
+         "sod": 656.0
+        }
+       },
+       {
+        "n": "Cheese Curds (side)",
+        "k": {
+         "cal": 150.0,
+         "p": 8.0,
+         "c": 7.0,
+         "f": 10.0,
+         "fib": 0.0,
+         "sug": 0.0,
+         "sod": 280.0
+        }
+       },
+       {
+        "n": "Cheese Curds (full order)",
+        "k": {
+         "cal": 299.0,
+         "p": 16.0,
+         "c": 14.0,
+         "f": 19.0,
+         "fib": 0.0,
+         "sug": 1.0,
+         "sod": 560.0
+        }
+       },
+       {
+        "n": "Cook Out Rounds (side)",
+        "k": {
+         "cal": 149.0,
+         "p": 4.0,
+         "c": 15.0,
+         "f": 8.0,
+         "fib": 2.0,
+         "sug": 1.0,
+         "sod": 372.0
+        }
+       },
+       {
+        "n": "Cook Out Rounds (full order)",
+        "k": {
+         "cal": 298.0,
+         "p": 8.0,
+         "c": 30.0,
+         "f": 17.0,
+         "fib": 5.0,
+         "sug": 2.0,
+         "sod": 745.0
+        }
+       },
+       {
+        "n": "Okra",
+        "k": {
+         "cal": 228.0,
+         "p": 3.0,
+         "c": 26.0,
+         "f": 13.0,
+         "fib": 2.0,
+         "sug": 3.0,
+         "sod": 665.0
+        }
        },
        {
         "n": "Side of Chili",
-        "fs": 119155919
+        "k": {
+         "cal": 164.0,
+         "p": 5.0,
+         "c": 4.0,
+         "f": 3.0,
+         "fib": 1.0,
+         "sug": 2.0,
+         "sod": 917.0
+        }
+       },
+       {
+        "n": "Side of Slaw",
+        "k": {
+         "cal": 405.0,
+         "p": 0.0,
+         "c": 30.0,
+         "f": 32.0,
+         "fib": 1.0,
+         "sug": 29.0,
+         "sod": 434.0
+        }
+       },
+       {
+        "n": "Cheese Dog (side)",
+        "k": {
+         "cal": 146.0,
+         "p": 3.0,
+         "c": 25.0,
+         "f": 3.0,
+         "fib": 0.0,
+         "sug": 3.0,
+         "sod": 410.0
+        }
        }
       ]
      },
      {
-      "name": "Milkshakes & Drinks",
+      "name": "Milkshakes",
       "items": [
        {
-        "n": "Oreo Milkshake",
-        "fs": 40355645
-       },
-       {
         "n": "Vanilla Milkshake",
-        "fs": 119156248
-       },
-       {
-        "n": "Strawberry Milkshake",
-        "fs": 119156261
+        "k": {
+         "cal": 555.0,
+         "p": 16.0,
+         "c": 86.0,
+         "f": 18.0,
+         "fib": 0.0,
+         "sug": 83.0,
+         "sod": 469.0
+        }
        },
        {
         "n": "Hershey's Chocolate Milkshake",
-        "fs": 119156254
+        "k": {
+         "cal": 620.0,
+         "p": 16.0,
+         "c": 110.0,
+         "f": 18.0,
+         "fib": 0.0,
+         "sug": 103.0,
+         "sod": 484.0
+        }
        },
        {
-        "n": "Peanut Butter Fudge Milkshake",
-        "fs": 119156305
+        "n": "Strawberry Milkshake",
+        "k": {
+         "cal": 610.0,
+         "p": 15.0,
+         "c": 105.0,
+         "f": 17.0,
+         "fib": 0.0,
+         "sug": 99.0,
+         "sod": 455.0
+        }
        },
        {
-        "n": "Banana Pudding Milkshake",
-        "fs": 119156283
+        "n": "Oreo Milkshake",
+        "k": {
+         "cal": 802.0,
+         "p": 17.0,
+         "c": 125.0,
+         "f": 29.0,
+         "fib": 2.0,
+         "sug": 103.0,
+         "sod": 678.0
+        }
        },
        {
-        "n": "Cherry Cheesecake Milkshake",
-        "fs": 119156411
+        "n": "Oreo Mint Milkshake",
+        "k": {
+         "cal": 853.0,
+         "p": 17.0,
+         "c": 138.0,
+         "f": 29.0,
+         "fib": 2.0,
+         "sug": 115.0,
+         "sod": 678.0
+        }
        },
        {
         "n": "Reese's Cup Milkshake",
-        "fs": 119156390
+        "k": {
+         "cal": 894.0,
+         "p": 24.0,
+         "c": 121.0,
+         "f": 37.0,
+         "fib": 3.0,
+         "sug": 115.0,
+         "sod": 699.0
+        }
+       },
+       {
+        "n": "Banana Pudding Milkshake",
+        "k": {
+         "cal": 781.0,
+         "p": 16.0,
+         "c": 126.0,
+         "f": 26.0,
+         "fib": 2.0,
+         "sug": 99.0,
+         "sod": 611.0
+        }
        },
        {
         "n": "Peach Cobbler Milkshake",
-        "fs": 119156388
+        "k": {
+         "cal": 790.0,
+         "p": 17.0,
+         "c": 127.0,
+         "f": 27.0,
+         "fib": 0.0,
+         "sug": 105.0,
+         "sod": 641.0
+        }
        },
        {
-        "n": "Sweet Tea (large)",
-        "fs": 119156146
+        "n": "Cherry Cobbler Milkshake",
+        "k": {
+         "cal": 842.0,
+         "p": 17.0,
+         "c": 135.0,
+         "f": 27.0,
+         "fib": 2.0,
+         "sug": 115.0,
+         "sod": 656.0
+        }
+       },
+       {
+        "n": "Cherry Cheesecake Milkshake",
+        "k": {
+         "cal": 925.0,
+         "p": 21.0,
+         "c": 119.0,
+         "f": 42.0,
+         "fib": 2.0,
+         "sug": 115.0,
+         "sod": 698.0
+        }
+       },
+       {
+        "n": "Philadelphia Cheesecake Milkshake",
+        "k": {
+         "cal": 845.0,
+         "p": 21.0,
+         "c": 101.0,
+         "f": 42.0,
+         "fib": 0.0,
+         "sug": 97.0,
+         "sod": 681.0
+        }
+       },
+       {
+        "n": "Peanut Butter Fudge Milkshake",
+        "k": {
+         "cal": 765.0,
+         "p": 21.0,
+         "c": 101.0,
+         "f": 34.0,
+         "fib": 2.0,
+         "sug": 91.0,
+         "sod": 569.0
+        }
+       },
+       {
+        "n": "Fresh Peanut Butter Milkshake",
+        "k": {
+         "cal": 847.0,
+         "p": 27.0,
+         "c": 91.0,
+         "f": 45.0,
+         "fib": 3.0,
+         "sug": 83.0,
+         "sod": 698.0
+        }
+       },
+       {
+        "n": "Peanut Butter Banana Milkshake",
+        "k": {
+         "cal": 864.0,
+         "p": 27.0,
+         "c": 99.0,
+         "f": 43.0,
+         "fib": 5.0,
+         "sug": 85.0,
+         "sod": 669.0
+        }
+       },
+       {
+        "n": "Chocolate Chip Milkshake",
+        "k": {
+         "cal": 783.0,
+         "p": 18.0,
+         "c": 107.0,
+         "f": 32.0,
+         "fib": 4.0,
+         "sug": 103.0,
+         "sod": 472.0
+        }
+       },
+       {
+        "n": "Chocolate Chip Mint Milkshake",
+        "k": {
+         "cal": 834.0,
+         "p": 18.0,
+         "c": 120.0,
+         "f": 32.0,
+         "fib": 4.0,
+         "sug": 115.0,
+         "sod": 472.0
+        }
+       },
+       {
+        "n": "M&M Milkshake",
+        "k": {
+         "cal": 755.0,
+         "p": 17.0,
+         "c": 114.0,
+         "f": 27.0,
+         "fib": 2.0,
+         "sug": 107.0,
+         "sod": 469.0
+        }
+       },
+       {
+        "n": "Snickers Milkshake",
+        "k": {
+         "cal": 720.0,
+         "p": 19.0,
+         "c": 107.0,
+         "f": 27.0,
+         "fib": 0.0,
+         "sug": 100.0,
+         "sod": 540.0
+        }
+       },
+       {
+        "n": "Heath Toffee Milkshake",
+        "k": {
+         "cal": 701.0,
+         "p": 15.0,
+         "c": 101.0,
+         "f": 28.0,
+         "fib": 0.0,
+         "sug": 98.0,
+         "sod": 565.0
+        }
+       },
+       {
+        "n": "Nilla Wafers Milkshake",
+        "k": {
+         "cal": 763.0,
+         "p": 17.0,
+         "c": 117.0,
+         "f": 27.0,
+         "fib": 0.0,
+         "sug": 97.0,
+         "sod": 639.0
+        }
+       },
+       {
+        "n": "Double Chocolate Milkshake",
+        "k": {
+         "cal": 651.0,
+         "p": 15.0,
+         "c": 129.0,
+         "f": 17.0,
+         "fib": 0.0,
+         "sug": 118.0,
+         "sod": 470.0
+        }
+       },
+       {
+        "n": "Fudge Milkshake",
+        "k": {
+         "cal": 754.0,
+         "p": 17.0,
+         "c": 122.0,
+         "f": 25.0,
+         "fib": 0.0,
+         "sug": 109.0,
+         "sod": 498.0
+        }
+       },
+       {
+        "n": "Caramel Milkshake",
+        "k": {
+         "cal": 560.0,
+         "p": 15.0,
+         "c": 91.0,
+         "f": 17.0,
+         "fib": 0.0,
+         "sug": 87.0,
+         "sod": 480.0
+        }
+       },
+       {
+        "n": "Caramel Fudge Milkshake",
+        "k": {
+         "cal": 677.0,
+         "p": 16.0,
+         "c": 111.0,
+         "f": 21.0,
+         "fib": 0.0,
+         "sug": 102.0,
+         "sod": 509.0
+        }
+       },
+       {
+        "n": "Chocolate Malt Milkshake",
+        "k": {
+         "cal": 671.0,
+         "p": 17.0,
+         "c": 119.0,
+         "f": 19.0,
+         "fib": 0.0,
+         "sug": 109.0,
+         "sod": 541.0
+        }
+       },
+       {
+        "n": "Malted Milk Milkshake",
+        "k": {
+         "cal": 606.0,
+         "p": 17.0,
+         "c": 95.0,
+         "f": 19.0,
+         "fib": 0.0,
+         "sug": 89.0,
+         "sod": 526.0
+        }
+       },
+       {
+        "n": "Mocha Milkshake",
+        "k": {
+         "cal": 620.0,
+         "p": 16.0,
+         "c": 110.0,
+         "f": 18.0,
+         "fib": 0.0,
+         "sug": 103.0,
+         "sod": 484.0
+        }
+       },
+       {
+        "n": "Cappuccino Milkshake",
+        "k": {
+         "cal": 555.0,
+         "p": 16.0,
+         "c": 86.0,
+         "f": 18.0,
+         "fib": 0.0,
+         "sug": 83.0,
+         "sod": 469.0
+        }
+       },
+       {
+        "n": "Mint Milkshake",
+        "k": {
+         "cal": 605.0,
+         "p": 16.0,
+         "c": 99.0,
+         "f": 18.0,
+         "fib": 0.0,
+         "sug": 96.0,
+         "sod": 469.0
+        }
+       },
+       {
+        "n": "Fresh Banana Milkshake",
+        "k": {
+         "cal": 538.0,
+         "p": 15.0,
+         "c": 89.0,
+         "f": 16.0,
+         "fib": 2.0,
+         "sug": 80.0,
+         "sod": 412.0
+        }
+       },
+       {
+        "n": "Banana Berry Milkshake",
+        "k": {
+         "cal": 671.0,
+         "p": 15.0,
+         "c": 123.0,
+         "f": 16.0,
+         "fib": 3.0,
+         "sug": 111.0,
+         "sod": 440.0
+        }
+       },
+       {
+        "n": "Banana Nut Milkshake",
+        "k": {
+         "cal": 704.0,
+         "p": 15.0,
+         "c": 103.0,
+         "f": 27.0,
+         "fib": 3.0,
+         "sug": 92.0,
+         "sod": 412.0
+        }
+       },
+       {
+        "n": "Banana Fudge Milkshake",
+        "k": {
+         "cal": 772.0,
+         "p": 17.0,
+         "c": 130.0,
+         "f": 24.0,
+         "fib": 2.0,
+         "sug": 111.0,
+         "sod": 470.0
+        }
+       },
+       {
+        "n": "Banana Pineapple Milkshake",
+        "k": {
+         "cal": 566.0,
+         "p": 15.0,
+         "c": 96.0,
+         "f": 16.0,
+         "fib": 2.0,
+         "sug": 86.0,
+         "sod": 412.0
+        }
+       },
+       {
+        "n": "Blueberry Milkshake",
+        "k": {
+         "cal": 617.0,
+         "p": 15.0,
+         "c": 107.0,
+         "f": 17.0,
+         "fib": 0.0,
+         "sug": 101.0,
+         "sod": 464.0
+        }
+       },
+       {
+        "n": "Red Cherry Milkshake",
+        "k": {
+         "cal": 600.0,
+         "p": 15.0,
+         "c": 99.0,
+         "f": 17.0,
+         "fib": 2.0,
+         "sug": 96.0,
+         "sod": 457.0
+        }
+       },
+       {
+        "n": "Chocolate Cherry Milkshake",
+        "k": {
+         "cal": 665.0,
+         "p": 15.0,
+         "c": 123.0,
+         "f": 17.0,
+         "fib": 2.0,
+         "sug": 116.0,
+         "sod": 472.0
+        }
+       },
+       {
+        "n": "Chocolate Nut Milkshake",
+        "k": {
+         "cal": 752.0,
+         "p": 15.0,
+         "c": 119.0,
+         "f": 28.0,
+         "fib": 2.0,
+         "sug": 110.0,
+         "sod": 455.0
+        }
+       },
+       {
+        "n": "Walnut Milkshake",
+        "k": {
+         "cal": 853.0,
+         "p": 15.0,
+         "c": 109.0,
+         "f": 40.0,
+         "fib": 4.0,
+         "sug": 103.0,
+         "sod": 440.0
+        }
+       },
+       {
+        "n": "Pineapple Milkshake",
+        "k": {
+         "cal": 575.0,
+         "p": 16.0,
+         "c": 94.0,
+         "f": 17.0,
+         "fib": 1.0,
+         "sug": 91.0,
+         "sod": 440.0
+        }
+       },
+       {
+        "n": "Peach Milkshake",
+        "k": {
+         "cal": 547.0,
+         "p": 15.0,
+         "c": 91.0,
+         "f": 17.0,
+         "fib": 0.0,
+         "sug": 86.0,
+         "sod": 442.0
+        }
+       },
+       {
+        "n": "Orange Push Up Milkshake",
+        "k": {
+         "cal": 638.0,
+         "p": 16.0,
+         "c": 109.0,
+         "f": 18.0,
+         "fib": 0.0,
+         "sug": 106.0,
+         "sod": 469.0
+        }
+       },
+       {
+        "n": "Hi-C Punch Milkshake",
+        "k": {
+         "cal": 598.0,
+         "p": 15.0,
+         "c": 102.0,
+         "f": 17.0,
+         "fib": 0.0,
+         "sug": 99.0,
+         "sod": 447.0
+        }
+       },
+       {
+        "n": "Fresh Watermelon Milkshake",
+        "k": {
+         "cal": 645.0,
+         "p": 15.0,
+         "c": 89.0,
+         "f": 16.0,
+         "fib": 1.0,
+         "sug": 84.0,
+         "sod": 413.0
+        }
+       }
+      ]
+     },
+     {
+      "name": "Drinks",
+      "items": [
+       {
+        "n": "Coca-Cola",
+        "k": {
+         "cal": 140.0,
+         "p": 0.0,
+         "c": 39.0,
+         "f": 0.0,
+         "fib": 0.0,
+         "sug": 39.0,
+         "sod": 0.0
+        },
+        "g": 16,
+        "u": [
+         [
+          "Regular 16 oz",
+          16
+         ],
+         [
+          "Small 12 oz",
+          12
+         ],
+         [
+          "Large 24 oz",
+          24
+         ],
+         [
+          "Huge 32 oz",
+          32
+         ]
+        ]
+       },
+       {
+        "n": "Diet Coke",
+        "k": {
+         "cal": 0.0,
+         "p": 0.0,
+         "c": 0.0,
+         "f": 0.0,
+         "fib": 0.0,
+         "sug": 0.0,
+         "sod": 10.0
+        },
+        "g": 16,
+        "u": [
+         [
+          "Regular 16 oz",
+          16
+         ],
+         [
+          "Small 12 oz",
+          12
+         ],
+         [
+          "Large 24 oz",
+          24
+         ],
+         [
+          "Huge 32 oz",
+          32
+         ]
+        ]
+       },
+       {
+        "n": "Coke Zero",
+        "k": {
+         "cal": 0.0,
+         "p": 0.0,
+         "c": 0.0,
+         "f": 0.0,
+         "fib": 0.0,
+         "sug": 0.0,
+         "sod": 8.0
+        },
+        "g": 16,
+        "u": [
+         [
+          "Regular 16 oz",
+          16
+         ],
+         [
+          "Small 12 oz",
+          12
+         ],
+         [
+          "Large 24 oz",
+          24
+         ],
+         [
+          "Huge 32 oz",
+          32
+         ]
+        ]
+       },
+       {
+        "n": "Sprite",
+        "k": {
+         "cal": 139.0,
+         "p": 0.0,
+         "c": 31.0,
+         "f": 0.0,
+         "fib": 0.0,
+         "sug": 31.0,
+         "sod": 31.0
+        },
+        "g": 16,
+        "u": [
+         [
+          "Regular 16 oz",
+          16
+         ],
+         [
+          "Small 12 oz",
+          12
+         ],
+         [
+          "Large 24 oz",
+          24
+         ],
+         [
+          "Huge 32 oz",
+          32
+         ]
+        ]
+       },
+       {
+        "n": "Cheerwine",
+        "k": {
+         "cal": 144.0,
+         "p": 0.0,
+         "c": 40.0,
+         "f": 0.0,
+         "fib": 0.0,
+         "sug": 40.0,
+         "sod": 24.0
+        },
+        "g": 16,
+        "u": [
+         [
+          "Regular 16 oz",
+          16
+         ],
+         [
+          "Small 12 oz",
+          12
+         ],
+         [
+          "Large 24 oz",
+          24
+         ],
+         [
+          "Huge 32 oz",
+          32
+         ]
+        ]
+       },
+       {
+        "n": "Dr Pepper",
+        "k": {
+         "cal": 140.0,
+         "p": 0.0,
+         "c": 37.0,
+         "f": 0.0,
+         "fib": 0.0,
+         "sug": 35.0,
+         "sod": 45.0
+        },
+        "g": 16,
+        "u": [
+         [
+          "Regular 16 oz",
+          16
+         ],
+         [
+          "Small 12 oz",
+          12
+         ],
+         [
+          "Large 24 oz",
+          24
+         ],
+         [
+          "Huge 32 oz",
+          32
+         ]
+        ]
+       },
+       {
+        "n": "Mellow Yellow",
+        "k": {
+         "cal": 144.0,
+         "p": 0.0,
+         "c": 38.0,
+         "f": 0.0,
+         "fib": 0.0,
+         "sug": 38.0,
+         "sod": 16.0
+        },
+        "g": 16,
+        "u": [
+         [
+          "Regular 16 oz",
+          16
+         ],
+         [
+          "Small 12 oz",
+          12
+         ],
+         [
+          "Large 24 oz",
+          24
+         ],
+         [
+          "Huge 32 oz",
+          32
+         ]
+        ]
+       },
+       {
+        "n": "Pibb Xtra",
+        "k": {
+         "cal": 145.0,
+         "p": 0.0,
+         "c": 40.0,
+         "f": 0.0,
+         "fib": 0.0,
+         "sug": 40.0,
+         "sod": 23.0
+        },
+        "g": 16,
+        "u": [
+         [
+          "Regular 16 oz",
+          16
+         ],
+         [
+          "Small 12 oz",
+          12
+         ],
+         [
+          "Large 24 oz",
+          24
+         ],
+         [
+          "Huge 32 oz",
+          32
+         ]
+        ]
+       },
+       {
+        "n": "Fanta Orange",
+        "k": {
+         "cal": 151.0,
+         "p": 0.0,
+         "c": 45.0,
+         "f": 0.0,
+         "fib": 0.0,
+         "sug": 44.0,
+         "sod": 43.0
+        },
+        "g": 16,
+        "u": [
+         [
+          "Regular 16 oz",
+          16
+         ],
+         [
+          "Small 12 oz",
+          12
+         ],
+         [
+          "Large 24 oz",
+          24
+         ],
+         [
+          "Huge 32 oz",
+          32
+         ]
+        ]
+       },
+       {
+        "n": "Hi-C Poppin' Pink Lemonade",
+        "k": {
+         "cal": 140.0,
+         "p": 0.0,
+         "c": 37.0,
+         "f": 0.0,
+         "fib": 0.0,
+         "sug": 37.0,
+         "sod": 65.0
+        },
+        "g": 16,
+        "u": [
+         [
+          "Regular 16 oz",
+          16
+         ],
+         [
+          "Small 12 oz",
+          12
+         ],
+         [
+          "Large 24 oz",
+          24
+         ],
+         [
+          "Huge 32 oz",
+          32
+         ]
+        ]
+       },
+       {
+        "n": "Hi-C Fruit Punch",
+        "k": {
+         "cal": 158.0,
+         "p": 0.0,
+         "c": 45.0,
+         "f": 0.0,
+         "fib": 0.0,
+         "sug": 44.0,
+         "sod": 54.0
+        },
+        "g": 16,
+        "u": [
+         [
+          "Regular 16 oz",
+          16
+         ],
+         [
+          "Small 12 oz",
+          12
+         ],
+         [
+          "Large 24 oz",
+          24
+         ],
+         [
+          "Huge 32 oz",
+          32
+         ]
+        ]
+       },
+       {
+        "n": "Fresh Brewed Sweet Tea",
+        "k": {
+         "cal": 236.0,
+         "p": 0.0,
+         "c": 74.0,
+         "f": 0.0,
+         "fib": 0.0,
+         "sug": 74.0,
+         "sod": 1.0
+        },
+        "g": 16,
+        "u": [
+         [
+          "Regular 16 oz",
+          16
+         ],
+         [
+          "Small 12 oz",
+          12
+         ],
+         [
+          "Large 24 oz",
+          24
+         ],
+         [
+          "Huge 32 oz",
+          32
+         ]
+        ]
+       },
+       {
+        "n": "Powerade Mountain Blast",
+        "k": {
+         "cal": 74.7,
+         "p": 0.0,
+         "c": 20.3,
+         "f": 0.0,
+         "fib": 0.0,
+         "sug": 20.0,
+         "sod": 74.7
+        },
+        "g": 16,
+        "u": [
+         [
+          "Regular 16 oz",
+          16
+         ],
+         [
+          "Small 12 oz",
+          12
+         ],
+         [
+          "Large 24 oz",
+          24
+         ],
+         [
+          "Huge 32 oz",
+          32
+         ]
+        ]
+       },
+       {
+        "n": "Coke Float",
+        "k": {
+         "cal": 399.0,
+         "p": 10.0,
+         "c": 69.0,
+         "f": 11.0,
+         "fib": 0.0,
+         "sug": 67.0,
+         "sod": 293.0
+        }
+       },
+       {
+        "n": "Cheerwine Float",
+        "k": {
+         "cal": 401.0,
+         "p": 10.0,
+         "c": 69.0,
+         "f": 11.0,
+         "fib": 0.0,
+         "sug": 67.0,
+         "sod": 303.0
+        }
        }
       ]
      }
@@ -4123,9 +5570,78 @@
   "n_bm": [
    {
     "name": "Benny Marzano's",
-    "basis": "Benny Marzano's",
-    "soon": true,
-    "sections": []
+    "nsrc": "Benny Marzano’s nutrition info",
+    "sections": [
+     {
+      "name": "Giant slices",
+      "items": [
+       {
+        "n": "Slice of Cheese",
+        "k": {
+         "cal": 675,
+         "p": 30,
+         "c": 62,
+         "f": 30
+        },
+        "note": "640–710 cal depending on the slice",
+        "u": [
+         [
+          "1 slice",
+          100
+         ]
+        ]
+       },
+       {
+        "n": "Slice of Garlic Mushroom",
+        "k": {
+         "cal": 715,
+         "p": 31,
+         "c": 65,
+         "f": 33
+        },
+        "note": "680–750 cal depending on the slice",
+        "u": [
+         [
+          "1 slice",
+          100
+         ]
+        ]
+       },
+       {
+        "n": "Slice of Pepperoni",
+        "k": {
+         "cal": 825,
+         "p": 36,
+         "c": 63,
+         "f": 44
+        },
+        "note": "780–870 cal depending on the slice",
+        "u": [
+         [
+          "1 slice",
+          100
+         ]
+        ]
+       },
+       {
+        "n": "Slice of Italian Sausage",
+        "k": {
+         "cal": 865,
+         "p": 38,
+         "c": 64,
+         "f": 47
+        },
+        "note": "820–910 cal depending on the slice",
+        "u": [
+         [
+          "1 slice",
+          100
+         ]
+        ]
+       }
+      ]
+     }
+    ]
    }
   ]
  }

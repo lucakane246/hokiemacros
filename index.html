@@ -3181,7 +3181,7 @@ function renderPlaceMenu(){
   const head=`${back}<h3 class="vtitle">${esc(p.n)}</h3><p class="xsrc"><span style="color:${st.open?'#5FCB8F':'var(--muted)'}">${esc(st.label)}</span>${w?' · '+esc(w):''} · ${esc(p.addr)} · <button class="nmaplink" style="padding:0" onclick="showPlaceOnMap('${p.id}')">Map</button></p>`;
   if(!r||!r.sections.length){
     $('outBody').innerHTML=head+`<div class="empty card">${esc(p.n)}’s menu and nutrition are coming soon.<span>For now you can log it with your own numbers.</span><button class="logbtn" style="margin:8px auto 0" onclick="openQuickAdd(null,null,'${esc(p.n).replace(/'/g,"\\'")}')">Quick add</button></div>`; return; }
-  $('outBody').innerHTML=head+`<p class="xsrc">Nutrition: ${FS_BADGE.replace('class="fsbadge"','class="fsinline"')}</p>`
+  $('outBody').innerHTML=head+`<p class="xsrc">Nutrition: ${r.sections.some(x=>x.items.some(i=>i.fs))?FS_BADGE.replace('class="fsbadge"','class="fsinline"'):'from '+esc(r.nsrc||r.name)}</p>`
     +r.sections.map((s,si)=>`<div class="station">${esc(s.name)}</div><div class="card list0">${s.items.map((it,ii)=>xRow(it,0,si,ii,p.menu)).join('')}</div>`).join('');
   fillXNutrition();
 }
