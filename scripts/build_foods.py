@@ -193,8 +193,6 @@ def main():
     out = []
     for rec in groups.values():
         info = rec.pop("_info"); rec.pop("_orig", None)
-        if info["grain"] and info["dry"]:
-            rec["n"] += ", dry"           # only a dry version exists - say so, it's ~3x cooked calories
         out.append(rec)
     print(f"{total} USDA foods -> {len(out)} after cleaning names and removing cooking-style duplicates")
     if len(out) < 1000:

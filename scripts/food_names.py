@@ -10,8 +10,9 @@ cooking-style duplicates.
 
 Foods are listed raw/as-bought, without saying "raw". Cooking-style variants
 (boiled, roasted, braised ...) of the same food are dropped. Exceptions:
-  - grains, pasta and dried beans are listed cooked, because that's how they're
-    eaten and measured (1 cup of dry rice has ~3x the calories of 1 cup cooked)
+  - grains, pasta and dried beans are listed dry (the default name) AND cooked
+    ("White rice" and "White rice, cooked"), since cooked weight depends on how much
+    water was absorbed
   - dishes where the method *is* the food stay: scrambled/fried/hard-boiled eggs,
     fried rice, mashed potatoes, french fries ...
 """
@@ -34,7 +35,7 @@ JUNK = _full([
     r"made with .* oil", r"made with butter", r"made with margarine", r"not further specified", r"all types",
     r"all varieties", r"all commercial varieties", r"with refuse", r"usda commodity", r"commodity", r"untrimmed",
     r"denuded", r"steak/roast", r"roast/steak", r"bnls", r"farmed", r"wild", r"raw or unheated", r"uncooked",
-    r"with salt added", r"from raw", r"from pre-cooked", r"from precooked", r"unroasted", r"whole kernel", r"all forms", r"salad or cooking",
+    r"with salt added", r"without added salt", r"with added salt", r"from raw", r"from pre-cooked", r"from precooked", r"unroasted", r"whole kernel", r"all forms", r"salad or cooking",
 ])
 RENAME = [  # part -> nicer wording
     (r"^meat and skin$", "with skin"), (r"^skin eaten$", "with skin"), (r"^separable lean only$", "lean"),
@@ -202,6 +203,8 @@ def clean(name, brand=None):
         disp += ", " + ", ".join(quals[:3])
     disp = re.sub(r"\s+", " ", disp).strip(" ,")
     disp = disp[:1].upper() + disp[1:]
+    if grain and method:
+        disp += ", cooked"        # grains are listed dry by default; the cooked version is its own entry
     return brand, disp, {"method": method, "dry": dry, "grain": grain, "base": hl}
 
 
@@ -210,15 +213,11 @@ def pick_better(a, b):
     def score(r):
         info = r["_info"]
         s = 0
-        if info["grain"]:
-            s += 40 if info["method"] else 0      # cooked rice/pasta/beans
-            s -= 30 if info["dry"] else 0
-        else:
-            s += 0 if info["method"] else 40      # raw / as bought
+        s += 0 if info["method"] else 40          # raw / dry / as bought
         s += {"F": 6, "S": 4, "V": 2}.get(r["src"], 0)
         s -= len(r.get("_orig", "")) / 40
         s += 3 if r["u"] else 0
-        s += 8 if re.search(r"(^|, )raw(,|$)", r.get("_orig", ""), re.I) and not info["grain"] else 0
+        s += 8 if re.search(r"(^|, )(raw|dry|uncooked)(,|$)", r.get("_orig", ""), re.I) else 0
         return s
     return a if score(a) >= score(b) else b
 
