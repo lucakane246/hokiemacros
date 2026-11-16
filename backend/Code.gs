@@ -117,8 +117,33 @@ function doPost(e) {
   } finally { lock.releaseLock(); }
 }
 
-// Approved prices, read by the app's daily data job.
-function doGet() {
+// ---------------- live gym occupancy (VT Rec Sports' public occupancy page) ----------------
+const OCC_URL = 'https://connect.recsports.vt.edu/facilityoccupancy';
+function fetchOccupancy_() {
+  const html = UrlFetchApp.fetch(OCC_URL, { muteHttpExceptions: true, headers: { 'User-Agent': 'HokieMacros (free student app)' } }).getContentText();
+  const out = [], re = /<h2><strong>([^<]+)<\/strong><\/h2>[\s\S]*?data-occupancy="(\d+)"\s+data-remaining="(\d+)"/g;
+  let m; while ((m = re.exec(html))) out.push({ name: m[1].trim(), count: +m[2], max: +m[2] + +m[3] });
+  return { ok: out.length > 0, at: new Date().toISOString(), facilities: out };
+}
+function occupancy_() {
+  const cache = CacheService.getScriptCache(), hit = cache.get('occ');
+  if (hit) return JSON.parse(hit);
+  const o = fetchOccupancy_(); if (o.ok) cache.put('occ', JSON.stringify(o), 90);
+  return o;
+}
+// Every 15 minutes: keep a log so the app can learn each gym's usual busy times.
+function sampleOccupancy() {
+  const o = fetchOccupancy_(); if (!o.ok) return;
+  const sh = sheet_(OCC_LOG) || SpreadsheetApp.getActive().insertSheet(OCC_LOG);
+  if (sh.getLastRow() === 0) sh.appendRow(['Time', 'Facility', 'Count', 'Max']);
+  const now = new Date(); o.facilities.forEach(f => sh.appendRow([now, f.name, f.count, f.max]));
+  CacheService.getScriptCache().put('occ', JSON.stringify(o), 90);
+}
+const OCC_LOG = 'Occupancy log';
+
+// Approved prices (read by the app's daily data job), or live gym occupancy with ?occ=1.
+function doGet(e) {
+  if (e && e.parameter && e.parameter.occ) return json_(occupancy_());
   const a = approvedPrices_(), out = {};
   for (const k in a) out[k] = { p: a[k].p, d: Utilities.formatDate(new Date(a[k].t), 'America/New_York', 'yyyy-MM-dd') };
   return json_({ ok: true, updated: new Date().toISOString(), prices: out });
@@ -159,6 +184,8 @@ function setup() {
   const s1 = ss.getSheetByName('Sheet1'); if (s1 && ss.getSheets().length > 1 && s1.getLastRow() === 0) ss.deleteSheet(s1);
   ScriptApp.getProjectTriggers().forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('dailyDigest').timeBased().everyDays(1).atHour(20).inTimezone('America/New_York').create();
+  ScriptApp.newTrigger('sampleOccupancy').timeBased().everyMinutes(15).create();
+  if (!ss.getSheetByName(OCC_LOG)) ss.insertSheet(OCC_LOG).appendRow(['Time', 'Facility', 'Count', 'Max']);
 }
 
 if (typeof module !== 'undefined') module.exports = { judge, median, RULES };

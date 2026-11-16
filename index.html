@@ -517,6 +517,16 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 .pwalk{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;color:#7fbaff;margin:6px 0 2px}
 .pwalk:empty{display:none}
 .walkbtn{font:inherit;font-size:13px;font-weight:700;color:#7fbaff;padding:0}
+
+/* ---------- gym occupancy ---------- */
+.occ{margin:10px 0 4px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--hair)}
+.occh{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.occh b{font-size:15px;font-weight:750}.occh span{font-size:12.5px;color:var(--muted);font-weight:650}
+.occbar{height:8px;border-radius:99px;background:rgba(255,255,255,.08);margin-top:9px;overflow:hidden}.occbar i{display:block;height:100%;border-radius:99px;transition:width .6s var(--ease)}
+.occ small{display:block;font-size:11px;color:var(--faint);font-weight:600;margin-top:7px}
+.occ.lo b{color:var(--green)}.occ.lo .occbar i{background:var(--green)}
+.occ.mid b{color:var(--orange-hi)}.occ.mid .occbar i{background:var(--orange)}
+.occ.hi b,.occ.max b{color:var(--fat)}.occ.hi .occbar i,.occ.max .occbar i{background:var(--fat)}
+.occc{font-weight:700}.occc.lo{color:var(--green)}.occc.mid{color:var(--orange-hi)}.occc.hi,.occc.max{color:var(--fat)}
 </style>
 </head>
 <body>
@@ -652,6 +662,7 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
           <div class="sub" id="popBldg"></div>
           <div class="pstatus" id="popStatus"></div>
           <div class="pwalk" id="popWalk"></div>
+          <div id="popOcc"></div>
           <div class="hrs" id="popHrs"></div>
           <button class="popmenu pressable" id="popMenu">See today's menu<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
         </div>
@@ -1389,7 +1400,7 @@ function actOptions(sel,place){
   const groups=place==='McComas Pool'?ACTIVITIES.filter(g=>g[0]==='Pool'):place?ACTIVITIES.filter(g=>g[0]!=='Outdoors'):ACTIVITIES;
   return groups.map(([g,l])=>`<optgroup label="${g}">${l.map(([n])=>`<option ${n===sel?'selected':''}>${n}</option>`).join('')}</optgroup>`).join('');
 }
-function placeStatus(p){ const t=PLACES[p]&&PLACES[p][1]; if(!t||!DATA) return ''; const st=statusOf(t); return st.known?`<i class="sd ${st.open?'on':''}"></i>${esc(st.open?'Open until '+st.until:st.next)}`:''; }
+function placeStatus(p){ const t=PLACES[p]&&PLACES[p][1]; if(!t||!DATA) return ''; const st=statusOf(t); if(OCC_NAMES[p]&&!occFor(p)) getOcc().then(()=>{const el=$('exPlace'); if(el&&occFor(p)) el.innerHTML=placeStatus(p);}); return st.known?`<i class="sd ${st.open?'on':''}"></i>${esc(st.open?'Open until '+st.until:st.next)}${st.open&&occFor(p)?' · '+occHTML(p,true):''}`:''; }
 function openExercise(date,entryId){
   const d=date||todayISO(), e=entryId?exOf(d).find(x=>x.id===entryId):null;
   let place=e?e.place||'':'' , act=e?e.act:'Weightlifting', min=e?e.min:45, lb=latestWeight()||'';
@@ -1819,6 +1830,33 @@ async function sendPrice(f,p){
   }catch(e){ toast('Couldn’t send. Check your connection and try again'); }
 }
 
+// ================= live gym occupancy (Rec Sports' swipe counts, via the price script) =================
+const OCC_NAMES={'McComas':/^McComas Hall$/i,'War Memorial':/^WMH|War Memorial/i};
+let OCC=null, occAt=0, occBusy=null;
+async function getOcc(){
+  if(!PRICE_API) return null;
+  if(OCC&&Date.now()-occAt<60000) return OCC;
+  if(occBusy) return occBusy;
+  occBusy=fetch(PRICE_API+'?occ=1').then(r=>r.json()).then(o=>{ if(o&&o.ok){OCC=o;occAt=Date.now();} return OCC; }).catch(()=>OCC).finally(()=>occBusy=null);
+  return occBusy;
+}
+function occFor(key){ const re=OCC_NAMES[key]; if(!re||!OCC) return null; return OCC.facilities.find(f=>re.test(f.name))||null; }
+function occWord(p){ return p<.3?'Not busy':p<.6?'Moderately busy':p<.85?'Busy':'Very busy'; }
+function occHTML(key,compact){
+  const f=occFor(key); if(!f||!f.max) return '';
+  const st=statusOf([{key,gym:true}]); if(st.known&&!st.open) return '';
+  const p=f.count/f.max, cls=p<.3?'lo':p<.6?'mid':p<.85?'hi':'max';
+  if(compact) return `<span class="occc ${cls}">${occWord(p)} · ${Math.round(p*100)}% full</span>`;
+  return `<div class="occ ${cls}"><div class="occh"><b>${occWord(p)}</b><span>${f.count} people · ${Math.round(p*100)}% full</span></div><div class="occbar"><i style="width:${Math.max(3,Math.min(100,p*100))}%"></i></div><small>Live from Rec Sports swipe-ins</small></div>`;
+}
+async function updatePopOcc(){
+  const el=$('popOcc'); if(!el) return; el.innerHTML='';
+  const p=spots[popIdx]; if(!p||!p.gym) return;
+  const keys=p.t.map(t=>t.key).filter(k=>OCC_NAMES[k]); if(!keys.length) return;
+  await getOcc(); if(spots[popIdx]!==p) return;
+  el.innerHTML=keys.map(k=>occHTML(k)).join('');
+}
+
 // ---------- Today: dining hall cards ----------
 const HALLCARDS=[
   {k:'15',n:'D2',b:'Dietrick Hall',g:['#8A2447','#3b0f22'],a:'#EE8A3C'},
@@ -1898,7 +1936,7 @@ function openPop(i){
     const rows=sl.length?sl.map(s=>`<div class="hl"><span>${esc(units.length>1?s.unit.replace(/^.*?\s{2,}/,''):(s.label&&!/regular/i.test(s.label)?s.label:''))}</span><b>${fmtT(s.open)} – ${fmtT(s.close)}${(()=>{const pr=doorPrice(t.key,s.label,date);return pr!=null?`<em class="hp">${money(pr)}</em>`:''})()}</b></div>`).join(''):`<div class="hl"><span></span><b class="muted">Closed today</b></div>`;
     return `<div class="hv"><div class="hn">${esc(name)}</div>${rows}</div>`}).join('');
   const menuBtn=$('popMenu'); menuBtn.style.display=p.gym?'none':'flex'; menuBtn.onclick=()=>{closePop();openHall(p.t[0].key)};
-  $('pop').classList.add('show'); updatePopWalk(); if(drawRoute()) requestAnimationFrame(fitRoute);
+  $('pop').classList.add('show'); updatePopWalk(); updatePopOcc(); if(drawRoute()) requestAnimationFrame(fitRoute);
 }
 function closePop(){popIdx=-1;$('pop').classList.remove('show');drawRoute();pinsEl.querySelectorAll('.pin').forEach(b=>b.classList.remove('sel'))}
 
