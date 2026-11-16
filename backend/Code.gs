@@ -22,7 +22,10 @@ const RULES = {
   maxPending: 150,         // stop queueing when this many are waiting for you
 };
 const HALLS = { '01': "Ducky's", '06': 'Perry Place', '07': 'Xpress Lane', '09': 'Hokie Grill', '14': 'Turner Place',
-  '16': 'West End', '18': 'Squires', '19': 'Viva Market', '71': 'DX', '72': "Deet's Place" };  // D2 and Owens use door prices
+  '16': 'West End', '18': 'Squires', '19': 'Viva Market', '71': 'DX', '72': "Deet's Place", '15': 'D2', '39': 'Owens Food Court' };
+// D2 and Owens are all you care to eat: only their door prices are taken, never single items.
+const AYCE = { '15': true, '39': true };
+const DOOR = { min: 5, max: 40 };
 
 // Decide what to do with one submission. Pure function, so it can be tested outside Google.
 // ctx: { approved: number|null, pending: number[] (other people's pending prices for this item),
@@ -35,10 +38,17 @@ function judge(sub, ctx) {
     return { status: 'denied', reason: 'Bad item name' };
   if (!/^[0-9a-f-]{8,40}$/i.test(String(sub.device || ''))) return { status: 'denied', reason: 'No device id' };
   if (!isFinite(p) || Math.round(p * 100) !== Math.round(p * 1000) / 10) return { status: 'denied', reason: 'Not a price' };
-  if (p > RULES.maxPrice) return { status: 'denied', reason: `Over $${RULES.maxPrice}` };
-  const cal = Number(sub.cal) || 0;
-  const floor = cal >= 400 ? RULES.minEntree : cal >= 200 ? RULES.minMedium : RULES.minPrice;
-  if (p < floor) return { status: 'denied', reason: `Under $${floor.toFixed(2)} for a ${cal || '?'} cal item` };
+  const door = /^door-(breakfast|lunch|dinner|brunch)$/.test(sub.id);
+  if (AYCE[sub.hall] && !door) return { status: 'denied', reason: 'Item price at an all-you-care-to-eat hall' };
+  if (!AYCE[sub.hall] && door) return { status: 'denied', reason: 'Door price for a hall without one' };
+  if (door) {
+    if (p < DOOR.min || p > DOOR.max) return { status: 'denied', reason: `Door price outside $${DOOR.min}–$${DOOR.max}` };
+  } else {
+    if (p > RULES.maxPrice) return { status: 'denied', reason: `Over $${RULES.maxPrice}` };
+    const cal = Number(sub.cal) || 0;
+    const floor = cal >= 400 ? RULES.minEntree : cal >= 200 ? RULES.minMedium : RULES.minPrice;
+    if (p < floor) return { status: 'denied', reason: `Under $${floor.toFixed(2)} for a ${cal || '?'} cal item` };
+  }
   if (ctx.deviceToday >= RULES.perDevicePerDay) return { status: 'denied', reason: 'Too many from one phone today' };
   if (ctx.approved) {
     if (Math.abs(p - ctx.approved) <= RULES.sameAsApproved) return { status: 'confirmed', reason: 'Matches approved price' };

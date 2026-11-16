@@ -488,6 +488,8 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 .dsrow::-webkit-scrollbar{display:none}
 .dsrow div{padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--hair);transition:all .3s}
 .dsrow span{display:block;font-size:11.5px;color:var(--muted);font-weight:650;white-space:nowrap}.dsrow b{display:block;font-size:16px;font-weight:800;margin-top:1px}
+.dsrow small{display:block;font-size:10.5px;color:var(--faint);font-weight:650;margin-top:1px}
+.dsreport{display:block;margin:12px auto 0;font:inherit;font-size:12.5px;font-weight:700;color:var(--muted)}
 .dsrow div.on{background:rgba(238,138,60,.14);border-color:rgba(238,138,60,.35)}.dsrow div.on b{color:var(--orange-hi)}
 .hp{font-style:normal;font-weight:700;color:var(--orange-hi);margin-left:8px}
 
@@ -913,7 +915,16 @@ async function loadData(){
 // Fallback copy of dining.vt.edu's tables (checked Nov 16, 2026); the daily data job refreshes them.
 const DOOR_FALLBACK={'15':[{meal:'Breakfast',price:13},{meal:'Lunch',price:17.95},{meal:'Dinner',price:17.95},{meal:'Saturday and Sunday Brunch',price:17.95}],
                      '39':[{meal:'Lunch',price:17.95},{meal:'Dinner',price:17.95}]};
-const doorRows=n=>(DATA&&DATA.doorPrices&&DATA.doorPrices[n])||DOOR_FALLBACK[n]||null;
+const DOOR_MEALS=[['breakfast','Breakfast'],['lunch','Lunch'],['dinner','Dinner'],['brunch','Weekend brunch']];
+const doorKey=m=>/brunch/i.test(m)?'brunch':(m.toLowerCase().match(/breakfast|lunch|dinner/)||[''])[0];
+// VT's posted door prices, with any student-reported price the moderator approved laid over them
+function doorRows(n){
+  const base=(DATA&&DATA.doorPrices&&DATA.doorPrices[n])||DOOR_FALLBACK[n]; if(!base) return null;
+  const rows=base.map(r=>({...r})), sp=(DATA&&DATA.prices)||{};
+  for(const [k,label] of DOOR_MEALS){ const a=sp[`${n}|door-${k}`]; if(!a) continue;
+    const r=rows.find(x=>doorKey(x.meal)===k); if(r){ r.price=a.p; r.student=a.d; } else rows.push({meal:label,price:a.p,student:a.d}); }
+  return rows.sort((a,b)=>DOOR_MEALS.findIndex(m=>m[0]===doorKey(a.meal))-DOOR_MEALS.findIndex(m=>m[0]===doorKey(b.meal)));
+}
 const money=v=>'$'+v.toFixed(2);
 const doorLabel=m=>/brunch/i.test(m)?'Weekend brunch':m;
 // Price for a meal period by name ("Lunch", "Brunch", "Lunch/Dinner"...)
@@ -928,7 +939,8 @@ function doorStrip(n){
   const cur=((todayMenu(n)[mealIdx]||{}).meal||'').toLowerCase();
   const onIdx=rows.findIndex(r=>cur.includes('brunch')?/brunch/i.test(r.meal):!/brunch/i.test(r.meal)&&cur.includes(r.meal.toLowerCase()));
   return `<div class="doorstrip"><div class="dsh"><b>All you care to eat</b><span>Free with an Unlimited plan swipe. Everyone else pays at the door.</span></div>
-    <div class="dsrow">${rows.map((r,i)=>`<div class="${i===onIdx?'on':''}"><span>${esc(doorLabel(r.meal))}</span><b>${money(r.price)}</b></div>`).join('')}</div></div>`;
+    <div class="dsrow">${rows.map((r,i)=>`<div class="${i===onIdx?'on':''}"><span>${esc(doorLabel(r.meal))}</span><b>${money(r.price)}</b>${r.student?'<small>Student-reported</small>':''}</div>`).join('')}</div>
+    ${PRICE_API?`<button class="dsreport" onclick="openDoorPriceForm('${n}')">Price wrong or missing? Report it</button>`:''}</div>`;
 }
 
 
@@ -1753,6 +1765,21 @@ function openPriceForm(){
       if(p>30) { toast('That’s more than anything at VT Dining costs'); return false; }
       if(pr&&Math.abs(pr.p-p)<.01) { toast('That’s the price already listed'); return false; }
       sendPrice(f,p); }});
+}
+function openDoorPriceForm(n){
+  const rows=doorRows(n)||[]; let meal=doorKey(((todayMenu(n)[mealIdx]||{}).meal)||'')||'lunch';
+  const cur=k=>{const r=rows.find(x=>doorKey(x.meal)===k); return r?r.price:null};
+  openForm({title:'Door price',sub:VENUE[n]||'',saveLabel:'Send for review',
+    body:`<div class="field"><span>Meal</span><div class="mchips gpills" id="dpMeal">${DOOR_MEALS.map(([k,l])=>`<button class="mchip ${k===meal?'on':''}" onclick="dpMeal('${k}')">${l}</button>`).join('')}</div></div>
+      <label class="field"><span>Price at the door</span><div class="moneyin"><i>$</i>${numIn('prIn',cur(meal)!=null?cur(meal).toFixed(2):'','0.00')}</div></label>
+      <p class="fnote">A student moderator checks every price before it shows in the app. Prices that look wrong are turned down automatically.</p>`,
+    onSave:()=>{
+      const raw=String($('prIn').value).replace(/[$\s]/g,''), p=parseFloat(raw);
+      if(!/^\d{1,2}(\.\d{1,2})?$/.test(raw)||!(p>0)) { toast('Enter a price like 17.95'); return false; }
+      if(cur(meal)!=null&&Math.abs(cur(meal)-p)<.01) { toast('That’s the price already listed'); return false; }
+      const label=DOOR_MEALS.find(m=>m[0]===meal)[1];
+      sendPrice({hall:n,id:'door-'+meal,n:`${VENUE[n]} door price, ${label}`,k:{}},p); }});
+  window.dpMeal=k=>{ meal=k; document.querySelectorAll('#dpMeal .mchip').forEach((b,i)=>b.classList.toggle('on',DOOR_MEALS[i][0]===k)); $('prIn').value=cur(k)!=null?cur(k).toFixed(2):''; };
 }
 async function sendPrice(f,p){
   const k=`${f.hall}|${f.id}`;
