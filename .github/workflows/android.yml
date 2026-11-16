@@ -32,6 +32,8 @@ jobs:
           M=android/app/src/main/AndroidManifest.xml
           sed -i 's#<uses-permission android:name="android.permission.INTERNET" />#<uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />#' $M
           grep -c ACCESS_FINE_LOCATION $M
+      - name: Health Connect (steps)
+        run: python3 ../scripts/android_health.py
       - name: Version and signing
         env:
           KS_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
