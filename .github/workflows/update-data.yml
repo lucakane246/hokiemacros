@@ -7,7 +7,7 @@ on:
   workflow_dispatch:         # "Run workflow" button on the Actions tab
   push:
     paths:
-      - "scripts/**"
+      - "scripts/update_data.py"
       - ".github/workflows/update-data.yml"
 
 permissions:

@@ -799,13 +799,18 @@ function searchFoods(q,tab){
   const out=[];
   for(const f of pool){
     if(!toks.every(t=>hit(f._h,t))) continue;
-    const name=norm(f.n);
+    const name=norm(f.n), q=toks.join(' ');
+    const seg=norm(f.n.split(/[,(;]/)[0]).trim();            // "Bananas, raw" -> "bananas"
     let s=0;
-    if(name.startsWith(' '+toks[0])) s+=40;
-    if(toks.every(t=>hit(name,t))) s+=20;
-    if(/ raw /.test(name)&&!f.r) s+=4;
-    s+=f.vt?14:f.src==='F'?8:f.src==='S'?6:4;
-    s-=f.n.length/6;
+    if(seg===q||seg===q+'s'||seg+'s'===q||seg===q.replace(/s$/,'')+'es') s+=70;   // the food itself
+    else if(seg.startsWith(q)) s+=30;
+    else if(name.startsWith(' '+toks[0])) s+=18;
+    for(const t of toks){ const base=t.replace(/s$/,'');
+      s+= new RegExp(' '+base+'(s|es)? ').test(name)?10:-15; }  // whole words beat "egg" -> "eggplant"
+    s-=Math.max(0,seg.split(' ').length-toks.length)*4;
+    if(/ (raw|nfs|plain|whole|cooked|roasted|grilled|large|medium) /.test(name)) s+=6;
+    s+=f.vt?8:f.r?0:5;
+    s-=f.n.length/10;
     out.push([s,f]);
   }
   return out.sort((a,b)=>b[0]-a[0]).slice(0,80).map(x=>x[1]);
