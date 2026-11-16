@@ -44,7 +44,8 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
   background:radial-gradient(130% 55% at 50% -12%,rgba(138,36,71,.55),rgba(138,36,71,.12) 45%,transparent 70%),var(--bg);
   background-attachment:local;
   opacity:0;pointer-events:none;transform:translate3d(var(--from,24px),0,0) scale(.985);
-  transition:opacity .28s ease,transform .5s var(--ease);will-change:transform,opacity}
+  transition:opacity .16s ease,transform .22s var(--ease)}
+.page:not(.active):not(.leaving){visibility:hidden;content-visibility:hidden}
 .page.active{opacity:1;pointer-events:auto;transform:none;z-index:2}
 /* Home screen app: iOS draws a solid status bar above the page, so fade the page's top into the same color
    instead of starting the maroon glow right under it. */
@@ -55,16 +56,15 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 #v-map{padding:0;overflow:hidden;background:#2a2e56}
 
 /* staggered entrance for blocks on the page that just opened */
-.rise{opacity:0;transform:translateY(14px)}
-.page.enter .rise{animation:rise .62s var(--ease) forwards;animation-delay:calc(var(--i,0) * 55ms + 60ms)}
+.rise{}
 @keyframes rise{to{opacity:1;transform:none}}
 
 /* compact nav bar that fades in once the large title scrolls away */
 .navbar{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:430px;z-index:5;height:calc(var(--safe-t) + 48px);padding-top:var(--safe-t);
   display:flex;align-items:center;justify-content:center;pointer-events:none;
-  background:rgba(17,11,14,.0);border-bottom:1px solid transparent;transition:background .25s,border-color .25s,backdrop-filter .25s}
+  background:rgba(17,11,14,.0);border-bottom:1px solid transparent;transition:background .2s,border-color .2s}
 .navbar span{font-weight:700;font-size:16px;letter-spacing:-.2px;opacity:0;transform:translateY(6px);transition:opacity .25s,transform .35s var(--ease)}
-.navbar.show{background:rgba(17,11,14,.72);backdrop-filter:saturate(160%) blur(22px);-webkit-backdrop-filter:saturate(160%) blur(22px);border-bottom-color:var(--hair)}
+.navbar.show{background:rgba(17,11,14,.97);border-bottom-color:var(--hair)}
 .navbar.show span{opacity:1;transform:none}
 
 /* ---------- type + layout primitives ---------- */
@@ -104,7 +104,7 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 .left-n span{display:block;font-size:12.5px;color:var(--muted);font-weight:600;margin-top:2px}
 .track{height:10px;border-radius:99px;background:rgba(255,255,255,.07);margin-top:16px;overflow:hidden;position:relative}
 .fill{height:100%;border-radius:99px;width:0;overflow:hidden;background:linear-gradient(90deg,var(--orange-deep),var(--orange),var(--orange-hi));transition:width 1.2s var(--ease);position:relative}
-.fill::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:translateX(-100%);animation:sheen 2.6s 1.2s ease-in-out infinite}
+
 @keyframes sheen{60%,100%{transform:translateX(100%)}}
 .cal-stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:16px;padding-top:14px;border-top:1px solid var(--hair)}
 .cal-stats div{display:flex;flex-direction:column;gap:3px}
@@ -180,7 +180,7 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 .menuhead{display:flex;align-items:center;justify-content:space-between;margin:4px 4px 10px}
 .menuhead h2{font-size:21px;font-weight:800;letter-spacing:-.4px}
 .badge{font-size:11.5px;font-weight:750;padding:5px 10px;border-radius:99px;background:rgba(95,203,143,.14);color:var(--green);display:flex;align-items:center;gap:6px}
-.badge i{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(95,203,143,.6);animation:pulse 2s infinite}
+.badge i{width:6px;height:6px;border-radius:50%;background:var(--green);}
 @keyframes pulse{70%{box-shadow:0 0 0 7px rgba(95,203,143,0)}100%{box-shadow:0 0 0 0 rgba(95,203,143,0)}}
 .station{font-size:12px;font-weight:750;letter-spacing:1px;color:var(--faint);text-transform:uppercase;margin:18px 6px 8px}
 .food{display:flex;align-items:center;gap:12px;padding:14px 16px;border-top:1px solid var(--hair)}
@@ -208,7 +208,7 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 
 /* ---------- tab bar ---------- */
 nav{position:fixed;bottom:0;left:0;right:0;margin:0 auto;max-width:430px;z-index:20;height:calc(var(--tabbar) + var(--safe-b));padding:6px 6px var(--safe-b);
-  display:flex;align-items:flex-start;justify-content:space-around;background:rgba(17,11,14,.78);backdrop-filter:saturate(170%) blur(24px);-webkit-backdrop-filter:saturate(170%) blur(24px);border-top:1px solid var(--hair)}
+  display:flex;align-items:flex-start;justify-content:space-around;background:rgba(17,11,14,.97);border-top:1px solid var(--hair)}
 nav .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:4px;font-size:10.5px;font-weight:650;color:var(--faint);transition:color .3s}
 nav .tab svg{width:25px;height:25px;transition:transform .45s var(--spring)}
 nav .tab.on{color:var(--text)}
@@ -260,7 +260,7 @@ body.sheet-open .opt{opacity:1;transform:none;transition-delay:calc(var(--k)*20m
 #attrib{position:absolute;left:12px;bottom:calc(var(--tabbar) + var(--safe-b) + 10px);z-index:2;font-size:10px;color:rgba(255,255,255,.75);text-shadow:0 1px 2px #000}
 #attrib a{color:inherit}
 .pop{position:absolute;left:12px;right:12px;bottom:calc(var(--tabbar) + var(--safe-b) + 12px);z-index:4;padding:18px;border-radius:22px;
-  background:rgba(28,20,24,.88);backdrop-filter:saturate(160%) blur(24px);-webkit-backdrop-filter:saturate(160%) blur(24px);border:1px solid var(--hair-2);box-shadow:0 16px 40px rgba(0,0,0,.5);
+  background:rgba(28,20,24,.98);border:1px solid var(--hair-2);box-shadow:0 16px 40px rgba(0,0,0,.5);
   opacity:0;transform:translateY(24px) scale(.97);pointer-events:none;transition:opacity .3s,transform .5s var(--spring)}
 .pop.show{opacity:1;transform:none;pointer-events:auto}
 .pop .x{position:absolute;right:12px;top:12px;width:30px;height:30px;border-radius:50%;background:var(--surface-3);color:var(--text-2);font-size:18px;line-height:30px}
@@ -595,7 +595,7 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 
 /* ---------- restaurants in a hall ---------- */
 .vgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.vcard{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;padding:14px;border-radius:18px;background:var(--surface);border:1px solid var(--hair);color:inherit;font:inherit;min-width:0;animation:rise .45s var(--ease) both}
+.vcard{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;padding:14px;border-radius:18px;background:var(--surface);border:1px solid var(--hair);color:inherit;font:inherit;min-width:0;animation:none}
 .vcard i{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:16px;color:var(--vc);background:color-mix(in srgb,var(--vc) 16%,transparent);margin-bottom:7px}
 .vcard b{font-size:15px;font-weight:750;line-height:1.25;overflow-wrap:anywhere}
 .vcard span{font-size:12.5px;color:var(--muted);font-weight:600}
@@ -930,16 +930,11 @@ let cur='today';
 const $=id=>document.getElementById(id);
 const navbar=$('navbar'), navTitle=$('navTitle');
 
-function countUp(root){
-  root.querySelectorAll('[data-count]').forEach(el=>{
-    const to=+el.dataset.count, t0=performance.now(), d=1100;
-    const step=t=>{const p=Math.min(1,(t-t0)/d), e=1-Math.pow(1-p,4); el.textContent=Math.round(to*e).toLocaleString(); if(p<1) requestAnimationFrame(step)};
-    requestAnimationFrame(step);
-  });
-  root.querySelectorAll('.fill[data-w]').forEach(f=>{f.style.transition='none';f.style.width='0';f.offsetWidth;f.style.transition='';setTimeout(()=>f.style.width=f.dataset.w+'%',120)});
+function countUp(root){   // numbers and bars show their real values right away
+  root.querySelectorAll('[data-count]').forEach(el=>{ el.textContent=(+el.dataset.count).toLocaleString(); });
+  root.querySelectorAll('.fill[data-w]').forEach(f=>{ f.style.width=f.dataset.w+'%'; });
 }
 function enter(page){
-  page.classList.remove('enter'); void page.offsetWidth; page.classList.add('enter');
   countUp(page);
   if(page.id==='v-today'){ animateWeek(); setMacros(); }
 }
@@ -950,7 +945,7 @@ function go(v){
   from.style.setProperty('--to',(-28*dir)+'px'); to.style.setProperty('--from',(28*dir)+'px');
   from.classList.add('leaving'); from.classList.remove('active');
   to.classList.remove('leaving'); to.classList.add('active');
-  setTimeout(()=>from.classList.remove('leaving','enter'),520);
+  setTimeout(()=>from.classList.remove('leaving','enter'),240);
   cur=v;
   document.querySelectorAll('nav .tab').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
   navTitle.textContent=to.dataset.title||''; syncNavbar();
@@ -962,7 +957,7 @@ function syncNavbar(){ const p=$('v-'+cur); navbar.classList.toggle('show',cur!=
 document.querySelectorAll('.page').forEach(p=>p.addEventListener('scroll',()=>{if(p.id==='v-'+cur) syncNavbar()},{passive:true}));
 
 // ---------- Today ----------
-function animateWeek(){ const C=2*Math.PI*14; document.querySelectorAll('#week .fgc').forEach((c,i)=>{ c.style.transition='none'; c.style.strokeDashoffset=C; c.getBoundingClientRect(); c.style.transition=''; setTimeout(()=>c.style.strokeDashoffset=C*(1-c.dataset.p),150+i*60)}); }
+function animateWeek(){ const C=2*Math.PI*14; document.querySelectorAll('#week .fgc').forEach(c=>{ c.style.strokeDashoffset=C*(1-c.dataset.p); }); }
 
 const MAC=[{k:'Carbs',c:'var(--carb)',g:0,goal:275},{k:'Fat',c:'var(--fat)',g:0,goal:73},{k:'Protein',c:'var(--protein)',g:0,goal:110}];
 let macPct=false;
@@ -973,7 +968,7 @@ function setMacros(){
       <div class="v">${macPct?pct+'<small>%</small>':Math.round(m.g)+'<small>/ '+Math.round(m.goal)+'g</small>'}</div></div>`}).join('');
   const bars=$('stack').children;
   const any=MAC.some(m=>m.g>0);
-  MAC.forEach((m,i)=>{bars[i].style.flexGrow=0.001; bars[i].style.opacity=any?1:.18; setTimeout(()=>bars[i].style.flexGrow=any?(macPct?m.g*(m.k==='Fat'?9:4):Math.min(1.5,m.g/m.goal)):1,80)});
+  MAC.forEach((m,i)=>{bars[i].style.opacity=any?1:.18; bars[i].style.flexGrow=any?(macPct?m.g*(m.k==='Fat'?9:4):Math.min(1.5,m.g/m.goal)):1;});
 }
 function swapMacros(){ macPct=!macPct; $('swapBtn').classList.toggle('flip',macPct);
   const el=$('macros'); el.animate([{opacity:1,transform:'none'},{opacity:0,transform:'translateY(-6px)'}],{duration:140,easing:'ease-in'}).onfinish=()=>{setMacros(); el.animate([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:320,easing:'cubic-bezier(.22,.9,.24,1)'})}; }
@@ -1048,7 +1043,8 @@ async function loadData(){
     DATA=await r.json(); LIVE=true;
   }catch(e){ DATA=sampleData(); LIVE=false; }
   try{ const v=await fetch('data/venues.json',{cache:'no-cache'}); if(v.ok) VENUES=await v.json(); }catch(e){}
-  setTimeout(()=>{ try{ fsWarm(); }catch(e){} },1500);
+  // get everything a tap might need ready in the background, so taps never wait
+  setTimeout(()=>{ try{ fsWarm(); prefetchVenueNutrition(); loadFoods(); }catch(e){} },1200);
   onData();
 }
 
@@ -1295,7 +1291,7 @@ function renderMenu(){
       if(g&&g.x!=null){ const r=xr[g.x];
         m.innerHTML=(cards.length>1?`<button class="vback pressable" onclick="venueBack()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>All restaurants</button>`:'')
           +`<h3 class="vtitle">${esc(r.name)}</h3><p class="xsrc">${r.nsrc?`${r.basis?'VT prices coming soon. ':''}Nutrition from ${esc(r.nsrc)}.${r.sections.some(x=>x.items.some(i=>i.fs))?` Some items: ${FS_BADGE.replace('class="fsbadge"','class="fsinline"')}`:''}`:r.sections.some(x=>x.items.some(i=>i.fs))?`${r.basis?`Based on ${esc(r.basis)}. VT prices coming soon.`:`Prices from ${esc(r.source||"the restaurant")}.`} Nutrition: ${FS_BADGE.replace('class="fsbadge"','class="fsinline"')}`:r.basis?`Based on ${esc(r.basis)}. VT prices and nutrition coming soon.`:`Prices from ${esc(r.source||"the restaurant")}. Nutrition coming soon.`}</p>`
-          +r.sections.map((s,si)=>`<div class="station">${esc(s.name)}</div><div class="card list0" style="animation:rise .5s var(--ease) both;animation-delay:${Math.min(si,6)*50}ms;opacity:0">${s.items.map((it,ii)=>xRow(it,g.x,si,ii)).join('')}</div>`).join('');
+          +r.sections.map((s,si)=>`<div class="station">${esc(s.name)}</div><div class="card list0">${s.items.map((it,ii)=>xRow(it,g.x,si,ii)).join('')}</div>`).join('');
         fillXNutrition();
         return; }
       if(!g){ venuePick=null; m.innerHTML=`<div class="station">${label==='restaurants'?'Restaurants':'Stations'}</div>`+venueGrid(cards); return; }
@@ -1307,7 +1303,7 @@ function renderMenu(){
   else if(prefsActive()) sections.forEach(s=>s.items.forEach(id=>{const x=DATA.items[id]; if(x&&conflicts(x.t,x.a).length) hidden++;}));
   const foot=hidden?`<button class="hiddenln" onclick="toggleHidden()">${showHidden?`Hide the ${hidden} item${hidden>1?'s':''} that don’t match your filters`:`${hidden} item${hidden>1?'s':''} hidden by your filters · Show`}</button>`:'';
   if(!sections.length){ m.innerHTML=head+`<div class="empty card">Nothing here matches your filters.<span>${esc(prefsSummary())}</span></div>`+foot; return; }
-  m.innerHTML=head+sections.map((s,si)=>`${s.name?`<div class="station">${esc(s.name)}</div>`:''}<div class="card list0" style="animation:rise .5s var(--ease) both;animation-delay:${Math.min(si,6)*50}ms;opacity:0">${s.items.map(foodRow).join('')}</div>`).join('')+foot;
+  m.innerHTML=head+sections.map((s,si)=>`${s.name?`<div class="station">${esc(s.name)}</div>`:''}<div class="card list0">${s.items.map(foodRow).join('')}</div>`).join('')+foot;
 }
 function addFood(btn){ btn.classList.add('done'); btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'; toast('Food logging is coming soon'); }
 document.querySelector('#v-dining .search input').addEventListener('input',e=>{query=e.target.value;renderMenu()});
@@ -1503,9 +1499,12 @@ function fsToFood(x){
   return {id:'fs'+x.id,fsid:x.id,n:x.n,b:x.b,k,u,nog,r:x.t==='Brand'?1:0,src:'F'};
 }
 function openFsFood(x){
-  fsGet(`fs=food&id=${encodeURIComponent(x.fsid)}`).then(j=>{
-    const f=j&&j.ok&&j.food&&fsToFood(j.food); showDetail(f||{...x,fsBrief:0});
-  }).catch(()=>showDetail({...x,fsBrief:0}));
+  const cached=fsCached('f:'+x.fsid);
+  if(cached){ const f=fsToFood(cached); return showDetail(f||{...x,fsBrief:0}); }
+  showDetail({...x,fsBrief:0});                       // open instantly with the search result's serving
+  fsFood(x.fsid).then(full=>{ const f=full&&fsToFood(full);
+    if(f&&detail&&detail.f&&detail.f.fsid===x.fsid&&document.body.classList.contains('detail-open')&&!detail.entry){
+      const qty=detail.qty; showDetail(f); if(qty!==1){ setQty(qty); } } });
 }
 
 // ---------- food detail ----------
@@ -1741,7 +1740,8 @@ function wireSwipes(){
 function closeOtherSwipes(keep){ document.querySelectorAll('#meals .swipe.open').forEach(r=>{ if(r!==keep){ r.classList.remove('open'); r.querySelector('.fg').style.transform=''; } }); }
 function swipeDelete(id,btn){ const row=btn.closest('.swipe'); row.style.height=row.offsetHeight+'px'; row.offsetHeight; row.classList.add('gone'); setTimeout(()=>deleteEntry(id),260); }
 
-function refreshLog(){ renderToday(); renderDiary(); renderRec(); if(document.body.classList.contains('prog-open')) renderProgress(); }
+let rlT=0;
+function refreshLog(){ renderToday(); clearTimeout(rlT); rlT=setTimeout(()=>{ renderDiary(); renderRec(); if(document.body.classList.contains('prog-open')) renderProgress(); },30); }
 
 // ================= exercise, weight, steps, water, quick add =================
 STORE.weights=STORE.weights||[]; STORE.profile=STORE.profile||{};
@@ -1770,7 +1770,7 @@ function openForm(cfg){
   $('fSave').textContent=cfg.saveLabel||'Save'; $('fDel').style.display=cfg.onDelete?'grid':'none';
   $('fFoot').classList.toggle('editing',!!cfg.onDelete);
   document.body.classList.add('form-open'); cfg.onOpen&&cfg.onOpen();
-  const first=$('fBody').querySelector('[autofocus]'); if(first) setTimeout(()=>first.focus(),420);
+  const first=$('fBody').querySelector('[autofocus]'); if(first) setTimeout(()=>first.focus(),260);
 }
 function closeForm(){ document.body.classList.remove('form-open'); formCfg=null; document.activeElement&&document.activeElement.blur(); }
 function formSave(){ if(formCfg&&formCfg.onSave()!==false) closeForm(); }
