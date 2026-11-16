@@ -569,6 +569,15 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 .setlist .row{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;text-align:left;padding:13px 16px;cursor:pointer;font:inherit;color:inherit}
 .setlist .row span{font-weight:700;font-size:15px}.setlist .row small{font-size:12.5px;color:var(--muted);font-weight:600}
 .setlist .row.danger span{color:var(--fat)}
+
+/* ---------- restaurants in a hall ---------- */
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.vcard{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;padding:14px;border-radius:18px;background:var(--surface);border:1px solid var(--hair);color:inherit;font:inherit;min-width:0;animation:rise .45s var(--ease) both}
+.vcard i{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:16px;color:var(--vc);background:color-mix(in srgb,var(--vc) 16%,transparent);margin-bottom:7px}
+.vcard b{font-size:15px;font-weight:750;line-height:1.25;overflow-wrap:anywhere}
+.vcard span{font-size:12.5px;color:var(--muted);font-weight:600}
+.vback{display:inline-flex;align-items:center;gap:4px;font:inherit;font-size:13.5px;font-weight:700;color:var(--orange-hi);padding:4px 0}
+.vtitle{font-size:22px;font-weight:800;letter-spacing:-.4px;margin:4px 0 6px}
 </style>
 </head>
 <body>
@@ -1022,6 +1031,39 @@ function doorStrip(n){
 }
 
 
+// ================= restaurants inside a dining hall =================
+// FoodPro lists stations ("Firegrill Southern Comfort", "Dolci e Caffe: Daily Crepe"...). Sections that start
+// with the same words belong to the same restaurant, so they're grouped under that name.
+const VENUE_NAMES={'Firegrill':'1872 Fire Grill','B37':"Burger '37",'Deets':"Deet's Place",'Corner':'Hokie Corner'};
+let venuePick=null;   // restaurant chosen in the current hall, or null for the list
+const cleanSec=n=>n.replace(/\s*:\s*|\s+[–-]\s+/g,' ').replace(/\s+/g,' ').trim();
+function venueGroups(sections){
+  const has=n=>sections.some(s=>cleanSec(s.name)===n||cleanSec(s.name).startsWith(n+' '));
+  const names=sections.map(s=>{const n=cleanSec(s.name); return n==='Sushi'&&has('Origami Grill')?'Origami Grill Sushi':n}), words=names.map(n=>n.split(' '));
+  // a section joins the restaurant named by the first word(s) it shares with another section
+  const key=words.map((w,i)=>{ for(let len=1;len<=w.length;len++){ const pre=w.slice(0,len).join(' ');
+      if(words.some((o,j)=>j!==i&&o.slice(0,len).join(' ')===pre)) return pre; } return names[i]; });
+  const groups=[], by={};
+  sections.forEach((s,i)=>{ const k=key[i]; if(!by[k]){ by[k]={key:k,members:[],sections:[],count:0}; groups.push(by[k]); } by[k].members.push(i); });
+  for(const g of groups){
+    // the restaurant's name is everything its sections have in common ("Leaf & Ladle", "Dolci e Caffe")
+    let common=words[g.members[0]];
+    for(const i of g.members) { let n=0; while(n<common.length&&n<words[i].length&&common[n]===words[i][n]) n++; common=common.slice(0,n); }
+    const base=g.members.length>1?common.join(' '):names[g.members[0]];
+    g.name=VENUE_NAMES[base]||base;
+    for(const i of g.members){ const rest=g.members.length>1?names[i].slice(base.length).trim():'';
+      g.sections.push({...sections[i],name:rest?rest.charAt(0).toUpperCase()+rest.slice(1):'Main menu'}); g.count+=sections[i].items.length; }
+  }
+  return groups;
+}
+const VCOLORS=['#EE8A3C','#69C3B2','#E26D8F','#F2A95B','#8fb6ff','#5FCB8F','#c99bff','#B4466C'];
+function venueGrid(groups){
+  return `<div class="vgrid">${groups.map((g,i)=>`<button class="vcard pressable" style="--vc:${VCOLORS[i%VCOLORS.length]};animation-delay:${Math.min(i,10)*35}ms" onclick="pickVenue(${JSON.stringify(g.key).replace(/"/g,'&quot;')})">
+    <i>${esc(g.name.replace(/^[^A-Za-z0-9]*/,'').charAt(0))}</i><b>${esc(g.name)}</b><span>${g.count} item${g.count===1?'':'s'}</span></button>`).join('')}</div>`;
+}
+function pickVenue(k){ venuePick=k; renderMenu(); document.querySelector('#v-dining').scrollTo({top:Math.max(0,$('menu').offsetTop-120),behavior:'smooth'}); }
+function venueBack(){ venuePick=null; renderMenu(); }
+
 // ---------- Dining ----------
 let hall='15', mealIdx=0, query='';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1048,7 +1090,7 @@ function renderDining(){
   seg.insertAdjacentHTML('beforeend',meals.map((m,i)=>`<button data-i="${i}" onclick="setPeriod(${i})">${esc(m.meal)}</button>`).join(''));
   setPeriod(Math.min(mealIdx,Math.max(0,meals.length-1)));
 }
-function selectHall(n){ hall=n; mealIdx=pickMealFor(n); renderDining(); }
+function selectHall(n){ if(n!==hall) venuePick=null; hall=n; mealIdx=pickMealFor(n); renderDining(); }
 function setPeriod(i){ mealIdx=i; $('thumb').style.transform=`translateX(${i*100}%)`; document.querySelectorAll('#periods button').forEach(b=>b.classList.toggle('on',+b.dataset.i===i)); renderMenu(); }
 function foodRow(id){
   const x=DATA.items[id]; if(!x) return ''; const bad=conflicts(x.t,x.a);
@@ -1068,12 +1110,21 @@ function renderMenu(){
   let sections=meals[mealIdx]?.sections||[];
   if(q) sections=meals.flatMap(ml=>ml.sections.map(s=>({name:`${ml.meal} · ${s.name}`,items:s.items.filter(id=>(DATA.items[id]?.n||'').toLowerCase().includes(q))}))).filter(s=>s.items.length);
   if(!sections.length){ m.innerHTML=`<div class="empty card">Nothing matches “${esc(query)}”.</div>`; return; }
+  // halls with several restaurants: pick one first (search still covers the whole hall)
+  let head='';
+  if(!q){ const groups=venueGroups(sections);
+    if(groups.length>=2&&groups.filter(g=>g.sections.length>1).length>=2){
+      const g=venuePick&&groups.find(x=>x.key===venuePick);
+      if(!g){ venuePick=null; m.innerHTML=`<div class="station">Restaurants</div>`+venueGrid(groups); return; }
+      sections=g.sections;
+      head=`<button class="vback pressable" onclick="venueBack()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>All restaurants</button><h3 class="vtitle">${esc(g.name)}</h3>`;
+    } }
   let hidden=0;
   if(prefsActive()&&!showHidden) sections=sections.map(s=>{const keep=s.items.filter(id=>{const x=DATA.items[id]; const ok=!x||!conflicts(x.t,x.a).length; if(!ok) hidden++; return ok}); return {...s,items:keep}}).filter(s=>s.items.length);
   else if(prefsActive()) sections.forEach(s=>s.items.forEach(id=>{const x=DATA.items[id]; if(x&&conflicts(x.t,x.a).length) hidden++;}));
   const foot=hidden?`<button class="hiddenln" onclick="toggleHidden()">${showHidden?`Hide the ${hidden} item${hidden>1?'s':''} that don’t match your filters`:`${hidden} item${hidden>1?'s':''} hidden by your filters · Show`}</button>`:'';
-  if(!sections.length){ m.innerHTML=`<div class="empty card">Nothing here matches your filters.<span>${esc(prefsSummary())}</span></div>`+foot; return; }
-  m.innerHTML=sections.map((s,si)=>`<div class="station">${esc(s.name)}</div><div class="card list0" style="animation:rise .5s var(--ease) both;animation-delay:${Math.min(si,6)*50}ms;opacity:0">${s.items.map(foodRow).join('')}</div>`).join('')+foot;
+  if(!sections.length){ m.innerHTML=head+`<div class="empty card">Nothing here matches your filters.<span>${esc(prefsSummary())}</span></div>`+foot; return; }
+  m.innerHTML=head+sections.map((s,si)=>`<div class="station">${esc(s.name)}</div><div class="card list0" style="animation:rise .5s var(--ease) both;animation-delay:${Math.min(si,6)*50}ms;opacity:0">${s.items.map(foodRow).join('')}</div>`).join('')+foot;
 }
 function addFood(btn){ btn.classList.add('done'); btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'; toast('Food logging is coming soon'); }
 document.querySelector('#v-dining .search input').addEventListener('input',e=>{query=e.target.value;renderMenu()});
@@ -2233,6 +2284,11 @@ function locStart(user){
   if(user&&!STORE.locOn){ STORE.locOn=true; saveStore(); toast('Your location stays on your phone'); }
   loadGraph().catch(()=>{});
 }
+function locOff(){
+  locStop(); LOC.xy=null; LOC.dist=null; LOC.prev=null; LOC.lastXY=null; LOC.follow=false;
+  STORE.locOn=false; saveStore(); drawMe(); drawRoute(); if(popIdx>=0) updatePopWalk(); renderHallCards();
+  toast('Location off');
+}
 function locStop(){ if(LOC.watch!=null) navigator.geolocation.clearWatch(LOC.watch); LOC.watch=null; LOC.on=false; $('locBtn').classList.remove('on','follow'); }
 async function onPos(p){
   const first=!LOC.xy; LOC.pos=p.coords; LOC.acc=p.coords.accuracy; LOC.xy=GEO(p.coords.latitude,p.coords.longitude);
@@ -2261,7 +2317,8 @@ function centerOn(x,y,zoomIn){
 }
 function locTap(){
   if(!LOC.on) return locStart(true);
-  if(LOC.off&&LOC.xy) return toast(`You’re ${fmtDist(Math.hypot(LOC.xy[0]-1700,LOC.xy[1]-700)*M_PER_U)} from campus`);
+  if(LOC.follow&&!LOC.off) return locOff();   // tap again while following: turn location off
+  if(LOC.off&&LOC.xy) return locOff();
   LOC.follow=true; $('locBtn').classList.add('follow'); if(LOC.xy) centerOn(LOC.xy[0],LOC.xy[1],false);
 }
 function drawRoute(){
