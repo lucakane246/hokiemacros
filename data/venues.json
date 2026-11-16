@@ -596,19 +596,6 @@
       ]
      },
      {
-      "name": "Build your own bagel sandwiches",
-      "items": [
-       {
-        "n": "Turkey Bagel Sandwich",
-        "price": 7.79
-       },
-       {
-        "n": "Ham Bagel Sandwich",
-        "price": 7.79
-       }
-      ]
-     },
-     {
       "name": "Bagel sandwiches",
       "items": [
        {
