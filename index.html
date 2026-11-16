@@ -1526,13 +1526,15 @@ function calcGoals(pr){
   return {cal,tdee:Math.round(tdee/10)*10,delta,floored,floor,
     c:Math.round(cal*pc/100/4),p:Math.round(cal*pp/100/4),f:Math.round(cal*pf/100/9),pc,pp,pf};
 }
+const gramsCal=g=>Math.round(4*(+g.gp||0)+4*(+g.gc||0)+9*(+g.gf||0));
+const pctOf=(g,cal)=>cal?[Math.round(400*(+g.gc||0)/cal),Math.round(400*(+g.gp||0)/cal),Math.round(900*(+g.gf||0)/cal)]:[0,0,0];
 const profileReady=pr=>pr.age>=13&&pr.age<=100&&pr.weightLb>60&&((pr.ft||0)*12+(pr.inch||0))>=48;
 
 function openGoals(){
   const pr=STORE.profile;
   G={name:pr.name||'',sex:pr.sex||'',age:pr.age||'',ft:pr.ft||'',inch:pr.inch??'',weightLb:latestWeight()||'',
      act:pr.act||1.375,goal:pr.goal||'maintain',rate:pr.rate||1,macros:pr.macros||'balanced',
-     mc:pr.mc||50,mp:pr.mp||20,mf:pr.mf||30,manual:!!pr.manual,manualCal:pr.manualCal||STORE.goals.cal,water:STORE.goals.water};
+     mc:pr.mc||50,mp:pr.mp||20,mf:pr.mf||30,gp:pr.gp??STORE.goals.p,gc:pr.gc??STORE.goals.c,gf:pr.gf??STORE.goals.f,manual:!!pr.manual,manualCal:pr.manualCal||STORE.goals.cal,water:STORE.goals.water};
   renderGoalsForm(); document.body.classList.add('goals-open'); $('goalscreen').scrollTop=0;
 }
 function closeGoals(){ document.body.classList.remove('goals-open'); document.activeElement&&document.activeElement.blur(); }
@@ -1564,14 +1566,15 @@ function renderGoalsForm(){
 
     <div class="station">Macros</div>
     <div class="card gcard">
-      ${pills('macros',[...Object.entries(MACRO_PRESETS).map(([k,v])=>[k,v[0]]),['custom','Custom']],g.macros)}
+      ${pills('macros',[...Object.entries(MACRO_PRESETS).map(([k,v])=>[k,v[0]]),['custom','Custom %'],['grams','Exact grams']],g.macros)}
+      ${g.macros==='grams'?`<div class="qgrid"><label class="field"><span>Protein (g)</span>${numIn('gGp',g.gp,'150','oninput="gNum(\'gp\',this.value)"')}</label><label class="field"><span>Carbs (g)</span>${numIn('gGc',g.gc,'200','oninput="gNum(\'gc\',this.value)"')}</label><label class="field"><span>Fat (g)</span>${numIn('gGf',g.gf,'70','oninput="gNum(\'gf\',this.value)"')}</label></div><div class="gsum" id="gGramSum"></div>`:''}
       ${g.macros==='custom'?`<div class="qgrid"><label class="field"><span>Carbs %</span>${numIn('gMc',g.mc,'50','oninput="gNum(\'mc\',this.value)"')}</label><label class="field"><span>Protein %</span>${numIn('gMp',g.mp,'20','oninput="gNum(\'mp\',this.value)"')}</label><label class="field"><span>Fat %</span>${numIn('gMf',g.mf,'30','oninput="gNum(\'mf\',this.value)"')}</label></div><div class="gsum" id="gSum"></div>`:''}
     </div>
 
     <div class="station">Calories</div>
     <div class="card gcard">
-      <button class="gtoggle ${g.manual?'on':''}" onclick="gSet('manual',${!g.manual})"><div><b>Set my own calorie goal</b><span>For a dietitian’s or coach’s number</span></div><i></i></button>
-      ${g.manual?`<label class="field"><span>Calories per day</span>${numIn('gCal',g.manualCal,'2200','oninput="gNum(\'manualCal\',this.value)"')}</label>`:''}
+      ${g.macros==='grams'?`<p class="fnote" style="margin:0">Set by your exact macros: 4 calories per gram of protein and carbs, 9 per gram of fat. Switch to a preset or Custom % to set calories on their own.</p>`:`<button class="gtoggle ${g.manual?'on':''}" onclick="gSet('manual',${!g.manual})"><div><b>Set my own calorie goal</b><span>Any exact number, like a dietitian’s or coach’s</span></div><i></i></button>`}
+      ${g.macros!=='grams'&&g.manual?`<label class="field"><span>Calories per day</span>${numIn('gCal',g.manualCal,'2200','oninput="gNum(\'manualCal\',this.value)"')}</label>`:''}
     </div>
 
     <div class="station">Water</div>
@@ -1592,6 +1595,14 @@ function gWaterStep(n){ G.water=Math.max(1,Math.min(20,G.water+n)); $('gWater').
 function gSummary(){
   const g=G, ok=profileReady(g)&&g.sex;
   if(g.macros==='custom'&&$('gSum')){ const sum=(+g.mc||0)+(+g.mp||0)+(+g.mf||0); $('gSum').textContent=sum===100?'Adds up to 100%':`Adds up to ${sum}%. Needs to be 100%.`; $('gSum').classList.toggle('bad',sum!==100); }
+  if(g.macros==='grams'){
+    const cal=gramsCal(g), [pc,pp,pf]=pctOf(g,cal);
+    if($('gGramSum')) $('gGramSum').textContent=`= ${fmtN(cal)} calories a day`;
+    $('gCalBig').textContent=cal?fmtN(cal):'–'; $('gExplain').textContent='From your exact macros';
+    $('gMacros').innerHTML=[['Carbs','gc','var(--carb)',pc],['Protein','gp','var(--protein)',pp],['Fat','gf','var(--fat)',pf]]
+      .map(([l,k,col,pct])=>`<div><i style="background:${col}"></i><b>${Math.round(+g[k]||0)}g</b><span>${l} · ${pct}%</span></div>`).join('');
+    $('gSave').textContent=cal?`Save · ${fmtN(cal)} cal`:'Save'; return;
+  }
   if(!ok&&!g.manual){
     $('gCalBig').textContent='–'; $('gExplain').textContent='Fill in your details below to see your goal.';
     $('gMacros').innerHTML=''; $('gSave').textContent='Save'; return;
@@ -1610,10 +1621,12 @@ function gSummary(){
 
 function saveGoals(){
   const g=G;
-  if(g.manual){ if(!(g.manualCal>=800&&g.manualCal<=8000)) return toast('Enter a calorie goal between 800 and 8,000'); }
+  if(g.macros==='grams'){ if(['gp','gc','gf'].some(k=>!(+g[k]>=0&&+g[k]<=1000))) return toast('Enter grams between 0 and 1,000');
+    const c=gramsCal(g); if(!(c>=800&&c<=8000)) return toast(`Those macros come to ${fmtN(c)} calories. Keep it between 800 and 8,000`); }
+  else if(g.manual){ if(!(g.manualCal>=800&&g.manualCal<=8000)) return toast('Enter a calorie goal between 800 and 8,000'); }
   else { if(!g.sex) return toast('Pick the sex the formula should use'); if(!profileReady(g)) return toast('Fill in age, height and weight'); }
   if(g.macros==='custom'&&(+g.mc||0)+(+g.mp||0)+(+g.mf||0)!==100) return toast('Macro percentages need to add up to 100');
-  const keep=['name','sex','age','ft','inch','act','goal','rate','macros','mc','mp','mf','manual','manualCal'];
+  const keep=['name','sex','age','ft','inch','act','goal','rate','macros','mc','mp','mf','gp','gc','gf','manual','manualCal'];
   keep.forEach(k=>STORE.profile[k]=g[k]); STORE.profile.name=(g.name||'').trim(); STORE.profile.setup=true;
   if(g.weightLb>60&&g.weightLb!==latestWeight()){ const d=todayISO(); STORE.weights=STORE.weights.filter(w=>w.d!==d).concat({d,lb:Math.round(g.weightLb*10)/10}); }
   if(g.weightLb>60) STORE.profile.weightLb=g.weightLb;
@@ -1624,8 +1637,9 @@ function saveGoals(){
 function applyGoals(){
   const pr={...STORE.profile,weightLb:latestWeight()||STORE.profile.weightLb};
   if(!pr.setup) return false;
-  if(!pr.manual&&!profileReady(pr)) return false;
   const before=STORE.goals.cal;
+  if(pr.macros==='grams'){ Object.assign(STORE.goals,{cal:gramsCal(pr),p:Math.round(+pr.gp||0),c:Math.round(+pr.gc||0),f:Math.round(+pr.gf||0)}); return before!==STORE.goals.cal; }
+  if(!pr.manual&&!profileReady(pr)) return false;
   let cal; if(!pr.manual) cal=calcGoals(pr).cal; else cal=Math.round(pr.manualCal);
   const [,pc,pp,pf]=pr.macros==='custom'?['',pr.mc,pr.mp,pr.mf]:MACRO_PRESETS[pr.macros||'balanced'];
   Object.assign(STORE.goals,{cal,c:Math.round(cal*pc/400),p:Math.round(cal*pp/400),f:Math.round(cal*pf/900)});
@@ -1636,7 +1650,7 @@ function renderProfile(){
   document.querySelectorAll('.avatar').forEach(a=>a.textContent=(nm[0]||'H').toUpperCase());
   $('profName').textContent=nm||'Hokie';
   const g=STORE.goals;
-  $('profSub').textContent=pr.setup?`${fmtN(g.cal)} cal a day · ${pr.manual?'Custom goal':pr.goal==='maintain'?'Maintain weight':(pr.goal==='lose'?'Lose ':'Gain ')+pr.rate+' lb a week'}`:'Goals not set up yet';
+  $('profSub').textContent=pr.setup?`${fmtN(g.cal)} cal a day · ${pr.macros==='grams'?'Exact macros':pr.manual?'Custom goal':pr.goal==='maintain'?'Maintain weight':(pr.goal==='lose'?'Lose ':'Gain ')+pr.rate+' lb a week'}`:'Goals not set up yet';
   $('setupCard').style.display=pr.setup?'none':'';
 }
 
