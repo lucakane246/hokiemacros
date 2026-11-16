@@ -45,6 +45,8 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 .page.active{opacity:1;pointer-events:auto;transform:none;z-index:2}
 /* Home screen app: iOS draws a solid status bar above the page, so fade the page's top into the same color
    instead of starting the maroon glow right under it. */
+/* Home screen app: soften the edge where the map meets iOS's solid status bar */
+@media (display-mode: standalone){ .mapcard::after{content:"";position:absolute;left:0;right:0;top:0;height:56px;z-index:3;pointer-events:none;background:linear-gradient(#0b0709,rgba(11,7,9,0))} }
 @media (display-mode: standalone){ .page{background:linear-gradient(var(--bg),rgba(17,11,14,0) 120px),radial-gradient(130% 55% at 50% -2%,rgba(138,36,71,.5),rgba(138,36,71,.12) 45%,transparent 70%),var(--bg);background-attachment:local} }
 .page.leaving{transform:translate3d(var(--to,-24px),0,0) scale(.985)}
 #v-map{padding:0;overflow:hidden;background:#2a2e56}
