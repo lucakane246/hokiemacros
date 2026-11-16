@@ -1671,6 +1671,7 @@ function recCandidates(){
   const t=dayTotals(todayISO()), g=STORE.goals, out=[], seen=new Set();
   const logged=new Set(Object.values(dayRec(todayISO()).meals||{}).flat().map(e=>e.f.id));
   for(const n of CHIP_ORDER){
+    if(AYCE.has(n)) continue;   // skip D2 and Owens Food Court (all you care to eat)
     const u=upcomingMenu(n); if(!u||!u.meal) continue;
     const later=u.date!==todayISO();
     const left=later?g.cal*.35:Math.max(250,g.cal-t.cal+exCal(todayISO()));
