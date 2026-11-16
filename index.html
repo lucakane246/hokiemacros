@@ -588,6 +588,8 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 .ordiv{display:flex;align-items:center;gap:10px;margin:16px 0 6px;color:var(--faint);font-size:12px}.ordiv:before,.ordiv:after{content:"";flex:1;height:1px;background:rgba(255,255,255,.08)}
 .linkbtn{background:none;border:0;color:var(--muted);font:inherit;font-size:13.5px;text-decoration:underline;padding:8px 0;cursor:pointer}
 .fsbadge{display:block;text-align:center;margin:12px 0 4px;font-size:12px;color:var(--muted);text-decoration:none}.fsbadge b{color:#3fa34d;font-weight:800;letter-spacing:-.2px}
+.fsinline{color:var(--muted);text-decoration:none}.fsinline b{color:#3fa34d;font-weight:800}
+.xn b{color:var(--text)}
 .fsload{padding:18px 0}
 .xd{font-size:12.5px;color:var(--muted);margin:2px 0 3px;line-height:1.35}
 .xsrc{color:var(--muted);font-size:12.5px;font-weight:600;margin:-2px 0 10px}
@@ -1088,14 +1090,33 @@ function venueBack(){ venuePick=null; renderMenu(); }
 let VENUES=null;
 const xRests=h=>(VENUES&&VENUES.halls&&VENUES.halls[h])||[];
 function xRow(it,ri,si,ii){
-  const opts=it.build?it.build.reduce((n,g)=>n+g.o.length,0):0;
+  const opts=it.build?it.build.reduce((n,g)=>n+g.o.length,0):0, fid=it.fs?[].concat(it.fs).join('_'):'';
   return `<div class="food xfood"><div><div class="nm">${esc(it.n)}</div>${it.d?`<div class="xd">${esc(it.d)}</div>`:''}
-    <div class="kc">${it.price!=null?`<span class="pr">${money(it.price)}</span> · `:''}<span class="soon">Nutrition coming soon</span></div>
+    <div class="kc">${it.price!=null?`<span class="pr">${money(it.price)}</span> · `:''}${fid?`<span class="xn" data-fs="${fid}">…</span>`:`<span class="soon">Nutrition coming soon</span>`}</div>
     ${it.build?`<button class="xbuild" onclick="openXItem(${ri},${si},${ii})">Build your own · ${it.build.length} steps, ${opts} choices ›</button>`:''}</div>
     <button class="plus" onclick="openXItem(${ri},${si},${ii})" aria-label="Log ${esc(it.n)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>`;
 }
+// FatSecret nutrition for hand-entered restaurant items: only the food IDs are stored in venues.json;
+// the numbers are fetched live through the proxy (and kept in memory for this visit only).
+const fsFoodCache=new Map();
+function fsFood(id){ if(!fsFoodCache.has(id)) fsFoodCache.set(id,fsGet(`fs=food&id=${id}`).then(j=>j&&j.ok?j.food:null).catch(()=>null)); return fsFoodCache.get(id); }
+function fsDefault(food){ const sv=(food&&food.sv)||[]; return sv.find(v=>v.def)||sv[0]||null; }
+async function fsCombo(ids){ // one or more FatSecret foods eaten together, as one food object
+  const foods=await Promise.all([].concat(ids).map(fsFood)); if(foods.some(f=>!f)) return null;
+  if(foods.length===1) return fsToFood(foods[0]);
+  const t={cal:0,p:0,c:0,f:0,fib:0,sug:0,sod:0}; for(const f of foods){ const v=fsDefault(f); if(!v) return null; for(const k in t) t[k]+=+v[k]||0; }
+  return {id:'fs'+[].concat(ids).join('_'),n:foods.map(f=>f.n).join(' + '),b:foods[0].b,k:t,u:[['1 order',100]],nog:true,src:'F'};
+}
+function fillXNutrition(){
+  document.querySelectorAll('.xn[data-fs]').forEach(el=>{ const ids=el.dataset.fs.split('_');
+    fsCombo(ids.length>1?ids:ids[0]).then(f=>{ if(!f){ el.textContent='Nutrition coming soon'; el.className='soon'; return; }
+      const sv=f.u&&f.u[0], n=per(f,{label:sv?sv[0]:'1 serving',g:sv?sv[1]:100});
+      el.innerHTML=`<b>${fmtN(n.cal)}</b> cal · ${Math.round(n.p)}P ${Math.round(n.c)}C ${Math.round(n.f)}F`; }); });
+}
 function openXItem(ri,si,ii){
   const r=xRests(hall)[ri], it=r.sections[si].items[ii], label=`${r.name} ${it.n}`;
+  if(it.fs&&!it.build){ fsCombo(it.fs).then(f=>{ if(!f) return openQuickAdd(null,null,label);
+      addMeal=mealNow(); addDate=todayISO(); showDetail({...f,n:it.n,b:r.name},{standalone:true}); }); return; }
   if(!it.build) return openQuickAdd(null,null,label,`${it.price!=null?money(it.price)+' at ':'From '}${r.name}. Nutrition for ${r.name} arrives soon; for now, enter what you know.`);
   openForm({title:it.n,sub:`${r.name}${it.price!=null?' · '+money(it.price):''}`,saveLabel:'Log it',
     body:it.build.map(g=>`<div class="xgrp"><div class="xgh"><b>${esc(g.g)}</b><span class="${g.req?'req':''}">${esc(g.rule)}${g.req?' · required':''}</span></div>
@@ -1170,8 +1191,9 @@ function renderMenu(){
       const g=venuePick&&cards.find(x=>x.key===venuePick)||(cards.length===1?cards[0]:null);
       if(g&&g.x!=null){ const r=xr[g.x];
         m.innerHTML=(cards.length>1?`<button class="vback pressable" onclick="venueBack()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>All restaurants</button>`:'')
-          +`<h3 class="vtitle">${esc(r.name)}</h3><p class="xsrc">${r.basis?`Based on ${esc(r.basis)}. VT prices and nutrition coming soon.`:`Prices from ${esc(r.source||"the restaurant")}. Nutrition coming soon.`}</p>`
+          +`<h3 class="vtitle">${esc(r.name)}</h3><p class="xsrc">${r.sections.some(x=>x.items.some(i=>i.fs))?`${r.basis?`Based on ${esc(r.basis)}. VT prices coming soon.`:`Prices from ${esc(r.source||"the restaurant")}.`} Nutrition: ${FS_BADGE.replace('class="fsbadge"','class="fsinline"')}`:r.basis?`Based on ${esc(r.basis)}. VT prices and nutrition coming soon.`:`Prices from ${esc(r.source||"the restaurant")}. Nutrition coming soon.`}</p>`
           +r.sections.map((s,si)=>`<div class="station">${esc(s.name)}</div><div class="card list0" style="animation:rise .5s var(--ease) both;animation-delay:${Math.min(si,6)*50}ms;opacity:0">${s.items.map((it,ii)=>xRow(it,g.x,si,ii)).join('')}</div>`).join('');
+        fillXNutrition();
         return; }
       if(!g){ venuePick=null; m.innerHTML=`<div class="station">${label==='restaurants'?'Restaurants':'Stations'}</div>`+venueGrid(cards); return; }
       sections=g.sections.length===1&&label==='stations'?[{...g.sections[0],name:''}]:g.sections;
@@ -1374,7 +1396,7 @@ function showDetail(f,opts={}){
   detail={f,servs,si,qty,standalone:opts.standalone,entry:opts.entry||null};
   $('dName').textContent=f.n;
   $('dSrc').innerHTML=f.my?`<span class="rb my">My food</span>${f.b?esc(f.b):''}`:(f.vt?'<span class="rb vt">VT Dining</span>':f.r?'<span class="rb rs">Restaurant</span>':'<span class="rb us">USDA</span>')+(f.vt||f.b?srcLabel(f):esc(f.cat||''));
-  $('dServ').innerHTML=servs.map((s,i)=>`<option value="${i}">${esc(s.label)}${s.g&&!/^\d+(\.\d+)? (g|oz)$/.test(s.label)?` (${Math.round(s.g)} g)`:''}</option>`).join('');
+  $('dServ').innerHTML=servs.map((s,i)=>`<option value="${i}">${esc(s.label)}${s.g&&!f.nog&&!/^\d+(\.\d+)? (g|oz)$/.test(s.label)?` (${Math.round(s.g)} g)`:''}</option>`).join('');
   $('dServ').value=si; $('dQty').value=+(+qty).toFixed(2);
   $('dMeal').innerHTML=MEALS.map(m=>`<option ${m===meal?'selected':''}>${m}</option>`).join('');
   const editing=!!opts.entry;

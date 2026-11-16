@@ -11,31 +11,40 @@
       "name": "Breakfast",
       "items": [
        {
-        "n": "Chick-fil-A Chicken Biscuit"
+        "n": "Chick-fil-A Chicken Biscuit",
+        "fs": 68720420
        },
        {
-        "n": "Spicy Chicken Biscuit"
+        "n": "Spicy Chicken Biscuit",
+        "fs": 34385837
        },
        {
-        "n": "Chick-n-Minis"
+        "n": "Chick-n-Minis",
+        "fs": 68720441
        },
        {
-        "n": "Egg White Grill"
+        "n": "Egg White Grill",
+        "fs": 13040701
        },
        {
-        "n": "Bacon, Egg & Cheese Biscuit"
+        "n": "Bacon, Egg & Cheese Biscuit",
+        "fs": 60095
        },
        {
-        "n": "Sausage, Egg & Cheese Biscuit"
+        "n": "Sausage, Egg & Cheese Biscuit",
+        "fs": 68720880
        },
        {
-        "n": "Hash Brown Scramble Burrito"
+        "n": "Hash Brown Scramble Burrito",
+        "fs": 53991202
        },
        {
-        "n": "Hash Brown Scramble Bowl"
+        "n": "Hash Brown Scramble Bowl",
+        "fs": 68720810
        },
        {
-        "n": "Hash Browns"
+        "n": "Hash Browns",
+        "fs": 83706360
        }
       ]
      },
@@ -43,43 +52,56 @@
       "name": "Entrées",
       "items": [
        {
-        "n": "Chick-fil-A Chicken Sandwich"
+        "n": "Chick-fil-A Chicken Sandwich",
+        "fs": 68721802
        },
        {
-        "n": "Chick-fil-A Deluxe Sandwich"
+        "n": "Chick-fil-A Deluxe Sandwich",
+        "fs": 68721854
        },
        {
-        "n": "Spicy Chicken Sandwich"
+        "n": "Spicy Chicken Sandwich",
+        "fs": 32997402
        },
        {
-        "n": "Spicy Deluxe Sandwich"
+        "n": "Spicy Deluxe Sandwich",
+        "fs": 68721929
        },
        {
-        "n": "Grilled Chicken Sandwich"
+        "n": "Grilled Chicken Sandwich",
+        "fs": 3373280
        },
        {
-        "n": "Grilled Chicken Club Sandwich"
+        "n": "Grilled Chicken Club Sandwich",
+        "fs": 68722052
        },
        {
-        "n": "Chick-fil-A Nuggets (8 ct)"
+        "n": "Chick-fil-A Nuggets (8 ct)",
+        "fs": 68752626
        },
        {
-        "n": "Chick-fil-A Nuggets (12 ct)"
+        "n": "Chick-fil-A Nuggets (12 ct)",
+        "fs": 68752635
        },
        {
-        "n": "Grilled Nuggets (8 ct)"
+        "n": "Grilled Nuggets (8 ct)",
+        "fs": 68752649
        },
        {
-        "n": "Grilled Nuggets (12 ct)"
+        "n": "Grilled Nuggets (12 ct)",
+        "fs": 68752654
        },
        {
-        "n": "Chick-n-Strips (3 ct)"
+        "n": "Chick-n-Strips (3 ct)",
+        "fs": 68752664
        },
        {
-        "n": "Chick-n-Strips (4 ct)"
+        "n": "Chick-n-Strips (4 ct)",
+        "fs": 68752670
        },
        {
-        "n": "Grilled Cool Wrap"
+        "n": "Grilled Cool Wrap",
+        "fs": 68752677
        }
       ]
      },
@@ -87,13 +109,16 @@
       "name": "Salads",
       "items": [
        {
-        "n": "Cobb Salad"
+        "n": "Cobb Salad",
+        "fs": 5513824
        },
        {
-        "n": "Spicy Southwest Salad"
+        "n": "Spicy Southwest Salad",
+        "fs": 68752827
        },
        {
-        "n": "Market Salad"
+        "n": "Market Salad",
+        "fs": 83706581
        }
       ]
      },
@@ -101,19 +126,24 @@
       "name": "Sides",
       "items": [
        {
-        "n": "Waffle Potato Fries (medium)"
+        "n": "Waffle Potato Fries (medium)",
+        "fs": 104058567
        },
        {
-        "n": "Mac & Cheese (medium)"
+        "n": "Mac & Cheese (medium)",
+        "fs": 104058665
        },
        {
-        "n": "Side Salad"
+        "n": "Side Salad",
+        "fs": 33115206
        },
        {
-        "n": "Fruit Cup (medium)"
+        "n": "Fruit Cup (medium)",
+        "fs": 104055446
        },
        {
-        "n": "Chicken Noodle Soup (cup)"
+        "n": "Chicken Noodle Soup (cup)",
+        "fs": 104058715
        }
       ]
      },
@@ -121,25 +151,32 @@
       "name": "Sauces",
       "items": [
        {
-        "n": "Chick-fil-A Sauce"
+        "n": "Chick-fil-A Sauce",
+        "fs": 59517
        },
        {
-        "n": "Polynesian"
+        "n": "Polynesian",
+        "fs": 47813
        },
        {
-        "n": "Honey Mustard"
+        "n": "Honey Mustard",
+        "fs": 60127
        },
        {
-        "n": "Garden Herb Ranch"
+        "n": "Garden Herb Ranch",
+        "fs": 68754070
        },
        {
-        "n": "Zesty Buffalo"
+        "n": "Zesty Buffalo",
+        "fs": 27962459
        },
        {
-        "n": "Barbeque"
+        "n": "Barbeque",
+        "fs": 68754066
        },
        {
-        "n": "Sweet & Spicy Sriracha"
+        "n": "Sweet & Spicy Sriracha",
+        "fs": 68754071
        }
       ]
      },
@@ -147,37 +184,47 @@
       "name": "Drinks & treats",
       "items": [
        {
-        "n": "Chick-fil-A Lemonade (medium)"
+        "n": "Chick-fil-A Lemonade (medium)",
+        "fs": 104059145
        },
        {
-        "n": "Diet Lemonade (medium)"
+        "n": "Diet Lemonade (medium)",
+        "fs": 104059206
        },
        {
-        "n": "Sweet Tea (medium)"
+        "n": "Sweet Tea (medium)",
+        "fs": 104059003
        },
        {
-        "n": "Unsweetened Tea (medium)"
+        "n": "Unsweetened Tea (medium)",
+        "fs": 104059078
        },
        {
         "n": "Frosted Lemonade"
        },
        {
-        "n": "Cookies & Cream Milkshake"
+        "n": "Cookies & Cream Milkshake",
+        "fs": 68753521
        },
        {
-        "n": "Chocolate Milkshake"
+        "n": "Chocolate Milkshake",
+        "fs": 68753612
        },
        {
-        "n": "Strawberry Milkshake"
+        "n": "Strawberry Milkshake",
+        "fs": 68753631
        },
        {
-        "n": "Vanilla Milkshake"
+        "n": "Vanilla Milkshake",
+        "fs": 68753682
        },
        {
-        "n": "Chocolate Chunk Cookie"
+        "n": "Chocolate Chunk Cookie",
+        "fs": 7180606
        },
        {
-        "n": "Coffee (medium)"
+        "n": "Coffee (medium)",
+        "fs": 68753883
        }
       ]
      }
@@ -591,7 +638,8 @@
        {
         "n": "Vermonter",
         "price": 9.09,
-        "d": "Eggs, pork sausage, bacon, cheddar, honey walnut cream cheese"
+        "d": "Eggs, pork sausage, bacon, cheddar, honey walnut cream cheese",
+        "fs": 113625337
        }
       ]
      },
@@ -609,7 +657,8 @@
         "d": "Herb garlic cream cheese, red pepper, Swiss, lettuce, tomato & red onion on Asiago Parmesan",
         "tags": [
          "vegetarian"
-        ]
+        ],
+        "fs": 113625343
        }
       ]
      },
@@ -618,7 +667,8 @@
       "items": [
        {
         "n": "Brewed Coffee Medium",
-        "price": 3.29
+        "price": 3.29,
+        "fs": 113625014
        },
        {
         "n": "Brewed Coffee Large",
@@ -626,11 +676,13 @@
        },
        {
         "n": "Iced Coffee Medium",
-        "price": 3.39
+        "price": 3.39,
+        "fs": 113625175
        },
        {
         "n": "Iced Coffee Large",
-        "price": 3.69
+        "price": 3.69,
+        "fs": 113625178
        }
       ]
      },
@@ -640,11 +692,16 @@
        {
         "n": "Single Bagel",
         "price": 2.49,
-        "d": "Choice of bagel, no toppings"
+        "d": "Choice of bagel, no toppings",
+        "fs": 74047915
        },
        {
         "n": "Bagel and Cream Cheese",
-        "price": 4.48
+        "price": 4.48,
+        "fs": [
+         74047915,
+         113625328
+        ]
        },
        {
         "n": "PB & J Bagel",
@@ -1277,31 +1334,40 @@
       "name": "Breakfast",
       "items": [
        {
-        "n": "Chick-fil-A Chicken Biscuit"
+        "n": "Chick-fil-A Chicken Biscuit",
+        "fs": 68720420
        },
        {
-        "n": "Spicy Chicken Biscuit"
+        "n": "Spicy Chicken Biscuit",
+        "fs": 34385837
        },
        {
-        "n": "Chick-n-Minis"
+        "n": "Chick-n-Minis",
+        "fs": 68720441
        },
        {
-        "n": "Egg White Grill"
+        "n": "Egg White Grill",
+        "fs": 13040701
        },
        {
-        "n": "Bacon, Egg & Cheese Biscuit"
+        "n": "Bacon, Egg & Cheese Biscuit",
+        "fs": 60095
        },
        {
-        "n": "Sausage, Egg & Cheese Biscuit"
+        "n": "Sausage, Egg & Cheese Biscuit",
+        "fs": 68720880
        },
        {
-        "n": "Hash Brown Scramble Burrito"
+        "n": "Hash Brown Scramble Burrito",
+        "fs": 53991202
        },
        {
-        "n": "Hash Brown Scramble Bowl"
+        "n": "Hash Brown Scramble Bowl",
+        "fs": 68720810
        },
        {
-        "n": "Hash Browns"
+        "n": "Hash Browns",
+        "fs": 83706360
        }
       ]
      },
@@ -1309,43 +1375,56 @@
       "name": "Entrées",
       "items": [
        {
-        "n": "Chick-fil-A Chicken Sandwich"
+        "n": "Chick-fil-A Chicken Sandwich",
+        "fs": 68721802
        },
        {
-        "n": "Chick-fil-A Deluxe Sandwich"
+        "n": "Chick-fil-A Deluxe Sandwich",
+        "fs": 68721854
        },
        {
-        "n": "Spicy Chicken Sandwich"
+        "n": "Spicy Chicken Sandwich",
+        "fs": 32997402
        },
        {
-        "n": "Spicy Deluxe Sandwich"
+        "n": "Spicy Deluxe Sandwich",
+        "fs": 68721929
        },
        {
-        "n": "Grilled Chicken Sandwich"
+        "n": "Grilled Chicken Sandwich",
+        "fs": 3373280
        },
        {
-        "n": "Grilled Chicken Club Sandwich"
+        "n": "Grilled Chicken Club Sandwich",
+        "fs": 68722052
        },
        {
-        "n": "Chick-fil-A Nuggets (8 ct)"
+        "n": "Chick-fil-A Nuggets (8 ct)",
+        "fs": 68752626
        },
        {
-        "n": "Chick-fil-A Nuggets (12 ct)"
+        "n": "Chick-fil-A Nuggets (12 ct)",
+        "fs": 68752635
        },
        {
-        "n": "Grilled Nuggets (8 ct)"
+        "n": "Grilled Nuggets (8 ct)",
+        "fs": 68752649
        },
        {
-        "n": "Grilled Nuggets (12 ct)"
+        "n": "Grilled Nuggets (12 ct)",
+        "fs": 68752654
        },
        {
-        "n": "Chick-n-Strips (3 ct)"
+        "n": "Chick-n-Strips (3 ct)",
+        "fs": 68752664
        },
        {
-        "n": "Chick-n-Strips (4 ct)"
+        "n": "Chick-n-Strips (4 ct)",
+        "fs": 68752670
        },
        {
-        "n": "Grilled Cool Wrap"
+        "n": "Grilled Cool Wrap",
+        "fs": 68752677
        }
       ]
      },
@@ -1353,13 +1432,16 @@
       "name": "Salads",
       "items": [
        {
-        "n": "Cobb Salad"
+        "n": "Cobb Salad",
+        "fs": 5513824
        },
        {
-        "n": "Spicy Southwest Salad"
+        "n": "Spicy Southwest Salad",
+        "fs": 68752827
        },
        {
-        "n": "Market Salad"
+        "n": "Market Salad",
+        "fs": 83706581
        }
       ]
      },
@@ -1367,19 +1449,24 @@
       "name": "Sides",
       "items": [
        {
-        "n": "Waffle Potato Fries (medium)"
+        "n": "Waffle Potato Fries (medium)",
+        "fs": 104058567
        },
        {
-        "n": "Mac & Cheese (medium)"
+        "n": "Mac & Cheese (medium)",
+        "fs": 104058665
        },
        {
-        "n": "Side Salad"
+        "n": "Side Salad",
+        "fs": 33115206
        },
        {
-        "n": "Fruit Cup (medium)"
+        "n": "Fruit Cup (medium)",
+        "fs": 104055446
        },
        {
-        "n": "Chicken Noodle Soup (cup)"
+        "n": "Chicken Noodle Soup (cup)",
+        "fs": 104058715
        }
       ]
      },
@@ -1387,25 +1474,32 @@
       "name": "Sauces",
       "items": [
        {
-        "n": "Chick-fil-A Sauce"
+        "n": "Chick-fil-A Sauce",
+        "fs": 59517
        },
        {
-        "n": "Polynesian"
+        "n": "Polynesian",
+        "fs": 47813
        },
        {
-        "n": "Honey Mustard"
+        "n": "Honey Mustard",
+        "fs": 60127
        },
        {
-        "n": "Garden Herb Ranch"
+        "n": "Garden Herb Ranch",
+        "fs": 68754070
        },
        {
-        "n": "Zesty Buffalo"
+        "n": "Zesty Buffalo",
+        "fs": 27962459
        },
        {
-        "n": "Barbeque"
+        "n": "Barbeque",
+        "fs": 68754066
        },
        {
-        "n": "Sweet & Spicy Sriracha"
+        "n": "Sweet & Spicy Sriracha",
+        "fs": 68754071
        }
       ]
      },
@@ -1413,37 +1507,47 @@
       "name": "Drinks & treats",
       "items": [
        {
-        "n": "Chick-fil-A Lemonade (medium)"
+        "n": "Chick-fil-A Lemonade (medium)",
+        "fs": 104059145
        },
        {
-        "n": "Diet Lemonade (medium)"
+        "n": "Diet Lemonade (medium)",
+        "fs": 104059206
        },
        {
-        "n": "Sweet Tea (medium)"
+        "n": "Sweet Tea (medium)",
+        "fs": 104059003
        },
        {
-        "n": "Unsweetened Tea (medium)"
+        "n": "Unsweetened Tea (medium)",
+        "fs": 104059078
        },
        {
         "n": "Frosted Lemonade"
        },
        {
-        "n": "Cookies & Cream Milkshake"
+        "n": "Cookies & Cream Milkshake",
+        "fs": 68753521
        },
        {
-        "n": "Chocolate Milkshake"
+        "n": "Chocolate Milkshake",
+        "fs": 68753612
        },
        {
-        "n": "Strawberry Milkshake"
+        "n": "Strawberry Milkshake",
+        "fs": 68753631
        },
        {
-        "n": "Vanilla Milkshake"
+        "n": "Vanilla Milkshake",
+        "fs": 68753682
        },
        {
-        "n": "Chocolate Chunk Cookie"
+        "n": "Chocolate Chunk Cookie",
+        "fs": 7180606
        },
        {
-        "n": "Coffee (medium)"
+        "n": "Coffee (medium)",
+        "fs": 68753883
        }
       ]
      }
