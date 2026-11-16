@@ -3331,6 +3331,802 @@
      }
     ]
    }
+  ],
+  "n_mcd": [
+   {
+    "name": "McDonald's",
+    "basis": "the standard McDonald's menu",
+    "nsrc": "FatSecret’s listing of the chain’s published nutrition",
+    "sections": [
+     {
+      "name": "Burgers",
+      "items": [
+       {
+        "n": "Big Mac",
+        "fs": 3145844
+       },
+       {
+        "n": "Quarter Pounder with Cheese",
+        "fs": 42331
+       },
+       {
+        "n": "Double Quarter Pounder with Cheese",
+        "fs": 30240
+       },
+       {
+        "n": "Quarter Pounder with Cheese Deluxe",
+        "fs": 68409678
+       },
+       {
+        "n": "McDouble",
+        "fs": 97921
+       },
+       {
+        "n": "Double Cheeseburger",
+        "fs": 27494
+       },
+       {
+        "n": "Triple Cheeseburger",
+        "fs": 83831343
+       },
+       {
+        "n": "Bacon McDouble",
+        "fs": 106930094
+       },
+       {
+        "n": "Cheeseburger",
+        "fs": 41963
+       },
+       {
+        "n": "Hamburger",
+        "fs": 68409693
+       }
+      ]
+     },
+     {
+      "name": "Chicken & Fish",
+      "items": [
+       {
+        "n": "Chicken McNuggets",
+        "fs": 68427859,
+        "ct": [
+         10,
+         "nugget",
+         "nuggets"
+        ]
+       },
+       {
+        "n": "McChicken",
+        "fs": 7235522
+       },
+       {
+        "n": "McCrispy",
+        "fs": 68409704
+       },
+       {
+        "n": "Spicy McCrispy",
+        "fs": 68409713
+       },
+       {
+        "n": "Deluxe McCrispy",
+        "fs": 68409705
+       },
+       {
+        "n": "Ranch Snack Wrap",
+        "fs": 104340135
+       },
+       {
+        "n": "Spicy Snack Wrap",
+        "fs": 123910118
+       },
+       {
+        "n": "Filet-O-Fish",
+        "fs": 62015
+       }
+      ]
+     },
+     {
+      "name": "Fries & Sides",
+      "items": [
+       {
+        "n": "Small Fries",
+        "fs": 68444328
+       },
+       {
+        "n": "Medium Fries",
+        "fs": 68444097
+       },
+       {
+        "n": "Large Fries",
+        "fs": 68444005
+       },
+       {
+        "n": "Hash Browns",
+        "fs": 68409587
+       },
+       {
+        "n": "Apple Slices",
+        "fs": 2968594
+       }
+      ]
+     },
+     {
+      "name": "Breakfast",
+      "items": [
+       {
+        "n": "Egg McMuffin",
+        "fs": 60800
+       },
+       {
+        "n": "Sausage McMuffin with Egg",
+        "fs": 63542
+       },
+       {
+        "n": "Sausage Biscuit",
+        "fs": 63549
+       },
+       {
+        "n": "Sausage Biscuit with Egg",
+        "fs": 63546
+       },
+       {
+        "n": "Bacon, Egg & Cheese Biscuit",
+        "fs": 63544
+       },
+       {
+        "n": "Bacon, Egg & Cheese McGriddles",
+        "fs": 67791
+       },
+       {
+        "n": "Sausage McGriddles",
+        "fs": 67792
+       },
+       {
+        "n": "Sausage Burrito",
+        "fs": 41695
+       },
+       {
+        "n": "Hotcakes",
+        "fs": 5408664
+       }
+      ]
+     },
+     {
+      "name": "Sweets & Drinks",
+      "items": [
+       {
+        "n": "McFlurry with OREO Cookies",
+        "fs": 103243799
+       },
+       {
+        "n": "McFlurry with M&M'S",
+        "fs": 103243683
+       },
+       {
+        "n": "Hot Fudge Sundae",
+        "fs": 3910592
+       },
+       {
+        "n": "Vanilla Cone",
+        "fs": 68409812
+       },
+       {
+        "n": "Baked Apple Pie",
+        "fs": 75471
+       },
+       {
+        "n": "Chocolate Chip Cookie",
+        "fs": 33310
+       },
+       {
+        "n": "Coca-Cola (medium)",
+        "fs": 68428040
+       },
+       {
+        "n": "Sweet Tea (medium)",
+        "fs": 68444392
+       }
+      ]
+     },
+     {
+      "name": "Sauces",
+      "items": [
+       {
+        "n": "Creamy Ranch Sauce",
+        "fs": 2988870
+       },
+       {
+        "n": "Sweet 'N Sour Sauce",
+        "fs": 63522
+       },
+       {
+        "n": "Tangy Barbeque Sauce",
+        "fs": 20677820
+       },
+       {
+        "n": "Honey Mustard Sauce",
+        "fs": 63521
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "n_tb": [
+   {
+    "name": "Taco Bell",
+    "basis": "the standard Taco Bell menu",
+    "nsrc": "FatSecret’s listing of the chain’s published nutrition",
+    "sections": [
+     {
+      "name": "Tacos",
+      "items": [
+       {
+        "n": "Crunchy Taco",
+        "fs": 44955
+       },
+       {
+        "n": "Crunchy Taco Supreme",
+        "fs": 32821
+       },
+       {
+        "n": "Nacho Cheese Doritos Locos Taco",
+        "fs": 68994926
+       },
+       {
+        "n": "Soft Taco (beef)",
+        "fs": 44956
+       },
+       {
+        "n": "Soft Taco (chicken)",
+        "fs": 550739
+       },
+       {
+        "n": "Cheesy Gordita Crunch",
+        "fs": 494534
+       },
+       {
+        "n": "Chalupa Supreme (beef)",
+        "fs": 48816
+       },
+       {
+        "n": "Chalupa Supreme (chicken)",
+        "fs": 48817
+       },
+       {
+        "n": "Double Stacked Taco",
+        "fs": 83499986
+       },
+       {
+        "n": "Spicy Potato Soft Taco",
+        "fs": 68996342
+       }
+      ]
+     },
+     {
+      "name": "Burritos",
+      "items": [
+       {
+        "n": "Bean Burrito",
+        "fs": 48830
+       },
+       {
+        "n": "Beefy 5-Layer Burrito",
+        "fs": 683691
+       },
+       {
+        "n": "Cheesy Bean & Rice Burrito",
+        "fs": 30896
+       },
+       {
+        "n": "Burrito Supreme (beef)",
+        "fs": 49954
+       },
+       {
+        "n": "Cheesy Double Beef Burrito",
+        "fs": 78342585
+       },
+       {
+        "n": "Grilled Cheese Burrito",
+        "fs": 39025284
+       },
+       {
+        "n": "Black Bean Grilled Cheese Burrito",
+        "fs": 83499993
+       },
+       {
+        "n": "Chicken Enchilada Burrito",
+        "fs": 73614708
+       }
+      ]
+     },
+     {
+      "name": "Specialties",
+      "items": [
+       {
+        "n": "Crunchwrap Supreme",
+        "fs": 83500070
+       },
+       {
+        "n": "Mexican Pizza",
+        "fs": 83500081
+       },
+       {
+        "n": "Cheese Quesadilla",
+        "fs": 68996327
+       },
+       {
+        "n": "Steak Quesadilla",
+        "fs": 55499
+       },
+       {
+        "n": "Nachos BellGrande",
+        "fs": 124375163
+       },
+       {
+        "n": "Cantina Chicken Bowl",
+        "fs": 80380042
+       },
+       {
+        "n": "3-Cheese Chicken Flatbread Melt",
+        "fs": 83500036
+       },
+       {
+        "n": "Cheesy Roll Up",
+        "fs": 83500044
+       }
+      ]
+     },
+     {
+      "name": "Sides & Sweets",
+      "items": [
+       {
+        "n": "Nacho Fries",
+        "fs": 104457807
+       },
+       {
+        "n": "Large Nacho Fries",
+        "fs": 83499965
+       },
+       {
+        "n": "Cheesy Fiesta Potatoes",
+        "fs": 49971
+       },
+       {
+        "n": "Black Beans & Rice",
+        "fs": 4843860
+       },
+       {
+        "n": "Crispy Chicken Nuggets (5 pc)",
+        "fs": 124374750,
+        "ct": [
+         5,
+         "nugget",
+         "nuggets"
+        ]
+       },
+       {
+        "n": "Cinnamon Twists",
+        "fs": 52365
+       },
+       {
+        "n": "Cinnabon Delights (2 pack)",
+        "fs": 104457480,
+        "ct": [
+         2,
+         "delight",
+         "delights"
+        ]
+       }
+      ]
+     },
+     {
+      "name": "Breakfast",
+      "items": [
+       {
+        "n": "Breakfast Crunchwrap (bacon)",
+        "fs": 7238951
+       },
+       {
+        "n": "Breakfast Crunchwrap (sausage)",
+        "fs": 83500131
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "n_wh": [
+   {
+    "name": "Waffle House",
+    "basis": "the standard Waffle House menu",
+    "nsrc": "FatSecret’s listing of the chain’s published nutrition",
+    "sections": [
+     {
+      "name": "Waffles",
+      "items": [
+       {
+        "n": "Classic Waffle",
+        "fs": 75582627
+       },
+       {
+        "n": "Pecan Waffle",
+        "fs": [
+         75582627,
+         75582863
+        ]
+       },
+       {
+        "n": "Chocolate Chip Waffle",
+        "fs": [
+         75582627,
+         75582866
+        ]
+       }
+      ]
+     },
+     {
+      "name": "Hashbrowns",
+      "items": [
+       {
+        "n": "Hashbrowns (regular)",
+        "fs": 75582875
+       },
+       {
+        "n": "Hashbrowns, smothered & covered",
+        "fs": [
+         75582875,
+         75583291,
+         75582909
+        ],
+        "d": "Grilled onions and melted cheese"
+       },
+       {
+        "n": "Hashbrowns (large)",
+        "fs": 75582876
+       },
+       {
+        "n": "Hashbrowns (triple)",
+        "fs": 75582890
+       },
+       {
+        "n": "Bacon, Egg & Cheese Hashbrown Bowl",
+        "fs": 139435483
+       },
+       {
+        "n": "Sausage, Egg & Cheese Hashbrown Bowl",
+        "fs": 139435156
+       },
+       {
+        "n": "Cheesesteak Melt Hashbrown Bowl",
+        "fs": 139435632
+       }
+      ]
+     },
+     {
+      "name": "Melts & Sandwiches",
+      "items": [
+       {
+        "n": "Texas Cheesesteak Melt",
+        "fs": 75583311
+       },
+       {
+        "n": "Texas Angus Patty Melt",
+        "fs": 75583320
+       },
+       {
+        "n": "Texas Bacon, Egg & Cheese Melt",
+        "fs": 75583205
+       },
+       {
+        "n": "Texas Grilled Chicken Melt",
+        "fs": 75583309
+       },
+       {
+        "n": "Angus Cheeseburger Deluxe",
+        "fs": 75583333
+       },
+       {
+        "n": "Double Angus Cheeseburger Deluxe",
+        "fs": 75583336
+       },
+       {
+        "n": "Bacon, Egg & Cheese Sandwich",
+        "fs": 75583202
+       },
+       {
+        "n": "Sausage, Egg & Cheese Biscuit",
+        "fs": 75582951
+       },
+       {
+        "n": "Chicken Biscuit",
+        "fs": 75582959
+       },
+       {
+        "n": "BLT",
+        "fs": 75583697
+       },
+       {
+        "n": "Grilled Cheese",
+        "fs": 75583893
+       }
+      ]
+     },
+     {
+      "name": "Eggs & Plates",
+      "items": [
+       {
+        "n": "2 Eggs, scrambled",
+        "fs": 75582619
+       },
+       {
+        "n": "Bacon (3 slices)",
+        "fs": 139435136,
+        "ct": [
+         3,
+         "slice",
+         "slices"
+        ]
+       },
+       {
+        "n": "Sausage",
+        "fs": 75582687
+       },
+       {
+        "n": "Steak & Eggs",
+        "fs": 75582715
+       },
+       {
+        "n": "T-Bone Steak",
+        "fs": 139435661
+       },
+       {
+        "n": "Pork Chops & Eggs",
+        "fs": 75582727
+       },
+       {
+        "n": "Biscuit & Sausage Gravy",
+        "fs": 75582937
+       }
+      ]
+     },
+     {
+      "name": "Sides & Pie",
+      "items": [
+       {
+        "n": "Grits",
+        "fs": 3032042
+       },
+       {
+        "n": "Cheese Grits",
+        "fs": 75582939
+       },
+       {
+        "n": "Raisin Toast",
+        "fs": 3032029
+       },
+       {
+        "n": "White Toast",
+        "fs": 75582641
+       },
+       {
+        "n": "Texas Toast (1 slice)",
+        "fs": 86023086
+       },
+       {
+        "n": "Southern Pecan Pie",
+        "fs": 75583703
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "n_co": [
+   {
+    "name": "Cook Out",
+    "basis": "the standard Cook Out menu",
+    "nsrc": "FatSecret’s listing of the chain’s published nutrition",
+    "sections": [
+     {
+      "name": "Burgers",
+      "items": [
+       {
+        "n": "Regular 1/4 lb · Cook Out Style",
+        "fs": [
+         119155735,
+         119155755
+        ]
+       },
+       {
+        "n": "Big Double · Cook Out Style",
+        "fs": [
+         119155744,
+         119155755
+        ]
+       },
+       {
+        "n": "Big Double · Cheddar Style",
+        "fs": [
+         119155744,
+         119155763
+        ]
+       },
+       {
+        "n": "Huge 1/2 lb · Cook Out Style",
+        "fs": [
+         119155741,
+         119155755
+        ]
+       },
+       {
+        "n": "Regular 1/4 lb · Everything",
+        "fs": [
+         119155735,
+         119155750
+        ]
+       }
+      ]
+     },
+     {
+      "name": "Chicken",
+      "items": [
+       {
+        "n": "Chicken Strips (3 pc)",
+        "fs": 119155821,
+        "ct": [
+         3,
+         "strip",
+         "strips"
+        ]
+       },
+       {
+        "n": "Char-Grilled Chicken Sandwich",
+        "fs": 119155768
+       },
+       {
+        "n": "Spicy Chicken Breast Sandwich",
+        "fs": 119155788
+       },
+       {
+        "n": "Chicken Strip Sandwich",
+        "fs": 119155824
+       },
+       {
+        "n": "Chicken Nuggets",
+        "fs": 119155866
+       },
+       {
+        "n": "Cajun Wrap",
+        "fs": 119155813
+       },
+       {
+        "n": "Ranch Wrap",
+        "fs": 119155816
+       },
+       {
+        "n": "Honey Mustard Wrap",
+        "fs": 119155818
+       }
+      ]
+     },
+     {
+      "name": "BBQ, Dogs & More",
+      "items": [
+       {
+        "n": "BBQ Sandwich",
+        "fs": 119155794
+       },
+       {
+        "n": "BBQ Plate",
+        "fs": 30272222
+       },
+       {
+        "n": "Cook Out Style Hot Dog",
+        "fs": 119155798
+       },
+       {
+        "n": "Hot Dog",
+        "fs": 31778013
+       },
+       {
+        "n": "Corn Dog",
+        "fs": 119155909
+       },
+       {
+        "n": "Cheese Quesadillas",
+        "fs": 119155838
+       }
+      ]
+     },
+     {
+      "name": "Sides",
+      "items": [
+       {
+        "n": "Fries (regular)",
+        "fs": 119155933
+       },
+       {
+        "n": "Fries (large)",
+        "fs": 119155931
+       },
+       {
+        "n": "Hushpuppies",
+        "fs": 119155925
+       },
+       {
+        "n": "Onion Rings",
+        "fs": 119155858
+       },
+       {
+        "n": "Cheese Curds",
+        "fs": 119155956
+       },
+       {
+        "n": "Cook Out Rounds",
+        "fs": 119155948
+       },
+       {
+        "n": "Side of Chili",
+        "fs": 119155919
+       }
+      ]
+     },
+     {
+      "name": "Milkshakes & Drinks",
+      "items": [
+       {
+        "n": "Oreo Milkshake",
+        "fs": 40355645
+       },
+       {
+        "n": "Vanilla Milkshake",
+        "fs": 119156248
+       },
+       {
+        "n": "Strawberry Milkshake",
+        "fs": 119156261
+       },
+       {
+        "n": "Hershey's Chocolate Milkshake",
+        "fs": 119156254
+       },
+       {
+        "n": "Peanut Butter Fudge Milkshake",
+        "fs": 119156305
+       },
+       {
+        "n": "Banana Pudding Milkshake",
+        "fs": 119156283
+       },
+       {
+        "n": "Cherry Cheesecake Milkshake",
+        "fs": 119156411
+       },
+       {
+        "n": "Reese's Cup Milkshake",
+        "fs": 119156390
+       },
+       {
+        "n": "Peach Cobbler Milkshake",
+        "fs": 119156388
+       },
+       {
+        "n": "Sweet Tea (large)",
+        "fs": 119156146
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "n_bm": [
+   {
+    "name": "Benny Marzano's",
+    "basis": "Benny Marzano's",
+    "soon": true,
+    "sections": []
+   }
   ]
  }
 }
