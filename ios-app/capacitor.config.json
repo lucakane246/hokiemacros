@@ -2,10 +2,6 @@
   "appId": "io.github.lucakane246.hokiemacros",
   "appName": "HokieMacros",
   "webDir": "www",
-  "server": {
-    "url": "https://lucakane246.github.io/hokiemacros/?source=ios",
-    "cleartext": false
-  },
   "backgroundColor": "#110b0e",
   "ios": {
     "backgroundColor": "#110b0e",
