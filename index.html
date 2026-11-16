@@ -23,7 +23,7 @@
   --text:#F6F0F2; --text-2:#CDBFC5; --muted:#988a91; --faint:#6b5d64;
   --maroon:#8A2447; --maroon-hi:#B4466C; --rose:#E46E90;
   --orange:#EE8A3C; --orange-hi:#F7A35C; --orange-deep:#D2611C;
-  --carb:#F2A95B; --fat:#E26D8F; --protein:#69C3B2; --green:#5FCB8F;
+  --carb:#69C3B2; --fat:#E26D8F; --protein:#F2A95B; --amber:#F2A95B; --teal:#69C3B2; --green:#5FCB8F;
   --r-lg:22px; --r-md:16px; --r-sm:12px;
   --ease:cubic-bezier(.22,.9,.24,1); --spring:cubic-bezier(.34,1.4,.5,1);
   --safe-t:env(safe-area-inset-top); --safe-b:env(safe-area-inset-bottom);
@@ -317,7 +317,7 @@ body.add-open .addscreen{transform:none;visibility:visible}
 .rs2{font-size:12.5px;color:var(--muted);margin-top:3px;font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}
 .rcal{text-align:right;flex-shrink:0}.rcal b{display:block;font-size:16px;font-weight:800}.rcal span{font-size:11px;color:var(--muted);font-weight:650}
 .rb{font-size:10px;font-weight:800;letter-spacing:.3px;padding:2px 6px;border-radius:6px;text-transform:uppercase;flex-shrink:0}
-.rb.vt{background:rgba(180,70,108,.22);color:#f08cb0}.rb.rs{background:rgba(242,169,91,.16);color:var(--carb)}.rb.us{background:rgba(105,195,178,.14);color:var(--protein)}
+.rb.vt{background:rgba(180,70,108,.22);color:#f08cb0}.rb.rs{background:rgba(242,169,91,.16);color:var(--amber)}.rb.us{background:rgba(105,195,178,.14);color:var(--teal)}
 .ahint{text-align:center;padding:30px 10px;color:var(--text-2)}
 .ahint h4{font-size:15px;font-weight:700;margin-bottom:14px}.ahint p{color:var(--muted);font-size:13.5px;margin-top:-6px}
 .tips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
@@ -439,10 +439,10 @@ body.prog-open .progscreen{transform:none;visibility:visible}
 .pgsvg{width:100%;height:auto;display:block}
 .pgsvg text{fill:var(--faint);font-size:10px;font-weight:600}
 .pgempty{color:var(--muted);font-size:13.5px;font-weight:600;text-align:center;padding:30px 10px}
-#pgChange.down{color:var(--green)} #pgChange.up{color:var(--carb)}
+#pgChange.down{color:var(--green)} #pgChange.up{color:var(--amber)}
 #pgList .row{display:grid;grid-template-columns:1fr auto auto;gap:12px}
 #pgList .row b{font-weight:750}
-.pgd{font-size:12.5px;font-weight:700;color:var(--muted)}.pgd.down{color:var(--green)}.pgd.up{color:var(--carb)}
+.pgd{font-size:12.5px;font-weight:700;color:var(--muted)}.pgd.down{color:var(--green)}.pgd.up{color:var(--amber)}
 
 /* ---------- goals ---------- */
 .goalscreen{z-index:24;padding-bottom:calc(var(--safe-b) + 100px)}
@@ -451,7 +451,7 @@ body.goals-open .goalscreen{transform:none;visibility:visible}
 .ghero .big{justify-content:center;display:flex;align-items:baseline;gap:6px;margin-top:6px}
 .ghero .big span{font-size:52px;font-weight:800;letter-spacing:-2px}
 .gexp{color:var(--muted);font-size:13.5px;font-weight:600;line-height:1.5;margin-top:4px}.gexp b{color:var(--text-2)}
-.gwarn{color:var(--carb)}
+.gwarn{color:var(--amber)}
 .gmac{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
 .gmac:empty{display:none}
 .gmac div{background:rgba(255,255,255,.04);border:1px solid var(--hair);border-radius:14px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:2px}
@@ -467,7 +467,7 @@ body.goals-open .goalscreen{transform:none;visibility:visible}
 .gact.on i{border-color:var(--orange);box-shadow:inset 0 0 0 4px var(--surface),inset 0 0 0 10px var(--orange)}
 .gact b{display:block;font-weight:700;font-size:15px}.gact span{display:block;color:var(--muted);font-size:13px;margin-top:2px}
 .gnote{margin:8px 6px 0}
-.gsum{font-size:12.5px;font-weight:650;color:var(--green)}.gsum.bad{color:var(--carb)}
+.gsum{font-size:12.5px;font-weight:650;color:var(--green)}.gsum.bad{color:var(--amber)}
 .gtoggle{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;color:inherit;font:inherit}
 .gtoggle b{display:block;font-weight:700;font-size:15px}.gtoggle span{display:block;color:var(--muted);font-size:13px;margin-top:2px}
 .gtoggle i{width:48px;height:28px;border-radius:99px;background:var(--surface-3);position:relative;flex:none;transition:background .3s}
@@ -681,9 +681,9 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 
   <div class="duo rise" style="--i:11">
     <button class="card pressable mini" onclick="openSteps()">
-      <div class="mini-h"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--protein)" stroke-width="2.2" stroke-linecap="round"><path d="M13 4a2 2 0 1 0 0 .01M9 20l2-6 3 2v5M8 11l3-3 3 2 3 1M11 14l-2-3"/></svg>Steps</div>
+      <div class="mini-h"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2.2" stroke-linecap="round"><path d="M13 4a2 2 0 1 0 0 .01M9 20l2-6 3 2v5M8 11l3-3 3 2 3 1M11 14l-2-3"/></svg>Steps</div>
       <div class="mini-v" id="stepsV">–</div>
-      <div class="track" style="height:6px;margin-top:12px"><div class="fill" id="stepsFill" style="background:linear-gradient(90deg,#3f9c8b,var(--protein))"></div></div>
+      <div class="track" style="height:6px;margin-top:12px"><div class="fill" id="stepsFill" style="background:linear-gradient(90deg,#3f9c8b,var(--teal))"></div></div>
       <div class="label" style="margin-top:8px;font-size:12px" id="stepsL">Tap to add today’s steps</div>
     </button>
     <button class="card pressable mini" onclick="openExercise()">
