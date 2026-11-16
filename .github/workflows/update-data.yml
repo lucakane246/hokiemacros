@@ -14,7 +14,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: update-data
+  group: data-commits
   cancel-in-progress: false
 
 jobs:
@@ -37,5 +37,6 @@ jobs:
             echo "No changes."
           else
             git commit -m "Update dining data $(TZ=America/New_York date +'%Y-%m-%d %H:%M')"
+            git pull --rebase --autostash
             git push
           fi

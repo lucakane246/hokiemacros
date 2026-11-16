@@ -280,6 +280,66 @@ body.sheet-open .opt{opacity:1;transform:none;transition-delay:calc(var(--k)*35m
 .hl span{color:var(--text-2);font-weight:600}
 .pop .hrs .hl b{display:inline;font-size:14px;font-weight:700;color:var(--text);text-transform:none;letter-spacing:0;margin:0}
 .popmenu{margin-top:12px;width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;border-radius:14px;background:rgba(238,138,60,.14);color:var(--orange-hi);font-weight:750;font-size:14.5px}
+/* ---------- add food ---------- */
+.addscreen{position:fixed;inset:0;margin:0 auto;max-width:430px;z-index:25;background:var(--bg);overflow-y:auto;padding:calc(var(--safe-t) + 10px) 16px calc(var(--safe-b) + 30px);
+  transform:translateY(100%);transition:transform .55s var(--ease);visibility:hidden}
+body.add-open .addscreen{transform:none;visibility:visible}
+.addtop{display:flex;align-items:center;justify-content:space-between;margin:2px 0 12px}
+.addtop h2{font-size:17px;font-weight:800}
+.iconbtn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:1px solid var(--hair);color:var(--text-2)}
+.mchips{display:flex;gap:6px;margin-bottom:12px}
+.mchip{flex:1;padding:8px 0;border-radius:99px;font-size:13px;font-weight:700;color:var(--muted);background:var(--surface);border:1px solid var(--hair);transition:all .3s}
+.mchip.on{background:rgba(238,138,60,.16);color:var(--orange-hi);border-color:rgba(238,138,60,.35)}
+.segment.four{grid-template-columns:repeat(4,1fr)}
+.segment.four .thumb{width:calc((100% - 6px)/4)}
+.rlist{padding:0}
+.rrow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 16px;border-top:1px solid var(--hair);animation:rise .45s var(--ease) both;animation-delay:var(--d)}
+.rrow:first-child{border-top:none}
+.rrow:active{background:var(--surface-2)}
+.rmain{flex:1;min-width:0}
+.rn{font-size:15px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rs2{font-size:12.5px;color:var(--muted);margin-top:3px;font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}
+.rcal{text-align:right;flex-shrink:0}.rcal b{display:block;font-size:16px;font-weight:800}.rcal span{font-size:11px;color:var(--muted);font-weight:650}
+.rb{font-size:10px;font-weight:800;letter-spacing:.3px;padding:2px 6px;border-radius:6px;text-transform:uppercase;flex-shrink:0}
+.rb.vt{background:rgba(180,70,108,.22);color:#f08cb0}.rb.rs{background:rgba(242,169,91,.16);color:var(--carb)}.rb.us{background:rgba(105,195,178,.14);color:var(--protein)}
+.ahint{text-align:center;padding:30px 10px;color:var(--text-2)}
+.ahint h4{font-size:15px;font-weight:700;margin-bottom:14px}.ahint p{color:var(--muted);font-size:13.5px;margin-top:-6px}
+.tips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.spin{width:26px;height:26px;border-radius:50%;border:3px solid var(--surface-3);border-top-color:var(--orange);margin:0 auto;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* detail sheet */
+.dscrim{position:fixed;inset:0;z-index:26;background:rgba(5,2,4,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .35s}
+body.detail-open .dscrim{opacity:1;pointer-events:auto}
+.dsheet{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:430px;z-index:27;background:var(--surface);border:1px solid var(--hair-2);border-bottom:none;border-radius:28px 28px 0 0;
+  padding:10px 18px calc(var(--safe-b) + 18px);transform:translateY(105%);transition:transform .55s var(--ease);max-height:92vh;overflow-y:auto}
+body.detail-open .dsheet{transform:none}
+.dsheet h3{font-size:21px;font-weight:800;letter-spacing:-.4px;line-height:1.2}
+.dsrc{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:13px;font-weight:600;margin-top:6px}
+.dgrid{display:grid;grid-template-columns:1.5fr 1fr;gap:10px;margin-top:16px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field>span{font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+.field select,.stepper{height:44px;border-radius:13px;background:var(--surface-2);border:1px solid var(--hair);color:var(--text);font:inherit;font-size:14.5px;font-weight:600}
+.field select{padding:0 12px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23988a91' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px;min-width:0}
+.stepper{display:flex;align-items:center;overflow:hidden}
+.stepper button{width:38px;height:100%;font-size:20px;font-weight:600;color:var(--orange-hi)}
+.stepper input{flex:1;min-width:0;width:100%;text-align:center;background:none;border:none;color:var(--text);font:inherit;font-weight:750;font-size:16px;outline:none}
+.dnut{display:flex;align-items:center;gap:18px;margin-top:18px;padding:16px;border-radius:20px;background:var(--surface-2);border:1px solid var(--hair)}
+.dring{position:relative;width:104px;height:104px;flex-shrink:0}
+.dring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.dring circle{fill:none;stroke-width:9;stroke-linecap:round}
+.dring div{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.dring b{font-size:26px;font-weight:800;letter-spacing:-.8px}.dring span{font-size:11.5px;color:var(--muted);font-weight:650}
+.dmac{flex:1;display:flex;flex-direction:column;gap:10px}
+.dmac div{display:grid;grid-template-columns:10px auto 1fr;align-items:center;gap:8px}
+.dmac i{width:8px;height:8px;border-radius:50%}
+.dmac b{font-size:17px;font-weight:800}.dmac b small{font-size:12px;color:var(--muted);margin-left:1px}
+.dmac span{font-size:12.5px;color:var(--muted);font-weight:600;text-align:right}
+.dmore{margin-top:12px;border-radius:16px;border:1px solid var(--hair);overflow:hidden}
+.dmore div{display:flex;justify-content:space-between;padding:11px 14px;font-size:14px}
+.dmore div+div{border-top:1px solid var(--hair)}
+.dmore span{color:var(--muted);font-weight:600}.dmore b{font-weight:700}
+.dadd{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;align-items:end;margin-top:16px}
+.primary{height:48px;border-radius:15px;font-weight:800;font-size:15.5px;color:#fff;background:linear-gradient(145deg,var(--orange-hi),var(--orange-deep));box-shadow:0 8px 22px rgba(238,138,60,.35)}
 </style>
 </head>
 <body>
@@ -440,6 +500,43 @@ body.sheet-open .opt{opacity:1;transform:none;transition-delay:calc(var(--k)*35m
   <h4>Log</h4>
   <div class="opts" id="opts"></div>
 </div>
+<!-- ============ ADD FOOD ============ -->
+<section class="addscreen" id="addScreen" aria-label="Add food">
+  <div class="addtop">
+    <button class="iconbtn" onclick="closeAdd()" aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <h2>Add food</h2><span style="width:40px"></span>
+  </div>
+  <div class="mchips" id="addMeal"></div>
+  <label class="search">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="addInput" placeholder="Search for a food" autocomplete="off" oninput="onAddInput(this.value)" aria-label="Search for a food">
+  </label>
+  <div class="segment four" id="addTabs"><div class="thumb" id="addThumb"></div>
+    <button data-t="all" onclick="setAddTab('all')">All</button><button data-t="vt" onclick="setAddTab('vt')">VT Dining</button><button data-t="foods" onclick="setAddTab('foods')">Foods</button><button data-t="rest" onclick="setAddTab('rest')">Restaurants</button></div>
+  <div id="addResults"></div>
+  <p class="note">Everyday foods and restaurant items from USDA FoodData Central. VT items from VT Dining Services.</p>
+</section>
+
+<!-- ============ FOOD DETAIL ============ -->
+<div class="dscrim" onclick="closeDetail()"></div>
+<div class="dsheet" role="dialog" aria-label="Food details">
+  <div class="grab"></div>
+  <h3 id="dName"></h3>
+  <div class="dsrc" id="dSrc"></div>
+  <div class="dgrid">
+    <label class="field"><span>Serving</span><select id="dServ" onchange="renderDetail()"></select></label>
+    <div class="field qty"><span>Servings</span><div class="stepper"><button onclick="stepQty(-.5)" aria-label="Fewer">−</button><input id="dQty" inputmode="decimal" value="1" oninput="renderDetail()"><button onclick="stepQty(.5)" aria-label="More">+</button></div></div>
+  </div>
+  <div class="dnut">
+    <div class="dring"><svg viewBox="0 0 100 100" id="dRing"></svg><div><b id="dCal">0</b><span>cal</span></div></div>
+    <div class="dmac" id="dMacros"></div>
+  </div>
+  <div class="dmore" id="dMore"></div>
+  <div class="dadd">
+    <label class="field"><span>Meal</span><select id="dMeal"></select></label>
+    <button class="primary pressable" onclick="addToDiary()">Add to diary</button>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -513,14 +610,14 @@ const meals=[
 const kc=m=>m.items.reduce((s,i)=>s+i[2],0);
 const micon=m=>`<div class="micon" style="background:${m.bg}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${m.ic}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${m.path}"/></svg></div>`;
 $('mealCards').innerHTML=meals.map((m,i)=>`<div class="card rise" style="--i:${7+i}">
-  <div class="mealrow">${micon(m)}<div><h3>${m.name}</h3><div class="meta">${kc(m)} cal</div></div><button class="logbtn pressable" onclick="openHall('15')">Log</button></div>
+  <div class="mealrow">${micon(m)}<div><h3>${m.name}</h3><div class="meta">${kc(m)} cal</div></div><button class="logbtn pressable" onclick="openAdd('${m.name}')">Log</button></div>
   <div class="mealsum">${m.items.slice(0,2).map(x=>x[0]).join(', ')}${m.items.length>2?` <span class="muted">+ ${m.items.length-2} more</span>`:''}</div></div>`).join('');
 
 // ---------- Diary ----------
 $('meals').innerHTML=meals.map((m,i)=>`<div class="card meal rise" style="--i:${3+i}">
   <div class="mh"><div class="mealrow" style="gap:12px">${micon(m)}<h3>${m.name}</h3></div><span class="kc">${kc(m)}</span></div>
   ${m.items.map(x=>`<div class="item"><div><div class="nm">${x[0]}</div><div class="ds">${x[1]}</div></div><div class="kc">${x[2]}</div></div>`).join('')}
-  <button class="add" onclick="openHall('15')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add food</button></div>`).join('');
+  <button class="add" onclick="openAdd('${m.name}')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add food</button></div>`).join('');
 $('water').innerHTML=Array.from({length:8},(_,k)=>`<i class="${k<5?'f':''}" style="--k:${k}"></i>`).join('');
 
 // ================= live data: menus, nutrition, hours =================
@@ -628,7 +725,7 @@ function foodRow(id){
   const tag=(x.t||[]).includes('vegan')?'<span class="vtag">Vegan</span>':(x.t||[]).includes('vegetarian')?'<span class="vtag">Vegetarian</span>':'';
   const nut=x.cal!=null?`<div class="mm"><span><b style="color:var(--protein)">P</b>${x.p??'–'}g</span><span><b style="color:var(--carb)">C</b>${x.c??'–'}g</span><span><b style="color:var(--fat)">F</b>${x.f??'–'}g</span>${tag}</div>`:(tag?`<div class="mm">${tag}</div>`:'');
   return `<div class="food"><div><div class="nm">${esc(x.n)}</div><div class="kc">${x.cal!=null?x.cal+' cal · ':''}${esc(x.s)}</div>${nut}</div>
-    <button class="plus" onclick="addFood(this)" aria-label="Add ${esc(x.n)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>`;
+    <button class="plus" onclick="openDiningItem('${id}')" aria-label="Add ${esc(x.n)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>`;
 }
 function renderMenu(){
   const st=statusOf([{key:hall}]);
@@ -644,6 +741,155 @@ function renderMenu(){
 }
 function addFood(btn){ btn.classList.add('done'); btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'; toast('Food logging is coming soon'); }
 document.querySelector('#v-dining .search input').addEventListener('input',e=>{query=e.target.value;renderMenu()});
+
+// ================= Add food: search VT dining + USDA foods + restaurants =================
+const MEALS=['Breakfast','Lunch','Dinner','Snacks'];
+let FOODS=null, foodsLoading=null, addMeal='Lunch', addTab='all', addQ='', detail=null;
+const SAMPLE_FOODS=[
+  ['Banana, raw',null,{cal:89,p:1.1,c:22.8,f:.3,fib:2.6,sug:12.2,sod:1},[['1 medium',118],['1 cup, sliced',150]]],
+  ['Egg, whole, scrambled',null,{cal:149,p:10,c:1.6,f:11,sod:145},[['1 large egg',61]]],
+  ['Egg, whole, hard-boiled',null,{cal:155,p:12.6,c:1.1,f:10.6,sod:124},[['1 large',50]]],
+  ['Oil, olive, extra virgin',null,{cal:884,p:0,c:0,f:100},[['1 tbsp',13.5],['1 tsp',4.5]]],
+  ['Chicken breast, roasted, skinless',null,{cal:165,p:31,c:0,f:3.6,sod:74},[['1/2 breast',86],['3 oz',85]]],
+  ['Rice, white, cooked',null,{cal:130,p:2.7,c:28,f:.3,sod:1},[['1 cup',158]]],
+  ['Oats, rolled, dry',null,{cal:379,p:13.2,c:67.7,f:6.5,fib:10.1},[['1/2 cup',40]]],
+  ['Apple, raw, with skin',null,{cal:52,p:.3,c:13.8,f:.2,fib:2.4,sug:10.4},[['1 medium',182]]],
+  ['Peanut butter, smooth',null,{cal:588,p:25,c:20,f:50,sod:459},[['2 tbsp',32]]],
+  ['Milk, 2%',null,{cal:50,p:3.3,c:4.8,f:2,sod:47},[['1 cup',244]]],
+  ['Greek yogurt, plain, nonfat',null,{cal:59,p:10.2,c:3.6,f:.4,sod:36},[['1 container (6 oz)',170]]],
+  ['Bread, whole wheat',null,{cal:252,p:12.4,c:42.7,f:3.5,sod:450},[['1 slice',32]]],
+  ['McChicken Sandwich',"McDonald's",{cal:254,p:10,c:27,f:12,sod:520},[['1 sandwich',143]],1],
+  ['French fries, medium',"McDonald's",{cal:323,p:3.4,c:42,f:15,sod:189},[['1 medium',117]],1],
+  ['Quarter Pounder with Cheese',"McDonald's",{cal:262,p:15,c:17,f:14,sod:560},[['1 sandwich',199]],1],
+  ['Burrito Supreme with beef','Taco Bell',{cal:177,p:7,c:21,f:7,sod:420},[['1 burrito',248]],1],
+  ['Crunchy Taco with beef','Taco Bell',{cal:226,p:9.5,c:17,f:13,sod:400},[['1 taco',78]],1],
+  ['Whopper','Burger King',{cal:231,p:10,c:18,f:13,sod:330},[['1 sandwich',290]],1],
+  ['Original Recipe chicken breast','KFC',{cal:224,p:22,c:7,f:12,sod:620},[['1 breast',178]],1],
+  ['Frosty Dairy Dessert',"Wendy's",{cal:132,p:3.5,c:22,f:3.3,sod:60},[['1 small',227]],1],
+].map(([n,b,k,u,r],i)=>({id:'x'+i,n,b,k,u,r,src:'S'}));
+
+function loadFoods(){
+  if(foodsLoading) return foodsLoading;
+  foodsLoading=(LIVE?fetch('data/foods.json',{cache:'force-cache'}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>d.foods):Promise.reject())
+    .catch(()=>SAMPLE_FOODS)
+    .then(list=>{FOODS=list.map(f=>({...f,_h:norm(`${f.n} ${f.b||''}`)})); return FOODS});
+  return foodsLoading;
+}
+const norm=s=>' '+String(s).toLowerCase().replace(/['’]/g,'').replace(/[^a-z0-9]+/g,' ').trim()+' ';
+
+// dining items currently on today's menus, tagged with where they're served
+function diningIndex(){
+  if(!DATA) return [];
+  if(diningIndex.cache&&diningIndex.cache.k===DATA.updated+etNow().date) return diningIndex.cache.v;
+  const d=etNow().date, seen=new Map();
+  for(const [num,days] of Object.entries(DATA.menus||{})){
+    const meals=days[d]||days[DATA.menuDays[0]]||[];
+    for(const m of meals) for(const s of m.sections) for(const id of s.items){
+      const x=DATA.items[id]; if(!x||x.cal==null||seen.has(id)) continue;
+      seen.set(id,{id,n:x.n,b:VENUE[num]||'',hall:num,station:s.name,k:{cal:x.cal,p:x.p,c:x.c,f:x.f,fib:x.fib,sug:x.sug,sod:x.sod},serving:x.s,vt:1,tags:x.t||[],_h:norm(x.n+' '+(VENUE[num]||''))});
+    }
+  }
+  const v=[...seen.values()]; diningIndex.cache={k:DATA.updated+d,v}; return v;
+}
+
+function searchFoods(q,tab){
+  const toks=norm(q).trim().split(' ').filter(Boolean); if(!toks.length) return [];
+  const hit=(h,t)=>h.includes(' '+t)||(t.length>3&&t.endsWith('s')&&h.includes(' '+t.slice(0,-1)));
+  const pool=[...(tab==='all'||tab==='vt'?diningIndex():[]),...((FOODS||[]).filter(f=>tab==='all'||(tab==='rest'?f.r:tab==='foods'?!f.r:false)))];
+  const out=[];
+  for(const f of pool){
+    if(!toks.every(t=>hit(f._h,t))) continue;
+    const name=norm(f.n);
+    let s=0;
+    if(name.startsWith(' '+toks[0])) s+=40;
+    if(toks.every(t=>hit(name,t))) s+=20;
+    if(/ raw /.test(name)&&!f.r) s+=4;
+    s+=f.vt?14:f.src==='F'?8:f.src==='S'?6:4;
+    s-=f.n.length/6;
+    out.push([s,f]);
+  }
+  return out.sort((a,b)=>b[0]-a[0]).slice(0,80).map(x=>x[1]);
+}
+
+function defaultServing(f){
+  if(f.vt) return {label:f.serving||'1 serving',g:null,mult:1};
+  const u=(f.u&&f.u[0]);
+  return u?{label:u[0],g:u[1]}:{label:'100 g',g:100};
+}
+const per=(f,serv,qty=1)=>{const m=f.vt?qty:(serv.g/100)*qty, k=f.k||{}; const r=v=>v==null?null:Math.round(v*m*10)/10; return {cal:k.cal==null?null:Math.round(k.cal*m),p:r(k.p),c:r(k.c),f:r(k.f),fib:r(k.fib),sug:r(k.sug),sod:k.sod==null?null:Math.round(k.sod*m)}};
+
+function openAdd(meal){
+  addMeal=meal||(()=>{const m=etNow().min;return m<630?'Breakfast':m<960?'Lunch':m<1290?'Dinner':'Snacks'})();
+  toggleSheet(false);
+  document.body.classList.add('add-open');
+  renderAddMeal(); setAddTab(addTab);
+  const inp=$('addInput'); inp.value=addQ; setTimeout(()=>inp.focus(),380);
+  loadFoods().then(()=>renderResults());
+}
+function closeAdd(){ document.body.classList.remove('add-open'); closeDetail(); $('addInput').blur(); }
+function renderAddMeal(){ $('addMeal').innerHTML=MEALS.map(m=>`<button class="mchip ${m===addMeal?'on':''}" onclick="addMeal='${m}';renderAddMeal()">${m}</button>`).join(''); }
+function setAddTab(t){ addTab=t; const i=['all','vt','foods','rest'].indexOf(t); $('addThumb').style.transform=`translateX(${i*100}%)`;
+  document.querySelectorAll('#addTabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t)); renderResults(); }
+let addTimer; function onAddInput(v){ addQ=v; clearTimeout(addTimer); addTimer=setTimeout(renderResults,90); }
+
+const srcLabel=f=>f.vt?`${esc(f.b)} · ${esc(f.station)}`:f.b?esc(f.b):f.src==='V'?'USDA · as eaten':'USDA';
+function resultRow(f,i){
+  const sv=defaultServing(f), n=per(f,sv);
+  const badge=f.vt?'<span class="rb vt">VT</span>':f.r?'<span class="rb rs">Restaurant</span>':'';
+  return `<button class="rrow" style="--d:${Math.min(i,12)*22}ms" onclick="openDetail(${i})">
+    <div class="rmain"><div class="rn">${esc(f.n)}</div><div class="rs2">${badge}${srcLabel(f)} · ${esc(sv.label)}</div></div>
+    <div class="rcal"><b>${n.cal??'–'}</b><span>cal</span></div></button>`;
+}
+let lastResults=[];
+function renderResults(){
+  const box=$('addResults'), q=addQ.trim();
+  if(!q){
+    const tips=['banana','eggs','chicken breast','olive oil','oatmeal','McChicken','burrito','pizza'];
+    box.innerHTML=`<div class="ahint"><h4>Search VT dining, everyday foods and restaurants</h4>
+      <div class="tips">${tips.map(t=>`<button class="chip" onclick="$('addInput').value='${t}';onAddInput('${t}');renderResults()">${t}</button>`).join('')}</div></div>`;
+    return;
+  }
+  if(!FOODS){ box.innerHTML='<div class="ahint"><div class="spin"></div></div>'; return; }
+  lastResults=searchFoods(q,addTab);
+  box.innerHTML=lastResults.length?`<div class="card list0 rlist">${lastResults.map(resultRow).join('')}</div>`
+    :`<div class="ahint"><h4>No matches for “${esc(q)}”</h4><p>Try a simpler word, like “chicken” or “yogurt”.</p></div>`;
+}
+
+// ---------- food detail ----------
+function openDetail(i){ showDetail(lastResults[i]); }
+function openDiningItem(id){
+  const x=DATA.items[id]; if(!x) return;
+  const f=diningIndex().find(d=>d.id===id)||{id,n:x.n,b:VENUE[hall]||'',station:'',k:{cal:x.cal,p:x.p,c:x.c,f:x.f,fib:x.fib,sug:x.sug,sod:x.sod},serving:x.s,vt:1,tags:x.t||[]};
+  addMeal=(()=>{const m=etNow().min;return m<630?'Breakfast':m<960?'Lunch':m<1290?'Dinner':'Snacks'})();
+  showDetail(f,true);
+}
+function showDetail(f,standalone){
+  detail={f,servs:f.vt?[{label:f.serving||'1 serving',g:null}]:[...(f.u||[]).map(([label,g])=>({label,g})),{label:'100 g',g:100},{label:'1 oz',g:28.35},{label:'1 g',g:1}],si:0,qty:1,standalone};
+  $('dName').textContent=f.n;
+  $('dSrc').innerHTML=(f.vt?'<span class="rb vt">VT Dining</span>':f.r?'<span class="rb rs">Restaurant</span>':'<span class="rb us">USDA</span>')+srcLabel(f);
+  $('dServ').innerHTML=detail.servs.map((s,i)=>`<option value="${i}">${esc(s.label)}${s.g&&!/^\d+(\.\d+)? (g|oz)$/.test(s.label)?` (${Math.round(s.g)} g)`:''}</option>`).join('');
+  $('dServ').value=0; $('dQty').value=1;
+  $('dMeal').innerHTML=MEALS.map(m=>`<option ${m===addMeal?'selected':''}>${m}</option>`).join('');
+  renderDetail(true);
+  document.body.classList.add('detail-open');
+}
+function closeDetail(){ document.body.classList.remove('detail-open'); }
+function renderDetail(first){
+  const {f,servs}=detail; detail.si=+$('dServ').value||0; detail.qty=Math.max(.25,parseFloat($('dQty').value)||1);
+  const n=per(f,servs[detail.si],detail.qty);
+  const kc={p:(n.p||0)*4,c:(n.c||0)*4,f:(n.f||0)*9}, tot=kc.p+kc.c+kc.f||1;
+  const C=2*Math.PI*44; let off=0;
+  const arcs=[['c','var(--carb)'],['f','var(--fat)'],['p','var(--protein)']].map(([k,col])=>{const len=C*kc[k]/tot; const s=`<circle cx="50" cy="50" r="44" stroke="${col}" stroke-dasharray="${Math.max(0,len-2)} ${C}" stroke-dashoffset="${-off}"/>`; off+=len; return s}).join('');
+  $('dRing').innerHTML=`<circle cx="50" cy="50" r="44" stroke="rgba(255,255,255,.07)"/>${arcs}`;
+  $('dCal').textContent=n.cal??'–';
+  $('dMacros').innerHTML=[['Carbs','c','var(--carb)'],['Fat','f','var(--fat)'],['Protein','p','var(--protein)']].map(([l,k,col])=>
+    `<div><i style="background:${col}"></i><b>${n[k]??'–'}<small>g</small></b><span>${l} · ${Math.round(kc[k]/tot*100)}%</span></div>`).join('');
+  $('dMore').innerHTML=[['Fiber',n.fib,'g'],['Sugar',n.sug,'g'],['Sodium',n.sod,'mg']].map(([l,v,u])=>`<div><span>${l}</span><b>${v==null?'–':v+' '+u}</b></div>`).join('')
+    +(f.tags&&f.tags.length?`<div><span>Diet</span><b>${f.tags.map(t=>t[0].toUpperCase()+t.slice(1)).join(', ')}</b></div>`:'');
+  if(first) $('dRing').querySelectorAll('circle').forEach((c,i)=>{ if(!i) return; c.animate([{strokeDasharray:`0 ${C}`},{strokeDasharray:c.getAttribute('stroke-dasharray')}],{duration:700,easing:'cubic-bezier(.22,.9,.24,1)'}); });
+}
+function stepQty(d){ const q=$('dQty'); q.value=Math.max(.25,Math.round(((parseFloat(q.value)||1)+d)*4)/4); renderDetail(); }
+function addToDiary(){ const m=$('dMeal').value; toast(`Diary logging comes next. This would add to ${m}`); }
 
 // ---------- Today: dining hall cards ----------
 const HALLCARDS=[
@@ -671,8 +917,8 @@ $('grp1').innerHTML=rowsHTML([['Goals','#D2611C','M12 3a9 9 0 1 0 9 9M12 7a5 5 0
 $('grp2').innerHTML=rowsHTML([['Dining Dollars','#6b3f8a','M3 7h18v10H3zM12 12m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0'],['Settings','#5b5056','M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1L14.5 3h-5l-.3 2.6a7 7 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.3 2.6h5l.3-2.6a7 7 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6a7 7 0 0 0 .1-1z']]);
 
 // ---------- sheet + toast ----------
-const OPTS=[['Log food','#EE8A3C','M4 13h16a8 8 0 0 1-16 0zM12 9V5'],['Scan','#B4466C','M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2M7 12h10'],['Water','#69C3B2','M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z'],['Exercise','#E26D8F','M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z'],['Weight','#F2A95B','M5 20h14l-2-12H7zM9 8a3 3 0 0 1 6 0'],['Quick add','#9b8cf0','M13 3 4 14h7l-1 7 9-11h-7z']];
-$('opts').innerHTML=OPTS.map((o,k)=>`<button class="opt" style="--k:${k}" onclick="toggleSheet(false);${k===0?"go('dining')":"toast('Coming soon')"}"><span class="oi" style="background:${o[1]}26"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${o[1]}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${o[2]}"/></svg></span>${o[0]}</button>`).join('');
+const OPTS=[['Search food','#EE8A3C','M4 13h16a8 8 0 0 1-16 0zM12 9V5'],['Scan','#B4466C','M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2M7 12h10'],['Water','#69C3B2','M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z'],['Exercise','#E26D8F','M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z'],['Weight','#F2A95B','M5 20h14l-2-12H7zM9 8a3 3 0 0 1 6 0'],['Quick add','#9b8cf0','M13 3 4 14h7l-1 7 9-11h-7z']];
+$('opts').innerHTML=OPTS.map((o,k)=>`<button class="opt" style="--k:${k}" onclick="toggleSheet(false);${k===0?"openAdd()":"toast('Coming soon')"}"><span class="oi" style="background:${o[1]}26"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${o[1]}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${o[2]}"/></svg></span>${o[0]}</button>`).join('');
 function toggleSheet(on){ document.body.classList.toggle('sheet-open',on); }
 let tt; function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1800)}
 

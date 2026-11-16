@@ -12,9 +12,11 @@ It reads the same public feeds VT's own websites use:
 | Menus + nutrition | foodpro.students.vt.edu (VT Dining Services) |
 | Dining hours | apps.students.vt.edu/hours |
 | McComas / War Memorial hours | apps.students.vt.edu/rshours (Rec Sports) |
+| Everyday foods + fast food (monthly) | USDA FoodData Central, public domain (fdc.nal.usda.gov) |
 
 and saves everything to `data/dining.json`, which the app loads. To refresh by hand, open the
 **Actions** tab, pick **Update dining data**, and press **Run workflow**.
 
+General food data: U.S. Department of Agriculture, Agricultural Research Service. FoodData Central, fdc.nal.usda.gov.
 Map data © OpenStreetMap contributors.
 Not affiliated with or endorsed by Virginia Tech.

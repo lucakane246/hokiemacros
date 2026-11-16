@@ -1,0 +1,41 @@
+name: Build food database
+
+on:
+  schedule:
+    - cron: "23 8 3 * *"    # 3rd of each month - USDA updates twice a year
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/build_foods.py"
+      - ".github/workflows/build-foods.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-commits      # never push at the same moment as the dining updater
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download USDA FoodData Central and build foods.json
+        run: python scripts/build_foods.py
+      - name: Save the new database
+        run: |
+          git config user.name "hokiemacros-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/foods.json
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git commit -m "Update food database $(date +'%Y-%m-%d')"
+            git pull --rebase --autostash
+            git push
+          fi
