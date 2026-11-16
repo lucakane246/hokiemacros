@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="HokieMacros">
 <title>HokieMacros</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,9 +31,6 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:var(--bg)}
-/* iOS home screen apps: with a translucent status bar, WebKit makes the page shorter by the status bar's height,
-   so the tab bar floats up and a black band shows below it. Making the root taller by that amount fills the screen. */
-@media (display-mode: standalone){ html{min-height:calc(100% + env(safe-area-inset-top))} body{min-height:100%} }
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,system-ui,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased;overflow:hidden;font-feature-settings:"tnum" 1,"cv11" 1}
 button{font-family:inherit;color:inherit;border:none;background:none;cursor:pointer}
 *{scrollbar-width:none}*::-webkit-scrollbar{display:none}
@@ -1120,13 +1117,30 @@ function fillXNutrition(){
       const sv=f.u&&f.u[0], n=per(f,{label:sv?sv[0]:'1 serving',g:sv?sv[1]:100});
       el.innerHTML=`<b>${fmtN(n.cal)}</b> cal · ${Math.round(n.p)}P ${Math.round(n.c)}C ${Math.round(n.f)}F`; }); });
 }
+
+// serving choices for restaurant menu items: count-based ("1 order (4 minis)", "1 mini") or a natural unit ("1 sandwich")
+function unitFor(n,sec){
+  const t=(n+' '+(sec||'')).toLowerCase();
+  const m=[[/milkshake|shake/,'shake'],[/cookie/,'cookie'],[/muffin/,'muffin'],[/burrito/,'burrito'],[/quesadilla/,'quesadilla'],[/nachos/,'order'],
+    [/bowl/,'bowl'],[/salad/,'salad'],[/wrap/,'wrap'],[/soup/,'cup'],[/sandwich|biscuit|grill|club|vermonter|western|sunrise|herby|leonardo|meat & cheese|egg & cheese|egg, cheese/,'sandwich'],
+    [/bagel/,'bagel'],[/samosa/,'samosa'],[/naan/,'naan'],[/sauce|ranch|yogurt|mango$|tango|polynesian|mustard|buffalo|barbeque|sriracha$/,'sauce cup'],
+    [/coffee|tea|lemonade|lassi|chai|drink/,'drink'],[/fries|mac & cheese|hash brown|fruit cup|side/,'side']];
+  for(const [re,u] of m) if(re.test(t)) return u;
+  return 'order';
+}
+function menuServs(it,sec,G){
+  if(it.u) return it.u;
+  if(it.ct){ const [c,one,many]=it.ct; return [[`1 order (${c} ${many})`,G],[`1 ${one}`,G/c]]; }
+  return [[`1 ${unitFor(it.n,sec)}`,G]];
+}
 function openXItem(ri,si,ii){
   const r=xRests(hall)[ri], it=r.sections[si].items[ii], label=`${r.name} ${it.n}`;
   if(it.k&&!it.build){ addMeal=mealNow(); addDate=todayISO();
     const k=it.g?Object.fromEntries(Object.entries(it.k).map(([a,v])=>[a,v*100/it.g])):it.k;   // items with a gram weight offer other sizes
-    return showDetail({id:'xk'+ri+'_'+si+'_'+ii,n:it.n,b:r.name,k,u:it.u||[['1 order',100]],nog:true,src:'X'},{standalone:true}); }
+    return showDetail({id:'xk'+ri+'_'+si+'_'+ii,n:it.n,b:r.name,k,u:menuServs(it,r.sections[si].name,it.g||100),nog:true,src:'X'},{standalone:true}); }
   if(it.fs&&!it.build){ fsCombo(it.fs).then(f=>{ if(!f) return openQuickAdd(null,null,label);
-      addMeal=mealNow(); addDate=todayISO(); showDetail({...f,n:it.n,b:r.name},{standalone:true}); }); return; }
+      addMeal=mealNow(); addDate=todayISO(); const G=(f.u&&f.u[0]&&f.u[0][1])||100;
+      showDetail({...f,n:it.n,b:r.name,u:menuServs(it,r.sections[si].name,G),nog:true},{standalone:true}); }); return; }
   if(!it.build) return openQuickAdd(null,null,label,`${it.price!=null?money(it.price)+' at ':'From '}${r.name}. Nutrition for ${r.name} arrives soon; for now, enter what you know.`);
   if(it.build.every(g=>g.o.every(o=>o.k))) return openBuilder(r,it);
   openForm({title:it.n,sub:`${r.name}${it.price!=null?' · '+money(it.price):''}`,saveLabel:'Log it',
@@ -1164,7 +1178,7 @@ function openBuilder(r,it){
     onSave:()=>{
       const miss=it.build.find((g,gi)=>g.req&&!xb.sel[gi].length); if(miss){ toast(`Pick a ${miss.g.toLowerCase()}`); return false; }
       const picks=it.build.flatMap((g,gi)=>xb.sel[gi].map(oi=>g.o[oi].n)).filter(n=>!/^No /.test(n));
-      const k=xsum(xbKs()), food={id:'xb'+Date.now(),n:`${it.n}${picks.length?' · '+picks.slice(0,4).join(', ')+(picks.length>4?'…':''):''}`,b:r.name,k,u:[['1 order',100]],nog:true,src:'X'};
+      const k=xsum(xbKs()), food={id:'xb'+Date.now(),n:`${it.n}${picks.length?' · '+picks.slice(0,4).join(', ')+(picks.length>4?'…':''):''}`,b:r.name,k,u:menuServs(it,'',100),nog:true,src:'X'};
       addMeal=mealNow(); addDate=todayISO(); setTimeout(()=>showDetail(food,{standalone:true}),380);
     }});
 }

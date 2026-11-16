@@ -20,7 +20,12 @@
        },
        {
         "n": "Chick-n-Minis",
-        "fs": 68720441
+        "fs": 68720441,
+        "ct": [
+         4,
+         "mini",
+         "minis"
+        ]
        },
        {
         "n": "Egg White Grill",
@@ -77,27 +82,57 @@
        },
        {
         "n": "Chick-fil-A Nuggets (8 ct)",
-        "fs": 68752626
+        "fs": 68752626,
+        "ct": [
+         8,
+         "nugget",
+         "nuggets"
+        ]
        },
        {
         "n": "Chick-fil-A Nuggets (12 ct)",
-        "fs": 68752635
+        "fs": 68752635,
+        "ct": [
+         12,
+         "nugget",
+         "nuggets"
+        ]
        },
        {
         "n": "Grilled Nuggets (8 ct)",
-        "fs": 68752649
+        "fs": 68752649,
+        "ct": [
+         8,
+         "nugget",
+         "nuggets"
+        ]
        },
        {
         "n": "Grilled Nuggets (12 ct)",
-        "fs": 68752654
+        "fs": 68752654,
+        "ct": [
+         12,
+         "nugget",
+         "nuggets"
+        ]
        },
        {
         "n": "Chick-n-Strips (3 ct)",
-        "fs": 68752664
+        "fs": 68752664,
+        "ct": [
+         3,
+         "strip",
+         "strips"
+        ]
        },
        {
         "n": "Chick-n-Strips (4 ct)",
-        "fs": 68752670
+        "fs": 68752670,
+        "ct": [
+         4,
+         "strip",
+         "strips"
+        ]
        },
        {
         "n": "Grilled Cool Wrap",
@@ -2399,6 +2434,11 @@
            }
           ]
          }
+        ],
+        "ct": [
+         3,
+         "taco",
+         "tacos"
         ]
        },
        {
@@ -2949,7 +2989,12 @@
        },
        {
         "n": "Chick-n-Minis",
-        "fs": 68720441
+        "fs": 68720441,
+        "ct": [
+         4,
+         "mini",
+         "minis"
+        ]
        },
        {
         "n": "Egg White Grill",
@@ -3006,27 +3051,57 @@
        },
        {
         "n": "Chick-fil-A Nuggets (8 ct)",
-        "fs": 68752626
+        "fs": 68752626,
+        "ct": [
+         8,
+         "nugget",
+         "nuggets"
+        ]
        },
        {
         "n": "Chick-fil-A Nuggets (12 ct)",
-        "fs": 68752635
+        "fs": 68752635,
+        "ct": [
+         12,
+         "nugget",
+         "nuggets"
+        ]
        },
        {
         "n": "Grilled Nuggets (8 ct)",
-        "fs": 68752649
+        "fs": 68752649,
+        "ct": [
+         8,
+         "nugget",
+         "nuggets"
+        ]
        },
        {
         "n": "Grilled Nuggets (12 ct)",
-        "fs": 68752654
+        "fs": 68752654,
+        "ct": [
+         12,
+         "nugget",
+         "nuggets"
+        ]
        },
        {
         "n": "Chick-n-Strips (3 ct)",
-        "fs": 68752664
+        "fs": 68752664,
+        "ct": [
+         3,
+         "strip",
+         "strips"
+        ]
        },
        {
         "n": "Chick-n-Strips (4 ct)",
-        "fs": 68752670
+        "fs": 68752670,
+        "ct": [
+         4,
+         "strip",
+         "strips"
+        ]
        },
        {
         "n": "Grilled Cool Wrap",
