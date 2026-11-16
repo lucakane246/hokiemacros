@@ -105,14 +105,26 @@ def tidy(name):
 def portion_label(p):
     desc = (p.get("portionDescription") or "").strip()
     if desc and desc.lower() not in ("quantity not specified", "guideline amount per fl oz of beverage"):
-        return desc
-    amt = p.get("amount") or p.get("value") or 1
-    unit = ((p.get("measureUnit") or {}).get("name") or "").strip()
-    mod = (p.get("modifier") or "").strip()
-    amt = int(amt) if float(amt).is_integer() else round(float(amt), 2)
-    unit = "" if unit.lower() in ("undetermined", "") else unit
-    label = " ".join(x for x in (str(amt), unit, mod) if x).strip()
-    return label if label and label != str(amt) else ""
+        label = desc
+    else:
+        amt = p.get("amount") or p.get("value") or 1
+        unit = ((p.get("measureUnit") or {}).get("name") or "").strip()
+        mod = (p.get("modifier") or "").strip()
+        if mod.isdigit():                      # FNDDS portion codes (90000 = typical amount), not words
+            return "1 serving" if mod == "90000" else "1 portion"
+        amt = int(amt) if float(amt).is_integer() else round(float(amt), 2)
+        unit = "" if unit.lower() in ("undetermined", "") else unit
+        label = " ".join(x for x in (str(amt), unit, mod) if x).strip()
+    # tidy USDA bookkeeping out of the label
+    label = re.sub(r"\s*\((yield|NLEA)[^)]*\)?", "", label, flags=re.I)
+    label = re.sub(r"\s*,?\s*(excluding refuse|yield from).*$", "", label, flags=re.I)
+    label = re.sub(r"\s*From \d+.*$", "", label)
+    label = re.sub(r"\s*\b[\w']+ label \d{4}$|\s*label \d{4}$|\s*\d{4} label$", "", label, flags=re.I)
+    label = re.sub(r"\bRACC\b", "serving", label)
+    label = re.sub(r"\s+", " ", label).strip(" ,")
+    if re.fullmatch(r"[\d./ ]*", label):
+        return ""
+    return label[:48]
 
 
 def convert(food, source):
@@ -140,7 +152,7 @@ def convert(food, source):
     for p in food.get("foodPortions") or []:
         g = p.get("gramWeight")
         lab = portion_label(p)
-        if g and lab and len(portions) < 4 and all(lab != x[0] for x in portions):
+        if g and lab and len(portions) < 4 and all((lab, round(float(g))) != (x[0], round(x[1])) for x in portions):
             portions.append([lab[:60], round(float(g), 1)])
     rec = {"id": food.get("fdcId"), "n": name, "src": source,
            "k": {key: (round(v) if key in ("cal", "sod") else round(v, 1)) for key, v in n.items()},
