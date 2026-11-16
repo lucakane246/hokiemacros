@@ -74,6 +74,9 @@ jobs:
           $B -c "Add :NSHealthShareUsageDescription string 'Reads your step count from Apple Health so your daily steps fill in automatically.'" $P
           $B -c "Add :NSHealthUpdateUsageDescription string 'Gobble does not write to Apple Health; iOS requires this description for apps that use HealthKit.'" $P
           cp App.entitlements ios/App/App/App.entitlements
+          # iPhone only (no iPad build), so App Store doesn't require iPad screenshots
+          perl -pi -e 's/TARGETED_DEVICE_FAMILY = "1,2";/TARGETED_DEVICE_FAMILY = 1;/g' ios/App/App.xcodeproj/project.pbxproj
+          grep -n 'TARGETED_DEVICE_FAMILY' ios/App/App.xcodeproj/project.pbxproj || true
           # HealthKit entitlements for the app target only (not the Capacitor plugin frameworks)
           perl -0pi -e 's/(PRODUCT_BUNDLE_IDENTIFIER = [^;]+;)/$1\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = App\/App.entitlements;/g' ios/App/App.xcodeproj/project.pbxproj
           grep -c "CODE_SIGN_ENTITLEMENTS" ios/App/App.xcodeproj/project.pbxproj
