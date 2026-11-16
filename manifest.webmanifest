@@ -1,6 +1,6 @@
 {
-  "name": "HokieMacros",
-  "short_name": "HokieMacros",
+  "name": "Gobble",
+  "short_name": "Gobble",
   "description": "Free, ad-free calorie and macro tracker for Virginia Tech dining.",
   "id": "./",
   "start_url": "./?source=app",

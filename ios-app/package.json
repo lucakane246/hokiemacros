@@ -2,7 +2,7 @@
   "name": "hokiemacros-ios",
   "private": true,
   "version": "1.0.3",
-  "description": "iPhone shell for HokieMacros (the app itself is the web app at lucakane246.github.io/hokiemacros)",
+  "description": "iPhone shell for Gobble (the app itself is the web app at lucakane246.github.io/hokiemacros)",
   "dependencies": {
     "@capacitor/cli": "^7.4.0",
     "@capacitor/core": "^7.4.0",

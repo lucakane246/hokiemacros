@@ -1,4 +1,4 @@
-# HokieMacros
+# Gobble
 
 A free, ad-free nutrition tracker for Virginia Tech students on the meal plan.
 Live menus, nutrition and hours for every dining hall, plus McComas and War Memorial gym hours, on a campus map.

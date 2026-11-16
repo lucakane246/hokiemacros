@@ -11,8 +11,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="HokieMacros">
-<title>HokieMacros</title>
+<meta name="apple-mobile-web-app-title" content="Gobble">
+<title>Gobble</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -706,7 +706,7 @@ body.night #recCard{display:none!important}
   <div class="top rise" style="--i:0">
     <div class="title">Today <svg class="caret" viewBox="0 0 24 24" fill="currentColor"><path d="M6 9l6 6 6-6z"/></svg></div>
     <div class="topbtns"><button class="moonbtn pressable" id="moonBtn" onclick="toggleNight(this)" aria-label="Nightlife mode"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path class="mi-moon" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><g class="mi-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg></button>
-    <button class="avatar pressable" onclick="go('more')" aria-label="Your profile">H</button></div>
+    <button class="avatar pressable" onclick="go('more')" aria-label="Your profile">G</button></div>
   </div>
   <div class="week rise" style="--i:1" id="week"></div>
 
@@ -854,12 +854,12 @@ body.night #recCard{display:none!important}
     <div class="title">You</div>
   </div>
   <button class="card rise profile pressable" style="--i:1" onclick="openGoals()">
-    <div class="avatar">H</div>
-    <div><h3 id="profName">Hokie</h3><div class="label" style="margin-top:3px" id="profSub"></div></div>
+    <div class="avatar">G</div>
+    <div><h3 id="profName">Gobbler</h3><div class="label" style="margin-top:3px" id="profSub"></div></div>
   </button>
   <div class="card group rise" style="--i:2" id="grp1"></div>
   <div class="card group rise" style="--i:3" id="grp2"></div>
-  <p class="note rise" style="--i:4">HokieMacros is free, ad-free and made by students.<br>Not affiliated with Virginia Tech.</p>
+  <p class="note rise" style="--i:4">Gobble is free, ad-free and made by students.<br>Not affiliated with Virginia Tech.</p>
 </section>
 
 <!-- ============ TAB BAR ============ -->
@@ -931,12 +931,12 @@ body.night #recCard{display:none!important}
 <div class="ascrim" onclick="closeAbout()"></div>
 <div class="dsheet asheet" role="dialog" aria-label="About and privacy">
   <div class="grab"></div>
-  <h3>About HokieMacros</h3>
+  <h3>About Gobble</h3>
   <div class="atext">
     <p>A free, ad-free nutrition tracker made by students for students on the Virginia Tech meal plan.</p>
     <h4>Your privacy</h4>
     <p>There are no accounts. Everything you log stays on this phone, in this browser. Nothing is sent to us or anyone else, and there's no tracking or ads.</p>
-    <p><b>Steps from Apple Health or Health Connect:</b> if you turn on step syncing in the app, HokieMacros reads only your step count. It is shown in your log on this phone and never leaves it. HokieMacros doesn't write anything to Apple Health or Health Connect, and you can turn syncing off from the Steps card.</p>
+    <p><b>Steps from Apple Health or Health Connect:</b> if you turn on step syncing in the app, Gobble reads only your step count. It is shown in your log on this phone and never leaves it. Gobble doesn't write anything to Apple Health or Health Connect, and you can turn syncing off from the Steps card.</p>
     <h4>Where the data comes from</h4>
     <p><b>Dining menus, nutrition and hours:</b> VT Dining Services, refreshed every morning.<br>
        <b>Gym and pool hours:</b> VT Recreational Sports.<br>
@@ -945,8 +945,8 @@ body.night #recCard{display:none!important}
        <b>Brand and restaurant foods:</b> <a href="https://www.fatsecret.com" target="_blank" rel="noopener">Powered by fatsecret</a>.</p>
     <p>Menus and hours can change without notice. Check signs in the dining center, especially for allergens.</p>
     <h4>Not medical advice</h4>
-    <p>Calorie and nutrient numbers are estimates. HokieMacros isn't a substitute for advice from a doctor or registered dietitian.</p>
-    <p class="fine">HokieMacros is an independent student project and is not affiliated with or endorsed by Virginia Tech.</p>
+    <p>Calorie and nutrient numbers are estimates. Gobble isn't a substitute for advice from a doctor or registered dietitian.</p>
+    <p class="fine">Gobble is an independent student project and is not affiliated with or endorsed by Virginia Tech.</p>
   </div>
   <button class="primary pressable" style="width:100%;margin-top:6px" onclick="closeAbout()">Done</button>
 </div>
@@ -1969,7 +1969,7 @@ function openSteps(){
     const t=STORE.healthAt?new Date(STORE.healthAt).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'}):'';
     return openForm({title:'Steps',sub:`Today · from ${HNAME()}`,saveLabel:'Sync now',
       body:`<div class="hsync"><div class="hbig">${fmtN(rec.steps||0)}</div><div class="label">steps today${t?` · updated ${t}`:''}</div></div>
-        <p class="fnote">HokieMacros reads your steps from ${HNAME()} each time you open the app. ${HNAME()==='Health Connect'?'Zero steps when you’ve been walking usually means access is off or no app is counting steps: open <b>Health Connect</b> → <b>App permissions</b> → HokieMacros and allow Steps, and make sure Google Fit, Samsung Health or your phone’s fitness app is set to share steps.':'Zero steps when you’ve been walking usually means access is off: open the <b>Health</b> app → your profile → <b>Apps</b> → HokieMacros, and turn on Steps.'}</p>
+        <p class="fnote">Gobble reads your steps from ${HNAME()} each time you open the app. ${HNAME()==='Health Connect'?'Zero steps when you’ve been walking usually means access is off or no app is counting steps: open <b>Health Connect</b> → <b>App permissions</b> → Gobble and allow Steps, and make sure Google Fit, Samsung Health or your phone’s fitness app is set to share steps.':'Zero steps when you’ve been walking usually means access is off: open the <b>Health</b> app → your profile → <b>Apps</b> → Gobble, and turn on Steps.'}</p>
         <button class="linkbtn" onclick="healthOff()">Stop syncing and enter steps myself</button>`,
       onSave:()=>{ syncSteps(false).then(ok=>toast(ok?'Steps updated':`Couldn’t read ${HNAME()}`)); }});
   }
@@ -2080,7 +2080,7 @@ function renderGoalsForm(){
   $('gForm').innerHTML=`
     <div class="station">About you</div>
     <div class="card gcard">
-      <label class="field"><span>First name (optional)</span><input class="numin" id="gName" value="${esc(g.name)}" placeholder="Hokie" maxlength="24" oninput="G.name=this.value"></label>
+      <label class="field"><span>First name (optional)</span><input class="numin" id="gName" value="${esc(g.name)}" placeholder="Gobbler" maxlength="24" oninput="G.name=this.value"></label>
       <div class="field"><span>Sex · used by the calorie formula</span>${pills('sex',[['m','Male'],['f','Female']],g.sex)}</div>
       <div class="g3">
         <label class="field"><span>Age</span>${numIn('gAge',g.age,'19','oninput="gNum(\'age\',this.value)"')}</label>
@@ -2182,8 +2182,8 @@ function applyGoals(){
 }
 function renderProfile(){
   const pr=STORE.profile, nm=(pr.name||'').trim();
-  document.querySelectorAll('.avatar').forEach(a=>a.textContent=(nm[0]||'H').toUpperCase());
-  $('profName').textContent=nm||'Hokie';
+  document.querySelectorAll('.avatar').forEach(a=>a.textContent=(nm[0]||'G').toUpperCase());
+  $('profName').textContent=nm||'Gobbler';
   const g=STORE.goals;
   $('profSub').textContent=pr.setup?`${fmtN(g.cal)} cal a day · ${pr.macros==='grams'?'Exact macros':pr.manual?'Custom goal':pr.goal==='maintain'?'Maintain weight':(pr.goal==='lose'?'Lose ':'Gain ')+pr.rate+' lb a week'}`:'Goals not set up yet';
   $('setupCard').style.display=pr.setup?'none':'';
@@ -2505,7 +2505,7 @@ const isIOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='M
 let installEvt=null;
 if(!NATIVE&&'serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')) navigator.serviceWorker.register('sw.js').catch(()=>{});
 window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); installEvt=e; renderInstallCard(); });
-window.addEventListener('appinstalled',()=>{ installEvt=null; STORE.installDismissed=true; saveStore(); renderInstallCard(); toast('HokieMacros is on your home screen'); });
+window.addEventListener('appinstalled',()=>{ installEvt=null; STORE.installDismissed=true; saveStore(); renderInstallCard(); toast('Gobble is on your home screen'); });
 // ask the browser not to clear your log when space runs low
 function keepData(){ try{ navigator.storage&&navigator.storage.persist&&navigator.storage.persist(); }catch(e){} }
 if(isStandalone()) keepData();
@@ -2515,14 +2515,14 @@ function renderInstallCard(){
   const native=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());
   const show=!native&&!isStandalone()&&!STORE.installDismissed&&(isIOS||installEvt||/Android/i.test(navigator.userAgent));
   el.hidden=!show; if(!show) return;
-  el.innerHTML=`<img src="icons/icon-192.png" alt="" width="44" height="44"><div><b>Get the app</b><span>Add HokieMacros to your home screen. It opens full screen, works offline and keeps your log safe.</span></div>
+  el.innerHTML=`<img src="icons/icon-192.png" alt="" width="44" height="44"><div><b>Get the app</b><span>Add Gobble to your home screen. It opens full screen, works offline and keeps your log safe.</span></div>
     <button class="ibtn pressable" onclick="installApp()">${installEvt?'Install':'How'}</button><button class="ix" onclick="STORE.installDismissed=true;saveStore();renderInstallCard()" aria-label="Dismiss">×</button>`;
 }
 function installApp(){
   if(installEvt){ installEvt.prompt(); installEvt.userChoice.finally(()=>{installEvt=null;renderInstallCard();}); return; }
   const share='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 3v12M8 7l4-4 4 4M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg>';
   openForm({title:'Add to Home Screen',sub:isIOS?'iPhone and iPad':'Android',saveLabel:'Got it',
-    body:isIOS?`<ol class="isteps"><li>Open this page in <b>Safari</b>.</li><li>Tap the Share button ${share} at the bottom of the screen.</li><li>Scroll down and tap <b>Add to Home Screen</b>, then <b>Add</b>.</li></ol><p class="fnote">Then open HokieMacros from your home screen. Home Screen apps aren’t cleared the way Safari clears websites you haven’t visited in a while.</p>${STORE.days&&Object.keys(STORE.days).length?'<p class="fnote">The home screen app starts with its own storage. To bring what you’ve logged here, tap <b>You → Settings → Back up my data</b> first, then <b>Restore from a backup</b> in the app.</p>':''}`
+    body:isIOS?`<ol class="isteps"><li>Open this page in <b>Safari</b>.</li><li>Tap the Share button ${share} at the bottom of the screen.</li><li>Scroll down and tap <b>Add to Home Screen</b>, then <b>Add</b>.</li></ol><p class="fnote">Then open Gobble from your home screen. Home Screen apps aren’t cleared the way Safari clears websites you haven’t visited in a while.</p>${STORE.days&&Object.keys(STORE.days).length?'<p class="fnote">The home screen app starts with its own storage. To bring what you’ve logged here, tap <b>You → Settings → Back up my data</b> first, then <b>Restore from a backup</b> in the app.</p>':''}`
       :`<ol class="isteps"><li>Tap the <b>⋮</b> menu in Chrome.</li><li>Tap <b>Add to Home screen</b> or <b>Install app</b>.</li></ol>`,
     onSave:()=>{}});
 }
@@ -2536,15 +2536,15 @@ function openSettings(){
         ${isStandalone()?'':`<button class="row" onclick="closeForm();setTimeout(installApp,380)"><span>Add to Home Screen</span><small>Full screen, offline, safer storage</small></button>`}
         <button class="row danger" onclick="eraseAll()"><span>Erase all data</span><small>Diary, goals, weights, foods and meals</small></button></div>
       <input type="file" id="importFile" accept="application/json,.json" hidden onchange="importData(this.files[0])">
-      <p class="fnote">HokieMacros has no accounts. Nothing you log is sent anywhere, so a backup file is how you move it to a new phone.</p>`,
+      <p class="fnote">Gobble has no accounts. Nothing you log is sent anywhere, so a backup file is how you move it to a new phone.</p>`,
     onSave:()=>{}});
 }
 async function exportData(){
-  const name=`hokiemacros-backup-${todayISO()}.json`, text=JSON.stringify({app:'HokieMacros',version:1,exported:new Date().toISOString(),data:STORE},null,1);
+  const name=`gobble-backup-${todayISO()}.json`, text=JSON.stringify({app:'Gobble',version:1,exported:new Date().toISOString(),data:STORE},null,1);
   const cap=window.Capacitor; // inside the Android/iPhone app, save the file and open the share sheet
   if(cap&&cap.isNativePlatform&&cap.isNativePlatform()&&cap.Plugins&&cap.Plugins.Filesystem&&cap.Plugins.Share){
     try{ const r=await cap.Plugins.Filesystem.writeFile({path:name,data:text,directory:'CACHE',encoding:'utf8'});
-      await cap.Plugins.Share.share({title:'HokieMacros backup',files:[r.uri]}); return; }catch(e){ if(String(e).includes('cancel')) return; }
+      await cap.Plugins.Share.share({title:'Gobble backup',files:[r.uri]}); return; }catch(e){ if(String(e).includes('cancel')) return; }
   }
   const blob=new Blob([text],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); a.remove();
@@ -2552,13 +2552,13 @@ async function exportData(){
 }
 async function importData(file){
   if(!file) return;
-  try{ const j=JSON.parse(await file.text()); const d=j&&j.app==='HokieMacros'?j.data:j;
+  try{ const j=JSON.parse(await file.text()); const d=j&&(j.app==='Gobble'||j.app==='Gobble')?j.data:j;
     if(!d||typeof d!=='object'||!d.days) throw 0;
     const n=Object.keys(d.days).length;
     closeForm(); setTimeout(()=>openForm({title:'Restore backup?',sub:`${n} day${n===1?'':'s'} of logs`,saveLabel:'Replace my data',
       body:`<p class="fnote" style="font-size:14px">Everything on this phone will be replaced by the backup from ${esc((j.exported||'').slice(0,10)||'that file')}.</p>`,
       onSave:()=>{ localStorage.setItem(STORE_KEY,JSON.stringify(d)); location.reload(); }}),380);
-  }catch(e){ toast('That file isn’t a HokieMacros backup'); }
+  }catch(e){ toast('That file isn’t a Gobble backup'); }
 }
 function eraseAll(){
   closeForm(); setTimeout(()=>openForm({title:'Erase everything?',sub:'This can’t be undone',saveLabel:'Erase all data',

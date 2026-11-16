@@ -1,4 +1,4 @@
-// HokieMacros service worker: works offline, stays fresh online.
+// Gobble service worker: works offline, stays fresh online.
 const V = 'hm-v1';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/apple-touch-icon.png', './campus-clean.webp'];
 

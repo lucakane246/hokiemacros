@@ -61,14 +61,14 @@ jobs:
           chmod +x gradlew
           ./gradlew --no-daemon assembleDebug bundleRelease
           mkdir -p ../../out
-          cp app/build/outputs/apk/debug/app-debug.apk ../../out/HokieMacros-test.apk
-          cp app/build/outputs/bundle/release/app-release.aab ../../out/HokieMacros-play-${{ github.run_number }}.aab
+          cp app/build/outputs/apk/debug/app-debug.apk ../../out/Gobble-test.apk
+          cp app/build/outputs/bundle/release/app-release.aab ../../out/Gobble-play-${{ github.run_number }}.aab
           ls -la ../../out
       - name: Publish to the "android" release
         working-directory: .
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release view android >/dev/null 2>&1 || gh release create android --title "Android app" --notes "Latest Android build. Install HokieMacros-test.apk on a phone to try it. The .aab file is for uploading to Google Play." --latest=false
+          gh release view android >/dev/null 2>&1 || gh release create android --title "Android app" --notes "Latest Android build. Install Gobble-test.apk on a phone to try it. The .aab file is for uploading to Google Play." --latest=false
           gh release upload android out/* --clobber
-          gh release edit android --notes "Latest Android build (run ${{ github.run_number }}, $(date -u +%Y-%m-%d)). Install HokieMacros-test.apk on an Android phone to try it. The .aab file is for uploading to Google Play$( [ -n "$SIGNED" ] && echo ' (signed with your upload key)' || echo ' (not signed yet: add the signing secrets first)')."
+          gh release edit android --notes "Latest Android build (run ${{ github.run_number }}, $(date -u +%Y-%m-%d)). Install Gobble-test.apk on an Android phone to try it. The .aab file is for uploading to Google Play$( [ -n "$SIGNED" ] && echo ' (signed with your upload key)' || echo ' (not signed yet: add the signing secrets first)')."

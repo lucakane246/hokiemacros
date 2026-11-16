@@ -2,7 +2,7 @@
   "name": "hokiemacros-android",
   "private": true,
   "version": "1.0.0",
-  "description": "Android shell for HokieMacros (the app itself is the web app at lucakane246.github.io/hokiemacros)",
+  "description": "Android shell for Gobble (the app itself is the web app at lucakane246.github.io/hokiemacros)",
   "dependencies": {
     "@capacitor/android": "^7.4.0",
     "@capacitor/cli": "^7.4.0",

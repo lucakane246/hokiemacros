@@ -159,7 +159,7 @@ struct WidgetView: View {
             }
         } else {
             VStack(alignment: .leading, spacing: 6) {
-                Text("HokieMacros").font(.system(size: 13, weight: .heavy)).foregroundColor(.hmOrange)
+                Text("Gobble").font(.system(size: 13, weight: .heavy)).foregroundColor(.hmOrange)
                 Text("Open the app and log a meal to see today's calories here.").font(.system(size: 12, weight: .medium)).foregroundColor(.white.opacity(0.8))
             }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
