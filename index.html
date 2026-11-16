@@ -838,7 +838,8 @@ function searchFoods(q,tab){
     for(const t of toks){ const base=t.replace(/s$/,'');
       s+= new RegExp(' '+base+'(s|es)? ').test(name)?10:-15; }  // whole words beat "egg" -> "eggplant"
     s-=Math.max(0,seg.split(' ').length-toks.length)*4;
-    if(/ (raw|nfs|plain|whole|cooked|roasted|grilled|large|medium) /.test(name)) s+=6;
+    const full=name.trim(); if(full===q||full===q+'s'||full+'s'===q) s+=25;      // exactly what they typed
+    if(/ (plain|whole|large|medium) /.test(name)) s+=2;
     s+=f.vt?8:f.r?0:5;
     s-=f.n.length/10;
     out.push([s,f]);

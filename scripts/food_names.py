@@ -34,7 +34,7 @@ JUNK = _full([
     r"made with .* oil", r"made with butter", r"made with margarine", r"not further specified", r"all types",
     r"all varieties", r"all commercial varieties", r"with refuse", r"usda commodity", r"commodity", r"untrimmed",
     r"denuded", r"steak/roast", r"roast/steak", r"bnls", r"farmed", r"wild", r"raw or unheated", r"uncooked",
-    r"with salt added", r"unroasted", r"whole kernel", r"all forms", r"salad or cooking",
+    r"with salt added", r"from raw", r"from pre-cooked", r"from precooked", r"unroasted", r"whole kernel", r"all forms", r"salad or cooking",
 ])
 RENAME = [  # part -> nicer wording
     (r"^meat and skin$", "with skin"), (r"^skin eaten$", "with skin"), (r"^separable lean only$", "lean"),
@@ -45,7 +45,8 @@ METHOD = _full([
     r"pan-fried", r"pan-broiled", r"pan-broil", r"stewed", r"simmered", r"toasted", r"blanched", r"heated in .*",
     r"baked or broiled", r"cooked in microwave", r"cooked, boiled", r"roasted, .*", r"braised, .*", r"rotisserie",
     r"oven-roasted", r"oven-heated", r"microwaved, .*", r"stir-fried", r"ns as to cooking method", r"fully cooked",
-    r"cooked, .*", r"from frozen", r"from fresh", r"from canned",
+    r"cooked, .*", r"from frozen", r"from fresh", r"from canned", r"or (roasted|baked|broiled|grilled|fried|boiled)",
+    r"(baked|broiled|roasted|grilled)( or (baked|broiled|roasted|grilled))+",
 ])
 DISH_METHODS = re.compile(r"^(scrambled|fried|hard-boiled|hard-cooked|soft-boiled|poached|deviled|mashed|french fried|"
                           r"fried in .*|sunny side up|over easy|omelet|baked potato)$", re.I)
