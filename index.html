@@ -415,6 +415,8 @@ body.about-open .asheet{transform:none}
 .fscrim{position:fixed;inset:0;z-index:28;background:rgba(5,2,4,.62);opacity:0;pointer-events:none;transition:opacity .22s}
 body.form-open .fscrim{opacity:1;pointer-events:auto}
 .fsheet{z-index:29}
+.fclose{position:sticky;top:0;float:right;margin:4px -4px -36px 0;z-index:6;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--surface-3);color:var(--text-2);border:1px solid var(--hair-2)}
+.fsheet h3{padding-right:40px}
 body.form-open .fsheet{transform:none}
 .fbody{display:flex;flex-direction:column;gap:12px;margin-top:16px}
 .fsave{grid-template-columns:1fr}
@@ -952,6 +954,7 @@ body.night #recCard{display:none!important}
 <!-- ============ FORM SHEET (exercise, weight, steps, quick add) ============ -->
 <div class="fscrim" onclick="closeForm()"></div>
 <div class="dsheet fsheet" role="dialog" aria-labelledby="fTitle">
+  <button class="fclose pressable" onclick="closeForm()" aria-label="Close"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
   <div class="grab"></div>
   <h3 id="fTitle"></h3><div class="ddate" id="fSub"></div>
   <div class="fbody" id="fBody"></div>
