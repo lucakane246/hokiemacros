@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['ios-app/**', '.github/workflows/ios.yml', 'scripts/ios_native.rb', 'index.html', 'icons/**', 'campus*', 't1/**', 't2/**', 'data/foods.json', 'data/walk.json']
+    paths: ['ios-app/**', '.github/workflows/ios.yml', 'scripts/ios_native.rb', 'scripts/revoke_dev_certs.rb', 'index.html', 'icons/**', 'campus*', 't1/**', 't2/**', 'data/foods.json', 'data/walk.json']
 
 permissions:
   contents: write
@@ -95,6 +95,7 @@ jobs:
         run: |
           mkdir -p ~/private_keys
           printf '%s' "$ASC_KEY_P8" > ~/private_keys/AuthKey_$ASC_KEY_ID.p8
+          ruby ../scripts/revoke_dev_certs.rb "$ASC_KEY_ID" "$ASC_ISSUER_ID" ~/private_keys/AuthKey_$ASC_KEY_ID.p8 || echo 'certificate cleanup skipped'
       - name: Archive
         run: |
           set -o pipefail
