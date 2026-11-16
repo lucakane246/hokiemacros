@@ -1107,7 +1107,7 @@
          "fib": 0,
          "sug": 5
         },
-        "est": "Tamarind Apple"
+        "est": "Estimated from the Tamarind Apple sauce"
        }
       ]
      },
@@ -1139,7 +1139,7 @@
          "fib": 0,
          "sug": 15
         },
-        "est": "Choolaah Chai"
+        "est": "Estimated from the hot chai"
        },
        {
         "n": "Mango Lassi",
@@ -1166,7 +1166,7 @@
          "fib": 0,
          "sug": 30
         },
-        "est": "small size"
+        "note": "Small size"
        },
        {
         "n": "Mango Lemonade",
@@ -1180,7 +1180,7 @@
          "fib": 7,
          "sug": 31
         },
-        "est": "small size"
+        "note": "Small size"
        }
       ]
      }
@@ -1199,30 +1199,87 @@
        {
         "n": "Egg & Cheese",
         "price": 6.89,
-        "d": "On a bagel"
+        "d": "On a bagel",
+        "k": {
+         "cal": 430,
+         "p": 22,
+         "c": 63,
+         "f": 18,
+         "sod": 970,
+         "fib": 4,
+         "sug": 8
+        }
        },
        {
         "n": "Meat & Cheese",
-        "price": 7.19
+        "price": 7.19,
+        "k": {
+         "cal": 390,
+         "p": 21,
+         "c": 62,
+         "f": 15,
+         "sod": 1020,
+         "fib": 4,
+         "sug": 8
+        },
+        "est": "Estimated: Egg, Cheese & Bacon without the egg"
        },
        {
         "n": "Skinny Zesty Egg White",
         "price": 7.49,
-        "d": "Egg white, turkey sausage, Swiss & sun-dried tomato spread on a skinny bagel"
+        "d": "Egg white, turkey sausage, Swiss & sun-dried tomato spread on a skinny bagel",
+        "k": {
+         "cal": 410,
+         "p": 26,
+         "c": 47,
+         "f": 13,
+         "sod": 880,
+         "fib": 3,
+         "sug": 6
+        }
        },
        {
         "n": "Egg, Cheese & Meat",
-        "price": 7.89
+        "price": 7.89,
+        "k": {
+         "cal": 500,
+         "p": 26,
+         "c": 64,
+         "f": 24,
+         "sod": 1190,
+         "fib": 4,
+         "sug": 9
+        },
+        "note": "With bacon. Sausage is 590 cal."
        },
        {
         "n": "Western",
         "price": 8.79,
-        "d": "Egg, bacon, cheddar, chipotle sauce, peppers & red onion on a bagel"
+        "d": "Egg, bacon, cheddar, chipotle sauce, peppers & red onion on a bagel",
+        "k": {
+         "cal": 670,
+         "p": 25,
+         "c": 67,
+         "f": 34,
+         "sod": 1210,
+         "fib": 4,
+         "sug": 11
+        }
        },
        {
         "n": "Sriracha Honey Sunrise",
         "price": 8.59,
-        "d": "Everything bagel, egg, 3 strips of bacon, cheddar, sriracha honey"
+        "d": "Everything bagel, egg, 3 strips of bacon, cheddar, sriracha honey",
+        "k": {
+         "cal": 530,
+         "p": 26,
+         "c": 71,
+         "f": 24,
+         "sod": 1190,
+         "fib": 4,
+         "sug": 16
+        },
+        "est": "Estimated: Egg, Cheese & Bacon plus sriracha honey"
        },
        {
         "n": "Vermonter",
@@ -1238,7 +1295,16 @@
        {
         "n": "Herby Turkey",
         "price": 9.19,
-        "d": "Roasted turkey, light herb garlic cream cheese, sun-dried tomato spread, lettuce & red onion"
+        "d": "Roasted turkey, light herb garlic cream cheese, sun-dried tomato spread, lettuce & red onion",
+        "k": {
+         "cal": 570,
+         "p": 34,
+         "c": 75,
+         "f": 15,
+         "sod": 1580,
+         "fib": 4,
+         "sug": 11
+        }
        },
        {
         "n": "Leonardo Da Veggie",
@@ -1247,7 +1313,15 @@
         "tags": [
          "vegetarian"
         ],
-        "fs": 113625343
+        "k": {
+         "cal": 490,
+         "p": 21,
+         "c": 70,
+         "f": 14,
+         "sod": 860,
+         "fib": 5,
+         "sug": 12
+        }
        }
       ]
      },
@@ -1257,21 +1331,54 @@
        {
         "n": "Brewed Coffee Medium",
         "price": 3.29,
-        "fs": 113625014
+        "k": {
+         "cal": 5,
+         "p": 0,
+         "c": 0,
+         "f": 0,
+         "sod": 11,
+         "fib": 0,
+         "sug": 0
+        }
        },
        {
         "n": "Brewed Coffee Large",
-        "price": 3.59
+        "price": 3.59,
+        "k": {
+         "cal": 6,
+         "p": 0,
+         "c": 0,
+         "f": 0,
+         "sod": 14,
+         "fib": 0,
+         "sug": 0
+        }
        },
        {
         "n": "Iced Coffee Medium",
         "price": 3.39,
-        "fs": 113625175
+        "k": {
+         "cal": 5,
+         "p": 0,
+         "c": 0,
+         "f": 0,
+         "sod": 11,
+         "fib": 0,
+         "sug": 0
+        }
        },
        {
         "n": "Iced Coffee Large",
         "price": 3.69,
-        "fs": 113625178
+        "k": {
+         "cal": 6,
+         "p": 0,
+         "c": 0,
+         "f": 0,
+         "sod": 14,
+         "fib": 0,
+         "sug": 0
+        }
        }
       ]
      },
@@ -1282,27 +1389,68 @@
         "n": "Single Bagel",
         "price": 2.49,
         "d": "Choice of bagel, no toppings",
-        "fs": 74047915
+        "k": {
+         "cal": 300,
+         "p": 12,
+         "c": 60,
+         "f": 2,
+         "sod": 530,
+         "fib": 4,
+         "sug": 7
+        }
        },
        {
         "n": "Bagel and Cream Cheese",
         "price": 4.48,
-        "fs": [
-         74047915,
-         113625328
-        ]
+        "k": {
+         "cal": 430,
+         "p": 15,
+         "c": 62,
+         "f": 13,
+         "sod": 655,
+         "fib": 4,
+         "sug": 9
+        }
        },
        {
         "n": "PB & J Bagel",
-        "price": 4.29
+        "price": 4.29,
+        "k": {
+         "cal": 600,
+         "p": 21,
+         "c": 82,
+         "f": 23,
+         "sod": 735,
+         "fib": 7,
+         "sug": 23
+        }
        },
        {
         "n": "Peanut Butter Bagel",
-        "price": 3.69
+        "price": 3.69,
+        "k": {
+         "cal": 550,
+         "p": 21,
+         "c": 69,
+         "f": 23,
+         "sod": 730,
+         "fib": 7,
+         "sug": 11
+        }
        },
        {
         "n": "Butter / Jelly / Honey Bagel",
-        "price": 3.19
+        "price": 3.19,
+        "k": {
+         "cal": 400,
+         "p": 12,
+         "c": 60,
+         "f": 13,
+         "sod": 620,
+         "fib": 4,
+         "sug": 7
+        },
+        "note": "With butter. Jelly is 350 cal."
        }
       ]
      },
@@ -1315,15 +1463,36 @@
        },
        {
         "n": "Muffin",
-        "price": 3.29
+        "price": 3.29,
+        "k": {
+         "cal": 430,
+         "p": 5,
+         "c": 55,
+         "f": 21,
+         "sod": 270,
+         "fib": 0,
+         "sug": 30
+        },
+        "note": "Blueberry"
        },
        {
         "n": "Cookie",
-        "price": 2.79
+        "price": 2.79,
+        "k": {
+         "cal": 440,
+         "p": 5,
+         "c": 63,
+         "f": 21,
+         "sod": 340,
+         "fib": 2,
+         "sug": 37
+        },
+        "note": "Chocolate chip"
        }
       ]
      }
-    ]
+    ],
+    "nsrc": "Bruegger’s nutrition chart (Mar 2020)"
    },
    {
     "name": "Qdoba",
