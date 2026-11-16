@@ -412,6 +412,45 @@ body.prog-open .progscreen{transform:none;visibility:visible}
 #pgList .row{display:grid;grid-template-columns:1fr auto auto;gap:12px}
 #pgList .row b{font-weight:750}
 .pgd{font-size:12.5px;font-weight:700;color:var(--muted)}.pgd.down{color:var(--green)}.pgd.up{color:var(--carb)}
+
+/* ---------- goals ---------- */
+.goalscreen{z-index:24;padding-bottom:calc(var(--safe-b) + 100px)}
+body.goals-open .goalscreen{transform:none;visibility:visible}
+.ghero{text-align:center;padding:22px 18px 18px;background:radial-gradient(120% 90% at 50% 0%,rgba(238,138,60,.16),transparent 60%),var(--surface)}
+.ghero .big{justify-content:center;display:flex;align-items:baseline;gap:6px;margin-top:6px}
+.ghero .big span{font-size:52px;font-weight:800;letter-spacing:-2px}
+.gexp{color:var(--muted);font-size:13.5px;font-weight:600;line-height:1.5;margin-top:4px}.gexp b{color:var(--text-2)}
+.gwarn{color:var(--carb)}
+.gmac{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.gmac:empty{display:none}
+.gmac div{background:rgba(255,255,255,.04);border:1px solid var(--hair);border-radius:14px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.gmac i{width:8px;height:8px;border-radius:50%}.gmac b{font-size:18px;font-weight:800}.gmac span{font-size:11.5px;color:var(--muted);font-weight:600}
+.gcard{display:flex;flex-direction:column;gap:14px}
+.gpills{margin:0;flex-wrap:wrap}.gpills .mchip{flex:1 1 auto;padding:9px 12px}
+.g3{display:grid;grid-template-columns:1fr 1.6fr;gap:10px}
+.hpair{display:grid;grid-template-columns:1fr auto 1fr auto;align-items:center;gap:6px}.hpair i{font-style:normal;color:var(--muted);font-weight:650;font-size:13px}
+.gacts{padding:0}
+.gact{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px;color:inherit;font:inherit;border-bottom:1px solid var(--hair)}
+.gact:last-child{border-bottom:none}
+.gact i{width:20px;height:20px;border-radius:50%;border:2px solid var(--faint);flex:none;transition:all .25s}
+.gact.on i{border-color:var(--orange);box-shadow:inset 0 0 0 4px var(--surface),inset 0 0 0 10px var(--orange)}
+.gact b{display:block;font-weight:700;font-size:15px}.gact span{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.gnote{margin:8px 6px 0}
+.gsum{font-size:12.5px;font-weight:650;color:var(--green)}.gsum.bad{color:var(--carb)}
+.gtoggle{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;color:inherit;font:inherit}
+.gtoggle b{display:block;font-weight:700;font-size:15px}.gtoggle span{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.gtoggle i{width:48px;height:28px;border-radius:99px;background:var(--surface-3);position:relative;flex:none;transition:background .3s}
+.gtoggle i::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .35s var(--spring)}
+.gtoggle.on i{background:var(--orange)}.gtoggle.on i::after{transform:translateX(20px)}
+.gwater{flex-direction:row;align-items:center;justify-content:space-between}.gwater b{font-size:22px;font-weight:800}.gwater span{color:var(--muted);font-size:13px;font-weight:600}
+.gwater .stepper{width:120px;flex:none}.gwater .stepper button{flex:1;height:100%}
+.gfoot{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:430px;padding:14px 16px calc(var(--safe-b) + 14px);background:linear-gradient(transparent,var(--bg) 35%);z-index:2}
+.gfoot .primary{width:100%}
+.setup{display:flex;align-items:center;gap:14px;width:100%;text-align:left;color:inherit;font:inherit;background:linear-gradient(120deg,rgba(138,36,71,.35),rgba(238,138,60,.18)),var(--surface);border-color:rgba(238,138,60,.25)}
+.setup .sq{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--orange),var(--orange-deep));flex:none}
+.setup b{display:block;font-weight:750;font-size:16px}.setup span{display:block;color:var(--text-2);font-size:13px;margin-top:2px;line-height:1.4}
+.setup .chev{margin-left:auto;color:var(--muted);flex:none}
+button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 </style>
 </head>
 <body>
@@ -429,6 +468,12 @@ body.prog-open .progscreen{transform:none;visibility:visible}
     <button class="avatar pressable" onclick="go('more')" aria-label="Your profile">H</button>
   </div>
   <div class="week rise" style="--i:1" id="week"></div>
+
+  <button class="card setup pressable rise" style="--i:2" id="setupCard" onclick="openGoals()">
+    <span class="sq"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M12 3a9 9 0 1 0 9 9M12 7a5 5 0 1 0 5 5M12 11a1 1 0 1 0 1 1M12 12l8-8"/></svg></span>
+    <div><b>Set your goals</b><span>One minute to get a calorie and macro goal made for you.</span></div>
+    <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+  </button>
 
   <div class="card rise" style="--i:2">
     <div class="label">Calories</div>
@@ -543,10 +588,10 @@ body.prog-open .progscreen{transform:none;visibility:visible}
   <div class="top rise" style="--i:0">
     <div class="title">You</div>
   </div>
-  <div class="card rise profile" style="--i:1">
+  <button class="card rise profile pressable" style="--i:1" onclick="openGoals()">
     <div class="avatar">H</div>
-    <div><h3>Hokie</h3><div class="label" style="margin-top:3px">Major Meal Plan · Class of 2029</div></div>
-  </div>
+    <div><h3 id="profName">Hokie</h3><div class="label" style="margin-top:3px" id="profSub"></div></div>
+  </button>
   <div class="card group rise" style="--i:2" id="grp1"></div>
   <div class="card group rise" style="--i:3" id="grp2"></div>
   <p class="note rise" style="--i:4">HokieMacros is free, ad-free and made by students.<br>Not affiliated with Virginia Tech.</p>
@@ -645,6 +690,23 @@ body.prog-open .progscreen{transform:none;visibility:visible}
     <button class="primary pressable" id="fSave" onclick="formSave()">Save</button>
   </div>
 </div>
+
+
+<!-- ============ GOALS ============ -->
+<section class="addscreen goalscreen" id="goalscreen" aria-label="Goals">
+  <div class="addtop">
+    <button class="iconbtn" onclick="closeGoals()" aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <h2>Goals</h2><span style="width:40px"></span>
+  </div>
+  <div class="card ghero">
+    <div class="label">Daily calorie goal</div>
+    <div class="big"><span id="gCalBig">–</span><small>cal</small></div>
+    <div class="gexp" id="gExplain"></div>
+    <div class="gmac" id="gMacros"></div>
+  </div>
+  <div id="gForm"></div>
+  <div class="gfoot"><button class="primary pressable" id="gSave" onclick="saveGoals()">Save</button></div>
+</section>
 
 <!-- ============ PROGRESS ============ -->
 <section class="addscreen progscreen" aria-label="Progress">
@@ -1242,7 +1304,7 @@ function openWeight(entryDate){
       <label class="field" style="margin-top:12px"><span>Date</span><input type="date" class="numin" id="wDate" value="${d}" max="${today}"></label>`,
     onSave:()=>{ const lb=Math.round(parseFloat($('wLb').value)*10)/10, nd=$('wDate').value||today;
       if(!(lb>50&&lb<700)) { toast('Enter a weight in pounds'); return false; }
-      STORE.weights=STORE.weights.filter(w=>w.d!==nd&&(!e||w.d!==e.d)).concat({d:nd,lb}); saveStore(); renderProgress(); refreshLog(); toast(`Weight saved · ${lb} lb`); },
+      STORE.weights=STORE.weights.filter(w=>w.d!==nd&&(!e||w.d!==e.d)).concat({d:nd,lb}); const ch=applyGoals(); saveStore(); renderProgress(); refreshLog(); renderProfile(); toast(ch?`Weight saved · goal now ${fmtN(STORE.goals.cal)} cal`:`Weight saved · ${lb} lb`); },
     onDelete:e?()=>{ STORE.weights=STORE.weights.filter(w=>w.d!==e.d); saveStore(); renderProgress(); }:null});
 }
 
@@ -1307,6 +1369,144 @@ function renderProgress(){
   $('pgAvg').textContent=days7.length?fmtN(days7.reduce((s,d)=>s+dayTotals(d).cal,0)/days7.length):'–';
 }
 
+// ================= goals & setup =================
+const ACT_LEVELS=[
+  [1.2,'Mostly sitting','Classes, studying, gaming. Short walks only.'],
+  [1.375,'Lightly active','Walking across campus most days.'],
+  [1.55,'Active','On your feet a lot, or a job that keeps you moving.'],
+  [1.725,'Very active','Physical job or training as a varsity athlete.'],
+];
+const RATES={lose:[.5,1,1.5,2],gain:[.25,.5,1]};
+const MACRO_PRESETS={balanced:['Balanced',50,20,30],protein:['High protein',40,30,30],lowcarb:['Low carb',25,35,40]};
+let G=null; // working copy while the Goals screen is open
+
+function calcGoals(pr){
+  const kg=pr.weightLb*0.45359237, cm=((pr.ft||0)*12+(pr.inch||0))*2.54;
+  const bmr=10*kg+6.25*cm-5*pr.age+(pr.sex==='f'?-161:5);
+  const tdee=bmr*pr.act;
+  const delta=pr.goal==='maintain'?0:(pr.goal==='lose'?-1:1)*pr.rate*500;
+  const floor=pr.sex==='f'?1200:1500;
+  let cal=Math.round((tdee+delta)/10)*10, floored=false;
+  if(pr.goal==='lose'&&cal<floor){ cal=floor; floored=true; }
+  if(pr.manual&&pr.manualCal>0) cal=Math.round(pr.manualCal);
+  const [,pc,pp,pf]=pr.macros==='custom'?['',pr.mc,pr.mp,pr.mf]:MACRO_PRESETS[pr.macros];
+  return {cal,tdee:Math.round(tdee/10)*10,delta,floored,floor,
+    c:Math.round(cal*pc/100/4),p:Math.round(cal*pp/100/4),f:Math.round(cal*pf/100/9),pc,pp,pf};
+}
+const profileReady=pr=>pr.age>=13&&pr.age<=100&&pr.weightLb>60&&((pr.ft||0)*12+(pr.inch||0))>=48;
+
+function openGoals(){
+  const pr=STORE.profile;
+  G={name:pr.name||'',sex:pr.sex||'',age:pr.age||'',ft:pr.ft||'',inch:pr.inch??'',weightLb:latestWeight()||'',
+     act:pr.act||1.375,goal:pr.goal||'maintain',rate:pr.rate||1,macros:pr.macros||'balanced',
+     mc:pr.mc||50,mp:pr.mp||20,mf:pr.mf||30,manual:!!pr.manual,manualCal:pr.manualCal||STORE.goals.cal,water:STORE.goals.water};
+  renderGoalsForm(); document.body.classList.add('goals-open'); $('goalscreen').scrollTop=0;
+}
+function closeGoals(){ document.body.classList.remove('goals-open'); document.activeElement&&document.activeElement.blur(); }
+
+const pills=(key,opts,cur)=>`<div class="mchips gpills">${opts.map(([v,l])=>`<button class="mchip ${String(v)===String(cur)?'on':''}" onclick="gSet('${key}','${v}')">${l}</button>`).join('')}</div>`;
+function renderGoalsForm(){
+  const g=G;
+  $('gForm').innerHTML=`
+    <div class="station">About you</div>
+    <div class="card gcard">
+      <label class="field"><span>First name (optional)</span><input class="numin" id="gName" value="${esc(g.name)}" placeholder="Hokie" maxlength="24" oninput="G.name=this.value"></label>
+      <div class="field"><span>Sex · used by the calorie formula</span>${pills('sex',[['m','Male'],['f','Female']],g.sex)}</div>
+      <div class="g3">
+        <label class="field"><span>Age</span>${numIn('gAge',g.age,'19','oninput="gNum(\'age\',this.value)"')}</label>
+        <label class="field"><span>Height</span><div class="hpair">${numIn('gFt',g.ft,'5','oninput="gNum(\'ft\',this.value)"')}<i>ft</i>${numIn('gIn',g.inch,'10','oninput="gNum(\'inch\',this.value)"')}<i>in</i></div></label>
+      </div>
+      <label class="field"><span>Current weight (lb)</span>${numIn('gLb',g.weightLb,'160','oninput="gNum(\'weightLb\',this.value)"')}</label>
+    </div>
+
+    <div class="station">Daily activity</div>
+    <div class="card group gacts">${ACT_LEVELS.map(([v,t,d])=>`<button class="gact ${v===g.act?'on':''}" onclick="gSet('act',${v})"><i></i><div><b>${t}</b><span>${d}</span></div></button>`).join('')}</div>
+    <p class="fnote gnote">Don’t count workouts here. Log them as exercise and those calories are added back that day.</p>
+
+    <div class="station">Goal</div>
+    <div class="card gcard">
+      ${pills('goal',[['lose','Lose weight'],['maintain','Maintain'],['gain','Gain weight']],g.goal)}
+      ${g.goal==='maintain'?'':`<div class="field"><span>Rate</span>${pills('rate',RATES[g.goal].map(r=>[r,(r<1?r:r)+' lb/wk']),g.rate)}</div>`}
+    </div>
+
+    <div class="station">Macros</div>
+    <div class="card gcard">
+      ${pills('macros',[...Object.entries(MACRO_PRESETS).map(([k,v])=>[k,v[0]]),['custom','Custom']],g.macros)}
+      ${g.macros==='custom'?`<div class="qgrid"><label class="field"><span>Carbs %</span>${numIn('gMc',g.mc,'50','oninput="gNum(\'mc\',this.value)"')}</label><label class="field"><span>Protein %</span>${numIn('gMp',g.mp,'20','oninput="gNum(\'mp\',this.value)"')}</label><label class="field"><span>Fat %</span>${numIn('gMf',g.mf,'30','oninput="gNum(\'mf\',this.value)"')}</label></div><div class="gsum" id="gSum"></div>`:''}
+    </div>
+
+    <div class="station">Calories</div>
+    <div class="card gcard">
+      <button class="gtoggle ${g.manual?'on':''}" onclick="gSet('manual',${!g.manual})"><div><b>Set my own calorie goal</b><span>For a dietitian’s or coach’s number</span></div><i></i></button>
+      ${g.manual?`<label class="field"><span>Calories per day</span>${numIn('gCal',g.manualCal,'2200','oninput="gNum(\'manualCal\',this.value)"')}</label>`:''}
+    </div>
+
+    <div class="station">Water</div>
+    <div class="card gcard gwater"><div><b id="gWater">${g.water}</b> glasses <span id="gWaterOz">· ${g.water*8} oz a day</span></div>
+      <div class="stepper"><button onclick="gWaterStep(-1)">−</button><button onclick="gWaterStep(1)">+</button></div></div>
+
+    <p class="fnote gnote" style="text-align:center;margin:18px 10px 0">Calories are estimated with the Mifflin–St Jeor equation. This is a starting point, not medical advice. If you have a health condition or are an athlete in season, talk to a professional. VT students can see a registered dietitian at Schiffert Health Center or use the free HNFE Nutrition Counseling Service.</p>`;
+  gSummary();
+}
+function gSet(k,v){
+  if(k==='act'||k==='rate') v=parseFloat(v); if(k==='manual') v=v===true||v==='true';
+  G[k]=v; if(k==='goal'&&v!=='maintain'&&!RATES[v].includes(G.rate)) G.rate=v==='lose'?1:.5;
+  const y=$('goalscreen').scrollTop; renderGoalsForm(); $('goalscreen').scrollTop=y;
+}
+function gNum(k,v){ G[k]=v===''?'':parseFloat(v); gSummary(); }
+function gWaterStep(n){ G.water=Math.max(1,Math.min(20,G.water+n)); $('gWater').textContent=G.water; $('gWaterOz').textContent=`· ${G.water*8} oz a day`; }
+
+function gSummary(){
+  const g=G, ok=profileReady(g)&&g.sex;
+  if(g.macros==='custom'&&$('gSum')){ const sum=(+g.mc||0)+(+g.mp||0)+(+g.mf||0); $('gSum').textContent=sum===100?'Adds up to 100%':`Adds up to ${sum}%. Needs to be 100%.`; $('gSum').classList.toggle('bad',sum!==100); }
+  if(!ok&&!g.manual){
+    $('gCalBig').textContent='–'; $('gExplain').textContent='Fill in your details below to see your goal.';
+    $('gMacros').innerHTML=''; $('gSave').textContent='Save'; return;
+  }
+  const r=ok?calcGoals(g):null, cal=g.manual?Math.round(g.manualCal)||0:r.cal;
+  const [,pc,pp,pf]=g.macros==='custom'?['',g.mc,g.mp,g.mf]:MACRO_PRESETS[g.macros];
+  const grams={c:Math.round(cal*pc/400),p:Math.round(cal*pp/400),f:Math.round(cal*pf/900)};
+  $('gCalBig').textContent=fmtN(cal);
+  $('gExplain').innerHTML=g.manual?'Your own number':
+    `Maintenance about <b>${fmtN(r.tdee)}</b>${g.goal==='maintain'?'':` ${g.goal==='lose'?'−':'+'} ${fmtN(Math.abs(r.delta))} to ${g.goal} ${g.rate} lb a week`}`
+    +(r.floored?`<br><span class="gwarn">Raised to ${fmtN(r.floor)}, the lowest we suggest without medical supervision. Try a slower rate.</span>`:'');
+  $('gMacros').innerHTML=[['Carbs','c','var(--carb)',pc],['Protein','p','var(--protein)',pp],['Fat','f','var(--fat)',pf]]
+    .map(([l,k,col,pct])=>`<div><i style="background:${col}"></i><b>${grams[k]}g</b><span>${l} · ${pct||0}%</span></div>`).join('');
+  $('gSave').textContent=`Save · ${fmtN(cal)} cal`;
+}
+
+function saveGoals(){
+  const g=G;
+  if(g.manual){ if(!(g.manualCal>=800&&g.manualCal<=8000)) return toast('Enter a calorie goal between 800 and 8,000'); }
+  else { if(!g.sex) return toast('Pick the sex the formula should use'); if(!profileReady(g)) return toast('Fill in age, height and weight'); }
+  if(g.macros==='custom'&&(+g.mc||0)+(+g.mp||0)+(+g.mf||0)!==100) return toast('Macro percentages need to add up to 100');
+  const keep=['name','sex','age','ft','inch','act','goal','rate','macros','mc','mp','mf','manual','manualCal'];
+  keep.forEach(k=>STORE.profile[k]=g[k]); STORE.profile.name=(g.name||'').trim(); STORE.profile.setup=true;
+  if(g.weightLb>60&&g.weightLb!==latestWeight()){ const d=todayISO(); STORE.weights=STORE.weights.filter(w=>w.d!==d).concat({d,lb:Math.round(g.weightLb*10)/10}); }
+  if(g.weightLb>60) STORE.profile.weightLb=g.weightLb;
+  STORE.goals.water=g.water; applyGoals(); saveStore(); refreshLog(); renderProfile(); closeGoals();
+  toast(`Goal set · ${fmtN(STORE.goals.cal)} cal a day`);
+}
+// Recalculate the stored goals from the profile (also runs after a new weigh-in).
+function applyGoals(){
+  const pr={...STORE.profile,weightLb:latestWeight()||STORE.profile.weightLb};
+  if(!pr.setup) return false;
+  if(!pr.manual&&!profileReady(pr)) return false;
+  const before=STORE.goals.cal;
+  let cal; if(!pr.manual) cal=calcGoals(pr).cal; else cal=Math.round(pr.manualCal);
+  const [,pc,pp,pf]=pr.macros==='custom'?['',pr.mc,pr.mp,pr.mf]:MACRO_PRESETS[pr.macros||'balanced'];
+  Object.assign(STORE.goals,{cal,c:Math.round(cal*pc/400),p:Math.round(cal*pp/400),f:Math.round(cal*pf/900)});
+  return before!==cal;
+}
+function renderProfile(){
+  const pr=STORE.profile, nm=(pr.name||'').trim();
+  document.querySelectorAll('.avatar').forEach(a=>a.textContent=(nm[0]||'H').toUpperCase());
+  $('profName').textContent=nm||'Hokie';
+  const g=STORE.goals;
+  $('profSub').textContent=pr.setup?`${fmtN(g.cal)} cal a day · ${pr.manual?'Custom goal':pr.goal==='maintain'?'Maintain weight':(pr.goal==='lose'?'Lose ':'Gain ')+pr.rate+' lb a week'}`:'Goals not set up yet';
+  $('setupCard').style.display=pr.setup?'none':'';
+}
+
 // ---------- Today: dining hall cards ----------
 const HALLCARDS=[
   {k:'15',n:'D2',b:'Dietrick Hall',g:['#8A2447','#3b0f22'],a:'#EE8A3C'},
@@ -1329,7 +1529,7 @@ function openHall(n){ hall=n; mealIdx=pickMealFor(n); renderDining(); go('dining
 
 // ---------- You ----------
 const rowsHTML=rows=>rows.map(r=>`<button class="row" onclick="${r[3]||"toast('Coming soon')"}"><span class="sq" style="background:${r[1]}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${r[2]}"/></svg></span>${r[0]}<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>`).join('');
-$('grp1').innerHTML=rowsHTML([['Goals','#D2611C','M12 3a9 9 0 1 0 9 9M12 7a5 5 0 1 0 5 5M12 11a1 1 0 1 0 1 1M12 12l8-8'],['Nutrition','#3f9c8b','M4 20V10M10 20V4M16 20v-7M22 20H2'],['Progress','#8A2447','M3 17l6-6 4 4 8-8M15 7h6v6','openProgress()']]);
+$('grp1').innerHTML=rowsHTML([['Goals','#D2611C','M12 3a9 9 0 1 0 9 9M12 7a5 5 0 1 0 5 5M12 11a1 1 0 1 0 1 1M12 12l8-8','openGoals()'],['Nutrition','#3f9c8b','M4 20V10M10 20V4M16 20v-7M22 20H2'],['Progress','#8A2447','M3 17l6-6 4 4 8-8M15 7h6v6','openProgress()']]);
 $('grp2').innerHTML=rowsHTML([['About & privacy','#3c5a7a','M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01',"openAbout()"],['Settings','#5b5056','M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1L14.5 3h-5l-.3 2.6a7 7 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.3 2.6h5l.3-2.6a7 7 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6a7 7 0 0 0 .1-1z']]);
 function openAbout(){document.body.classList.add('about-open')}
 function closeAbout(){document.body.classList.remove('about-open')}
@@ -1341,7 +1541,7 @@ function toggleSheet(on){ document.body.classList.toggle('sheet-open',on); }
 let tt; function toast(m){const t=$('toast');t.classList.remove('has-undo');undoFn=null;t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1800)}
 
 // first paint
-refreshLog(); $('v-today').classList.add('active'); requestAnimationFrame(()=>enter($('v-today')));
+refreshLog(); renderProfile(); $('v-today').classList.add('active'); requestAnimationFrame(()=>enter($('v-today')));
 function onData(){
   renderHallCards(); hall='15'; mealIdx=pickMealFor(hall); renderDining(); refreshPins(); if(popIdx>=0) openPop(popIdx);
   const t=DATA.updated?new Date(DATA.updated):null;
