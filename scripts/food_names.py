@@ -144,6 +144,8 @@ def clean(name, brand=None):
         head = parts[0]
     if parts[0] != name.split(",")[0].strip() and head.lower() in ("white", "mixed species", "other"):
         head = "white fish" if head.lower() == "white" else "fish"
+    if head.lower() == "rice" and not any(re.search(r"\b(brown|wild|black|red|white|basmati|jasmine|glutinous|sweet)\b", p, re.I) for p in parts[1:2]):
+        head = "White rice"         # USDA's unqualified "Rice" is white rice
     hl = head.lower()
     hl = SINGULAR.get(hl, hl)
     rest = ", ".join(parts[1:]).lower()
@@ -164,6 +166,8 @@ def clean(name, brand=None):
             continue
         if METHOD.match(ql) or any(METHOD.match(x.strip()) for x in ql.split(" and ")):
             method = True
+            continue
+        if grain and re.fullmatch(r"as ingredient|plain|100%|regular|enriched|unenriched", ql):
             continue
         if grain and DRY_WORDS.match(ql):
             dry = True
