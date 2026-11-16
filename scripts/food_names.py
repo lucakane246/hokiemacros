@@ -132,6 +132,7 @@ def clean(name, brand=None):
         b, name = _brand_from_paren(name)
         brand = b or brand
     name = re.sub(r"\s*\((?:includes|formerly|nlea|upc)[^)]*\)", "", name, flags=re.I)
+    name = re.sub(r"\s*\([^()]*,[^()]*\)", "", name)        # "(garbanzo beans, bengal gram)" synonyms
     name = re.sub(r"\s+", " ", name.replace(";", ",")).strip(" ,")
     parts = [p.strip() for p in name.split(",") if p.strip()]
     if not parts:

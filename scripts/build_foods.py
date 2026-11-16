@@ -183,6 +183,11 @@ def main():
             if not cleaned:
                 continue
             brand, disp, info = cleaned
+            # FNDDS describes food "as eaten": its beans and grains are cooked even when unlabelled
+            if source == "survey" and info["grain"] and not info["dry"] and not info["method"] \
+                    and not re.search(r"\b(fried|salad|soup|pudding)\b", disp, re.I):
+                info["method"] = True
+                disp += ", cooked"
             rec.update(n=disp, _info=info, _orig=f.get("description") or "")
             if brand:
                 rec["b"], rec["r"] = brand, 1
