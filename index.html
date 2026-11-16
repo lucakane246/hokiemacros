@@ -578,6 +578,16 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 .vcard span{font-size:12.5px;color:var(--muted);font-weight:600}
 .vback{display:inline-flex;align-items:center;gap:4px;font:inherit;font-size:13.5px;font-weight:700;color:var(--orange-hi);padding:4px 0}
 .vtitle{font-size:22px;font-weight:800;letter-spacing:-.4px;margin:4px 0 6px}
+
+/* ---------- hand-entered restaurants ---------- */
+.xfood .soon{color:var(--faint);font-weight:600}
+.xbuild{display:block;margin-top:6px;font:inherit;font-size:12.5px;font-weight:700;color:var(--orange-hi);padding:0;text-align:left}
+.xd{font-size:12.5px;color:var(--muted);margin:2px 0 3px;line-height:1.35}
+.xsrc{color:var(--muted);font-size:12.5px;font-weight:600;margin:-2px 0 10px}
+.xgrp{padding:2px 0 4px}.xgrp+.xgrp{border-top:1px solid var(--hair);padding-top:12px}
+.xgh{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.xgh b{font-size:15px;font-weight:750}.xgh span{font-size:12px;color:var(--muted);font-weight:650}.xgh span.req{color:var(--orange-hi)}
+.xopts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.xopts span{font-size:13px;font-weight:650;padding:6px 10px;border-radius:99px;background:var(--surface-2);border:1px solid var(--hair)}
+.xopts em{font-style:normal;color:var(--orange-hi);font-weight:700}
 </style>
 </head>
 <body>
@@ -995,6 +1005,7 @@ async function loadData(){
     if(!r.ok) throw 0;
     DATA=await r.json(); LIVE=true;
   }catch(e){ DATA=sampleData(); LIVE=false; }
+  try{ const v=await fetch('data/venues.json',{cache:'no-cache'}); if(v.ok) VENUES=await v.json(); }catch(e){}
   onData();
 }
 
@@ -1064,6 +1075,26 @@ function venueGrid(groups){
 function pickVenue(k){ venuePick=k; renderMenu(); document.querySelector('#v-dining').scrollTo({top:Math.max(0,$('menu').offsetTop-120),behavior:'smooth'}); }
 function venueBack(){ venuePick=null; renderMenu(); }
 
+// ================= restaurants VT's menu system doesn't list (hand-entered menus) =================
+let VENUES=null;
+const xRests=h=>(VENUES&&VENUES.halls&&VENUES.halls[h])||[];
+function xRow(it,ri,si,ii){
+  const opts=it.build?it.build.reduce((n,g)=>n+g.o.length,0):0;
+  return `<div class="food xfood"><div><div class="nm">${esc(it.n)}</div>${it.d?`<div class="xd">${esc(it.d)}</div>`:''}
+    <div class="kc">${it.price!=null?`<span class="pr">${money(it.price)}</span> · `:''}<span class="soon">Nutrition coming soon</span></div>
+    ${it.build?`<button class="xbuild" onclick="openXItem(${ri},${si},${ii})">Build your own · ${it.build.length} steps, ${opts} choices ›</button>`:''}</div>
+    <button class="plus" onclick="openXItem(${ri},${si},${ii})" aria-label="Log ${esc(it.n)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>`;
+}
+function openXItem(ri,si,ii){
+  const r=xRests(hall)[ri], it=r.sections[si].items[ii], label=`${r.name} ${it.n}`;
+  if(!it.build) return openQuickAdd(null,null,label,`${it.price!=null?money(it.price)+' at ':'From '}${r.name}. Nutrition for ${r.name} arrives soon; for now, enter what you know.`);
+  openForm({title:it.n,sub:`${r.name}${it.price!=null?' · '+money(it.price):''}`,saveLabel:'Log it',
+    body:it.build.map(g=>`<div class="xgrp"><div class="xgh"><b>${esc(g.g)}</b><span class="${g.req?'req':''}">${esc(g.rule)}${g.req?' · required':''}</span></div>
+      <div class="xopts">${g.o.map(o=>`<span>${esc(o.n)}${o.p?` <em>+${money(o.p)}</em>`:''}</span>`).join('')}</div></div>`).join('')
+      +`<p class="fnote">Nutrition for ${esc(r.name)} is on the way. Until then you can log it with your own numbers.</p>`,
+    onSave:()=>{ setTimeout(()=>openQuickAdd(null,null,label),380); }});
+}
+
 // ---------- Dining ----------
 let hall='15', mealIdx=0, query='';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1106,16 +1137,19 @@ function renderMenu(){
   $('hallStatus').textContent=statusLine(st);
   $('doorStrip').innerHTML=doorStrip(hall);
   const meals=todayMenu(hall), m=$('menu'), q=query.trim().toLowerCase();
-  if(!meals.length){ m.innerHTML=`<div class="empty card">No menu posted for today.<span>${esc(statusLine(st))}</span></div>`; return; }
+  const xr=xRests(hall);
+  if(!meals.length&&!xr.length){ m.innerHTML=`<div class="empty card">No menu posted for today.<span>${esc(statusLine(st))}</span></div>`; return; }
   let sections=meals[mealIdx]?.sections||[];
   if(q) sections=meals.flatMap(ml=>ml.sections.map(s=>({name:`${ml.meal} · ${s.name}`,items:s.items.filter(id=>(DATA.items[id]?.n||'').toLowerCase().includes(q))}))).filter(s=>s.items.length);
-  if(!sections.length){ m.innerHTML=`<div class="empty card">Nothing matches “${esc(query)}”.</div>`; return; }
+  if(!sections.length&&!(xr.length&&!q)){ m.innerHTML=`<div class="empty card">Nothing matches “${esc(query)}”.</div>`; return; }
   // halls with several restaurants: pick one first (search still covers the whole hall)
   let head='';
   if(!q){ const groups=venueGroups(sections), multi=groups.filter(g=>g.sections.length>1).length;
     let cards=null, label='restaurants';
     const named=g=>/[A-Za-z]{3}/.test(g.name)&&!/^(BYO|Build|Grab|Hot|Cold|Daily|Breakfast)\b/i.test(g.name);
-    if(groups.length>=2&&multi>=2&&groups.filter(g=>g.sections.length>1).every(named)) cards=groups.map(g=>({key:g.key,name:g.name,count:g.count,sections:g.sections}));
+    const xcards=xr.map((r,ri)=>({key:'x:'+r.name,name:r.name,count:r.sections.reduce((n,s)=>n+s.items.length,0),x:ri}));
+    if(xcards.length) cards=[...groups.map(g=>({key:g.key,name:g.name,count:g.count,sections:g.sections})),...xcards];
+    else if(groups.length>=2&&multi>=2&&groups.filter(g=>g.sections.length>1).every(named)) cards=groups.map(g=>({key:g.key,name:g.name,count:g.count,sections:g.sections}));
     else if(sections.length>=3&&sections.length<=30){   // one restaurant: show its stations instead
       label='stations';
       const strip=multi===1;   // one restaurant plus extras: drop its name from each station ("DX Burgers" -> "Burgers")
@@ -1124,7 +1158,12 @@ function renderMenu(){
         return {key:'s:'+g.key+'|'+sec.name,name:nm,count:sec.items.length,sections:[{...sec,name:nm}]}; }));
     }
     if(cards){
-      const g=venuePick&&cards.find(x=>x.key===venuePick);
+      const g=venuePick&&cards.find(x=>x.key===venuePick)||(cards.length===1?cards[0]:null);
+      if(g&&g.x!=null){ const r=xr[g.x];
+        m.innerHTML=(cards.length>1?`<button class="vback pressable" onclick="venueBack()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>All restaurants</button>`:'')
+          +`<h3 class="vtitle">${esc(r.name)}</h3><p class="xsrc">${r.basis?`Based on ${esc(r.basis)}. VT prices and nutrition coming soon.`:`Prices from ${esc(r.source||"the restaurant")}. Nutrition coming soon.`}</p>`
+          +r.sections.map((s,si)=>`<div class="station">${esc(s.name)}</div><div class="card list0" style="animation:rise .5s var(--ease) both;animation-delay:${Math.min(si,6)*50}ms;opacity:0">${s.items.map((it,ii)=>xRow(it,g.x,si,ii)).join('')}</div>`).join('');
+        return; }
       if(!g){ venuePick=null; m.innerHTML=`<div class="station">${label==='restaurants'?'Restaurants':'Stations'}</div>`+venueGrid(cards); return; }
       sections=g.sections.length===1&&label==='stations'?[{...g.sections[0],name:''}]:g.sections;
       head=`<button class="vback pressable" onclick="venueBack()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>All ${label}</button><h3 class="vtitle">${esc(g.name)}</h3>`;
@@ -1567,12 +1606,12 @@ function openSteps(){
 }
 
 // ---------- quick add ----------
-function openQuickAdd(meal,date){
+function openQuickAdd(meal,date,name,note){
   const d=date||todayISO(), m=meal||mealNow();
-  openForm({title:'Quick add',sub:relDay(d),saveLabel:'Add',
+  openForm({title:'Quick add',sub:note||relDay(d),saveLabel:'Add',
     body:`<label class="field"><span>Calories</span>${numIn('qCal','','0','autofocus')}</label>
       <div class="qgrid"><label class="field"><span>Protein (g)</span>${numIn('qP','','–')}</label><label class="field"><span>Carbs (g)</span>${numIn('qC','','–')}</label><label class="field"><span>Fat (g)</span>${numIn('qF','','–')}</label></div>
-      <div class="dgrid" style="margin-top:12px"><label class="field"><span>Name (optional)</span><input class="numin" id="qName" placeholder="Quick add"></label>
+      <div class="dgrid" style="margin-top:12px"><label class="field"><span>Name (optional)</span><input class="numin" id="qName" placeholder="Quick add" value="${esc(name||'')}"></label>
       <label class="field"><span>Meal</span><select id="qMeal">${MEALS.map(x=>`<option ${x===m?'selected':''}>${x}</option>`).join('')}</select></label></div>`,
     onSave:()=>{ const cal=parseFloat($('qCal').value); if(!(cal>=0)) { toast('Enter calories'); return false; }
       const g=id=>{const v=parseFloat($(id).value);return isNaN(v)?0:v};

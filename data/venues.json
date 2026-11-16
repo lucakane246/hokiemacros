@@ -1,0 +1,1467 @@
+{
+ "note": "Restaurants VT's menu system doesn't list. Menus entered by hand; nutrition comes later from FatSecret.",
+ "updated": "2026-11-16",
+ "halls": {
+  "09": [
+   {
+    "name": "Chick-fil-A",
+    "basis": "the standard Chick-fil-A menu",
+    "sections": [
+     {
+      "name": "Breakfast",
+      "items": [
+       {
+        "n": "Chick-fil-A Chicken Biscuit"
+       },
+       {
+        "n": "Spicy Chicken Biscuit"
+       },
+       {
+        "n": "Chick-n-Minis"
+       },
+       {
+        "n": "Egg White Grill"
+       },
+       {
+        "n": "Bacon, Egg & Cheese Biscuit"
+       },
+       {
+        "n": "Sausage, Egg & Cheese Biscuit"
+       },
+       {
+        "n": "Hash Brown Scramble Burrito"
+       },
+       {
+        "n": "Hash Brown Scramble Bowl"
+       },
+       {
+        "n": "Hash Browns"
+       }
+      ]
+     },
+     {
+      "name": "Entrées",
+      "items": [
+       {
+        "n": "Chick-fil-A Chicken Sandwich"
+       },
+       {
+        "n": "Chick-fil-A Deluxe Sandwich"
+       },
+       {
+        "n": "Spicy Chicken Sandwich"
+       },
+       {
+        "n": "Spicy Deluxe Sandwich"
+       },
+       {
+        "n": "Grilled Chicken Sandwich"
+       },
+       {
+        "n": "Grilled Chicken Club Sandwich"
+       },
+       {
+        "n": "Chick-fil-A Nuggets (8 ct)"
+       },
+       {
+        "n": "Chick-fil-A Nuggets (12 ct)"
+       },
+       {
+        "n": "Grilled Nuggets (8 ct)"
+       },
+       {
+        "n": "Grilled Nuggets (12 ct)"
+       },
+       {
+        "n": "Chick-n-Strips (3 ct)"
+       },
+       {
+        "n": "Chick-n-Strips (4 ct)"
+       },
+       {
+        "n": "Grilled Cool Wrap"
+       }
+      ]
+     },
+     {
+      "name": "Salads",
+      "items": [
+       {
+        "n": "Cobb Salad"
+       },
+       {
+        "n": "Spicy Southwest Salad"
+       },
+       {
+        "n": "Market Salad"
+       }
+      ]
+     },
+     {
+      "name": "Sides",
+      "items": [
+       {
+        "n": "Waffle Potato Fries (medium)"
+       },
+       {
+        "n": "Mac & Cheese (medium)"
+       },
+       {
+        "n": "Side Salad"
+       },
+       {
+        "n": "Fruit Cup (medium)"
+       },
+       {
+        "n": "Chicken Noodle Soup (cup)"
+       }
+      ]
+     },
+     {
+      "name": "Sauces",
+      "items": [
+       {
+        "n": "Chick-fil-A Sauce"
+       },
+       {
+        "n": "Polynesian"
+       },
+       {
+        "n": "Honey Mustard"
+       },
+       {
+        "n": "Garden Herb Ranch"
+       },
+       {
+        "n": "Zesty Buffalo"
+       },
+       {
+        "n": "Barbeque"
+       },
+       {
+        "n": "Sweet & Spicy Sriracha"
+       }
+      ]
+     },
+     {
+      "name": "Drinks & treats",
+      "items": [
+       {
+        "n": "Chick-fil-A Lemonade (medium)"
+       },
+       {
+        "n": "Diet Lemonade (medium)"
+       },
+       {
+        "n": "Sweet Tea (medium)"
+       },
+       {
+        "n": "Unsweetened Tea (medium)"
+       },
+       {
+        "n": "Frosted Lemonade"
+       },
+       {
+        "n": "Cookies & Cream Milkshake"
+       },
+       {
+        "n": "Chocolate Milkshake"
+       },
+       {
+        "n": "Strawberry Milkshake"
+       },
+       {
+        "n": "Vanilla Milkshake"
+       },
+       {
+        "n": "Chocolate Chunk Cookie"
+       },
+       {
+        "n": "Coffee (medium)"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "name": "Choolaah",
+    "source": "the mobile-order menu",
+    "sections": [
+     {
+      "name": "Bowls",
+      "items": [
+       {
+        "n": "Large Bowl",
+        "price": 12.95,
+        "build": [
+         {
+          "g": "Base",
+          "rule": "Pick one",
+          "req": true,
+          "o": [
+           {
+            "n": "White Rice"
+           },
+           {
+            "n": "No Base"
+           }
+          ]
+         },
+         {
+          "g": "Masala",
+          "rule": "Pick 1–2",
+          "req": true,
+          "o": [
+           {
+            "n": "Tikka Masala"
+           },
+           {
+            "n": "Chickpea Masala"
+           },
+           {
+            "n": "Yellow Lentil Daal"
+           },
+           {
+            "n": "Butter Masala"
+           },
+           {
+            "n": "No Masala"
+           }
+          ]
+         },
+         {
+          "g": "Extra masala",
+          "rule": "Optional",
+          "o": [
+           {
+            "n": "Extra Tikka Masala",
+            "p": 2.75
+           },
+           {
+            "n": "Extra Chickpea Masala",
+            "p": 2.75
+           },
+           {
+            "n": "Extra Yellow Lentil Daal",
+            "p": 2.75
+           },
+           {
+            "n": "Extra Butter Masala",
+            "p": 2.75
+           }
+          ]
+         },
+         {
+          "g": "Protein",
+          "rule": "Pick 1–2",
+          "req": true,
+          "o": [
+           {
+            "n": "Chicken"
+           },
+           {
+            "n": "Spicy Chicken"
+           },
+           {
+            "n": "Paneer"
+           },
+           {
+            "n": "Tofu"
+           },
+           {
+            "n": "No Protein"
+           }
+          ]
+         },
+         {
+          "g": "Extra protein",
+          "rule": "Optional",
+          "o": [
+           {
+            "n": "Extra Chicken",
+            "p": 2.75
+           },
+           {
+            "n": "Extra Spicy Chicken",
+            "p": 2.75
+           },
+           {
+            "n": "Extra Paneer",
+            "p": 2.75
+           },
+           {
+            "n": "Extra Tofu",
+            "p": 2.75
+           }
+          ]
+         },
+         {
+          "g": "Signature sauce",
+          "rule": "Up to 2",
+          "o": [
+           {
+            "n": "Choolaah Ranch"
+           },
+           {
+            "n": "Mint Yogurt"
+           },
+           {
+            "n": "Spicy Mango"
+           },
+           {
+            "n": "Sweet Tango"
+           }
+          ]
+         },
+         {
+          "g": "Extra sauce",
+          "rule": "Optional",
+          "o": [
+           {
+            "n": "Extra Choolaah Ranch",
+            "p": 0.99
+           },
+           {
+            "n": "Extra Mint Yogurt",
+            "p": 0.99
+           },
+           {
+            "n": "Extra Spicy Mango",
+            "p": 0.99
+           }
+          ]
+         },
+         {
+          "g": "Toppings",
+          "rule": "As many as you like",
+          "o": [
+           {
+            "n": "Pickled Onions"
+           },
+           {
+            "n": "Red Onions"
+           },
+           {
+            "n": "Serrano Peppers"
+           },
+           {
+            "n": "Roasted Corn"
+           },
+           {
+            "n": "Greens"
+           }
+          ]
+         },
+         {
+          "g": "Extra toppings",
+          "rule": "Optional",
+          "o": [
+           {
+            "n": "Extra Pickled Onions",
+            "p": 0.35
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "name": "Wraps",
+      "items": [
+       {
+        "n": "Naan Wrap",
+        "price": 11.5,
+        "build": [
+         {
+          "g": "Base",
+          "rule": "Pick one",
+          "req": true,
+          "o": [
+           {
+            "n": "White Rice"
+           },
+           {
+            "n": "No Base"
+           }
+          ]
+         },
+         {
+          "g": "Masala",
+          "rule": "Pick one",
+          "req": true,
+          "o": [
+           {
+            "n": "Tikka Masala"
+           },
+           {
+            "n": "Chickpea Masala"
+           },
+           {
+            "n": "Yellow Lentil Daal"
+           },
+           {
+            "n": "Butter Masala"
+           },
+           {
+            "n": "No Masala"
+           }
+          ]
+         },
+         {
+          "g": "Protein",
+          "rule": "Pick one",
+          "req": true,
+          "o": [
+           {
+            "n": "Chicken"
+           },
+           {
+            "n": "Spicy Chicken"
+           },
+           {
+            "n": "Tofu"
+           },
+           {
+            "n": "Paneer"
+           },
+           {
+            "n": "No Protein"
+           }
+          ]
+         },
+         {
+          "g": "Toppings",
+          "rule": "As many as you like",
+          "o": [
+           {
+            "n": "Pickled Onions"
+           },
+           {
+            "n": "Red Onions"
+           },
+           {
+            "n": "Serrano Peppers"
+           },
+           {
+            "n": "Roasted Corn"
+           },
+           {
+            "n": "Greens"
+           }
+          ]
+         },
+         {
+          "g": "Signature sauce",
+          "rule": "Pick one",
+          "o": [
+           {
+            "n": "Choolaah Ranch"
+           },
+           {
+            "n": "Mint Yogurt"
+           },
+           {
+            "n": "Spicy Mango"
+           },
+           {
+            "n": "Sweet Tango"
+           }
+          ]
+         },
+         {
+          "g": "Extra sauce",
+          "rule": "Optional",
+          "o": [
+           {
+            "n": "Extra Choolaah Ranch",
+            "p": 0.99
+           },
+           {
+            "n": "Extra Mint Yogurt",
+            "p": 0.99
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "name": "Street food",
+      "items": [
+       {
+        "n": "Samosa",
+        "price": 1.75,
+        "tags": [
+         "vegan"
+        ]
+       },
+       {
+        "n": "Naan",
+        "price": 2.1
+       }
+      ]
+     },
+     {
+      "name": "Side sauces",
+      "items": [
+       {
+        "n": "Choolaah Ranch",
+        "price": 0.99
+       },
+       {
+        "n": "Mint Yogurt",
+        "price": 0.99
+       },
+       {
+        "n": "Spicy Mango",
+        "price": 0.99
+       },
+       {
+        "n": "Sweet Tango",
+        "price": 0.99
+       }
+      ]
+     },
+     {
+      "name": "Drinks",
+      "items": [
+       {
+        "n": "Hot Chai",
+        "price": 5.95
+       },
+       {
+        "n": "Chilled Chai",
+        "price": 5.95
+       },
+       {
+        "n": "Mango Lassi",
+        "price": 5.95
+       },
+       {
+        "n": "Mint Ginger Lemonade",
+        "price": 4.25
+       },
+       {
+        "n": "Mango Lemonade",
+        "price": 4.25
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "14": [
+   {
+    "name": "Bruegger's Bagels",
+    "source": "the mobile-order menu",
+    "sections": [
+     {
+      "name": "Breakfast sandwiches",
+      "items": [
+       {
+        "n": "Egg & Cheese",
+        "price": 6.89,
+        "d": "On a bagel"
+       },
+       {
+        "n": "Meat & Cheese",
+        "price": 7.19
+       },
+       {
+        "n": "Skinny Zesty Egg White",
+        "price": 7.49,
+        "d": "Egg white, turkey sausage, Swiss & sun-dried tomato spread on a skinny bagel"
+       },
+       {
+        "n": "Egg, Cheese & Meat",
+        "price": 7.89
+       },
+       {
+        "n": "Western",
+        "price": 8.79,
+        "d": "Egg, bacon, cheddar, chipotle sauce, peppers & red onion on a bagel"
+       },
+       {
+        "n": "Sriracha Honey Sunrise",
+        "price": 8.59,
+        "d": "Everything bagel, egg, 3 strips of bacon, cheddar, sriracha honey"
+       },
+       {
+        "n": "Vermonter",
+        "price": 9.09,
+        "d": "Eggs, pork sausage, bacon, cheddar, honey walnut cream cheese"
+       }
+      ]
+     },
+     {
+      "name": "Build your own bagel sandwiches",
+      "items": [
+       {
+        "n": "Turkey Bagel Sandwich",
+        "price": 7.79
+       },
+       {
+        "n": "Ham Bagel Sandwich",
+        "price": 7.79
+       }
+      ]
+     },
+     {
+      "name": "Bagel sandwiches",
+      "items": [
+       {
+        "n": "Herby Turkey",
+        "price": 9.19,
+        "d": "Roasted turkey, light herb garlic cream cheese, sun-dried tomato spread, lettuce & red onion"
+       },
+       {
+        "n": "Leonardo Da Veggie",
+        "price": 8.69,
+        "d": "Herb garlic cream cheese, red pepper, Swiss, lettuce, tomato & red onion on Asiago Parmesan",
+        "tags": [
+         "vegetarian"
+        ]
+       }
+      ]
+     },
+     {
+      "name": "Coffee",
+      "items": [
+       {
+        "n": "Brewed Coffee Medium",
+        "price": 3.29
+       },
+       {
+        "n": "Brewed Coffee Large",
+        "price": 3.59
+       },
+       {
+        "n": "Iced Coffee Medium",
+        "price": 3.39
+       },
+       {
+        "n": "Iced Coffee Large",
+        "price": 3.69
+       }
+      ]
+     },
+     {
+      "name": "Bagels",
+      "items": [
+       {
+        "n": "Single Bagel",
+        "price": 2.49,
+        "d": "Choice of bagel, no toppings"
+       },
+       {
+        "n": "Bagel and Cream Cheese",
+        "price": 4.48
+       },
+       {
+        "n": "PB & J Bagel",
+        "price": 4.29
+       },
+       {
+        "n": "Peanut Butter Bagel",
+        "price": 3.69
+       },
+       {
+        "n": "Butter / Jelly / Honey Bagel",
+        "price": 3.19
+       }
+      ]
+     },
+     {
+      "name": "Snacks & desserts",
+      "items": [
+       {
+        "n": "Chips",
+        "price": 2.29
+       },
+       {
+        "n": "Muffin",
+        "price": 3.29
+       },
+       {
+        "n": "Cookie",
+        "price": 2.79
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "name": "Qdoba",
+    "basis": "the standard Qdoba menu",
+    "sections": [
+     {
+      "name": "Entrées",
+      "items": [
+       {
+        "n": "Burrito",
+        "build": [
+         {
+          "g": "Protein",
+          "rule": "Pick one",
+          "req": true,
+          "o": [
+           {
+            "n": "Grilled Adobo Chicken"
+           },
+           {
+            "n": "Grilled Steak"
+           },
+           {
+            "n": "Smoked Brisket"
+           },
+           {
+            "n": "Pulled Pork"
+           },
+           {
+            "n": "Ground Beef"
+           },
+           {
+            "n": "Impossible (plant-based)"
+           },
+           {
+            "n": "Fajita Veggies"
+           }
+          ]
+         },
+         {
+          "g": "Rice",
+          "rule": "Pick one",
+          "req": false,
+          "o": [
+           {
+            "n": "Cilantro Lime Rice"
+           },
+           {
+            "n": "Brown Rice"
+           },
+           {
+            "n": "No Rice"
+           }
+          ]
+         },
+         {
+          "g": "Beans",
+          "rule": "Pick one",
+          "req": false,
+          "o": [
+           {
+            "n": "Black Beans"
+           },
+           {
+            "n": "Pinto Beans"
+           },
+           {
+            "n": "No Beans"
+           }
+          ]
+         },
+         {
+          "g": "Queso",
+          "rule": "Optional",
+          "req": false,
+          "o": [
+           {
+            "n": "3-Cheese Queso"
+           }
+          ]
+         },
+         {
+          "g": "Toppings",
+          "rule": "Pick any",
+          "req": false,
+          "o": [
+           {
+            "n": "Pico de Gallo"
+           },
+           {
+            "n": "Roasted Tomato Salsa"
+           },
+           {
+            "n": "Salsa Verde"
+           },
+           {
+            "n": "Corn Salsa"
+           },
+           {
+            "n": "Fajita Veggies"
+           },
+           {
+            "n": "Shredded Cheese"
+           },
+           {
+            "n": "Sour Cream"
+           },
+           {
+            "n": "Lettuce"
+           },
+           {
+            "n": "Pickled Jalapeños"
+           },
+           {
+            "n": "Guacamole"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "n": "Bowl",
+        "build": [
+         {
+          "g": "Protein",
+          "rule": "Pick one",
+          "req": true,
+          "o": [
+           {
+            "n": "Grilled Adobo Chicken"
+           },
+           {
+            "n": "Grilled Steak"
+           },
+           {
+            "n": "Smoked Brisket"
+           },
+           {
+            "n": "Pulled Pork"
+           },
+           {
+            "n": "Ground Beef"
+           },
+           {
+            "n": "Impossible (plant-based)"
+           },
+           {
+            "n": "Fajita Veggies"
+           }
+          ]
+         },
+         {
+          "g": "Rice",
+          "rule": "Pick one",
+          "req": false,
+          "o": [
+           {
+            "n": "Cilantro Lime Rice"
+           },
+           {
+            "n": "Brown Rice"
+           },
+           {
+            "n": "No Rice"
+           }
+          ]
+         },
+         {
+          "g": "Beans",
+          "rule": "Pick one",
+          "req": false,
+          "o": [
+           {
+            "n": "Black Beans"
+           },
+           {
+            "n": "Pinto Beans"
+           },
+           {
+            "n": "No Beans"
+           }
+          ]
+         },
+         {
+          "g": "Queso",
+          "rule": "Optional",
+          "req": false,
+          "o": [
+           {
+            "n": "3-Cheese Queso"
+           }
+          ]
+         },
+         {
+          "g": "Toppings",
+          "rule": "Pick any",
+          "req": false,
+          "o": [
+           {
+            "n": "Pico de Gallo"
+           },
+           {
+            "n": "Roasted Tomato Salsa"
+           },
+           {
+            "n": "Salsa Verde"
+           },
+           {
+            "n": "Corn Salsa"
+           },
+           {
+            "n": "Fajita Veggies"
+           },
+           {
+            "n": "Shredded Cheese"
+           },
+           {
+            "n": "Sour Cream"
+           },
+           {
+            "n": "Lettuce"
+           },
+           {
+            "n": "Pickled Jalapeños"
+           },
+           {
+            "n": "Guacamole"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "n": "Tacos",
+        "build": [
+         {
+          "g": "Protein",
+          "rule": "Pick one",
+          "req": true,
+          "o": [
+           {
+            "n": "Grilled Adobo Chicken"
+           },
+           {
+            "n": "Grilled Steak"
+           },
+           {
+            "n": "Smoked Brisket"
+           },
+           {
+            "n": "Pulled Pork"
+           },
+           {
+            "n": "Ground Beef"
+           },
+           {
+            "n": "Impossible (plant-based)"
+           },
+           {
+            "n": "Fajita Veggies"
+           }
+          ]
+         },
+         {
+          "g": "Rice",
+          "rule": "Pick one",
+          "req": false,
+          "o": [
+           {
+            "n": "Cilantro Lime Rice"
+           },
+           {
+            "n": "Brown Rice"
+           },
+           {
+            "n": "No Rice"
+           }
+          ]
+         },
+         {
+          "g": "Beans",
+          "rule": "Pick one",
+          "req": false,
+          "o": [
+           {
+            "n": "Black Beans"
+           },
+           {
+            "n": "Pinto Beans"
+           },
+           {
+            "n": "No Beans"
+           }
+          ]
+         },
+         {
+          "g": "Queso",
+          "rule": "Optional",
+          "req": false,
+          "o": [
+           {
+            "n": "3-Cheese Queso"
+           }
+          ]
+         },
+         {
+          "g": "Toppings",
+          "rule": "Pick any",
+          "req": false,
+          "o": [
+           {
+            "n": "Pico de Gallo"
+           },
+           {
+            "n": "Roasted Tomato Salsa"
+           },
+           {
+            "n": "Salsa Verde"
+           },
+           {
+            "n": "Corn Salsa"
+           },
+           {
+            "n": "Fajita Veggies"
+           },
+           {
+            "n": "Shredded Cheese"
+           },
+           {
+            "n": "Sour Cream"
+           },
+           {
+            "n": "Lettuce"
+           },
+           {
+            "n": "Pickled Jalapeños"
+           },
+           {
+            "n": "Guacamole"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "n": "Quesadilla",
+        "build": [
+         {
+          "g": "Protein",
+          "rule": "Pick one",
+          "req": true,
+          "o": [
+           {
+            "n": "Grilled Adobo Chicken"
+           },
+           {
+            "n": "Grilled Steak"
+           },
+           {
+            "n": "Smoked Brisket"
+           },
+           {
+            "n": "Pulled Pork"
+           },
+           {
+            "n": "Ground Beef"
+           },
+           {
+            "n": "Impossible (plant-based)"
+           },
+           {
+            "n": "Fajita Veggies"
+           }
+          ]
+         },
+         {
+          "g": "Rice",
+          "rule": "Pick one",
+          "req": false,
+          "o": [
+           {
+            "n": "Cilantro Lime Rice"
+           },
+           {
+            "n": "Brown Rice"
+           },
+           {
+            "n": "No Rice"
+           }
+          ]
+         },
+         {
+          "g": "Beans",
+          "rule": "Pick one",
+          "req": false,
+          "o": [
+           {
+            "n": "Black Beans"
+           },
+           {
+            "n": "Pinto Beans"
+           },
+           {
+            "n": "No Beans"
+           }
+          ]
+         },
+         {
+          "g": "Queso",
+          "rule": "Optional",
+          "req": false,
+          "o": [
+           {
+            "n": "3-Cheese Queso"
+           }
+          ]
+         },
+         {
+          "g": "Toppings",
+          "rule": "Pick any",
+          "req": false,
+          "o": [
+           {
+            "n": "Pico de Gallo"
+           },
+           {
+            "n": "Roasted Tomato Salsa"
+           },
+           {
+            "n": "Salsa Verde"
+           },
+           {
+            "n": "Corn Salsa"
+           },
+           {
+            "n": "Fajita Veggies"
+           },
+           {
+            "n": "Shredded Cheese"
+           },
+           {
+            "n": "Sour Cream"
+           },
+           {
+            "n": "Lettuce"
+           },
+           {
+            "n": "Pickled Jalapeños"
+           },
+           {
+            "n": "Guacamole"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "n": "Nachos",
+        "build": [
+         {
+          "g": "Protein",
+          "rule": "Pick one",
+          "req": true,
+          "o": [
+           {
+            "n": "Grilled Adobo Chicken"
+           },
+           {
+            "n": "Grilled Steak"
+           },
+           {
+            "n": "Smoked Brisket"
+           },
+           {
+            "n": "Pulled Pork"
+           },
+           {
+            "n": "Ground Beef"
+           },
+           {
+            "n": "Impossible (plant-based)"
+           },
+           {
+            "n": "Fajita Veggies"
+           }
+          ]
+         },
+         {
+          "g": "Rice",
+          "rule": "Pick one",
+          "req": false,
+          "o": [
+           {
+            "n": "Cilantro Lime Rice"
+           },
+           {
+            "n": "Brown Rice"
+           },
+           {
+            "n": "No Rice"
+           }
+          ]
+         },
+         {
+          "g": "Beans",
+          "rule": "Pick one",
+          "req": false,
+          "o": [
+           {
+            "n": "Black Beans"
+           },
+           {
+            "n": "Pinto Beans"
+           },
+           {
+            "n": "No Beans"
+           }
+          ]
+         },
+         {
+          "g": "Queso",
+          "rule": "Optional",
+          "req": false,
+          "o": [
+           {
+            "n": "3-Cheese Queso"
+           }
+          ]
+         },
+         {
+          "g": "Toppings",
+          "rule": "Pick any",
+          "req": false,
+          "o": [
+           {
+            "n": "Pico de Gallo"
+           },
+           {
+            "n": "Roasted Tomato Salsa"
+           },
+           {
+            "n": "Salsa Verde"
+           },
+           {
+            "n": "Corn Salsa"
+           },
+           {
+            "n": "Fajita Veggies"
+           },
+           {
+            "n": "Shredded Cheese"
+           },
+           {
+            "n": "Sour Cream"
+           },
+           {
+            "n": "Lettuce"
+           },
+           {
+            "n": "Pickled Jalapeños"
+           },
+           {
+            "n": "Guacamole"
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "name": "Sides",
+      "items": [
+       {
+        "n": "Chips & Queso"
+       },
+       {
+        "n": "Chips & Guacamole"
+       },
+       {
+        "n": "Chips & Salsa"
+       },
+       {
+        "n": "Chips"
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "06": [
+   {
+    "name": "Chick-fil-A",
+    "basis": "the standard Chick-fil-A menu",
+    "sections": [
+     {
+      "name": "Breakfast",
+      "items": [
+       {
+        "n": "Chick-fil-A Chicken Biscuit"
+       },
+       {
+        "n": "Spicy Chicken Biscuit"
+       },
+       {
+        "n": "Chick-n-Minis"
+       },
+       {
+        "n": "Egg White Grill"
+       },
+       {
+        "n": "Bacon, Egg & Cheese Biscuit"
+       },
+       {
+        "n": "Sausage, Egg & Cheese Biscuit"
+       },
+       {
+        "n": "Hash Brown Scramble Burrito"
+       },
+       {
+        "n": "Hash Brown Scramble Bowl"
+       },
+       {
+        "n": "Hash Browns"
+       }
+      ]
+     },
+     {
+      "name": "Entrées",
+      "items": [
+       {
+        "n": "Chick-fil-A Chicken Sandwich"
+       },
+       {
+        "n": "Chick-fil-A Deluxe Sandwich"
+       },
+       {
+        "n": "Spicy Chicken Sandwich"
+       },
+       {
+        "n": "Spicy Deluxe Sandwich"
+       },
+       {
+        "n": "Grilled Chicken Sandwich"
+       },
+       {
+        "n": "Grilled Chicken Club Sandwich"
+       },
+       {
+        "n": "Chick-fil-A Nuggets (8 ct)"
+       },
+       {
+        "n": "Chick-fil-A Nuggets (12 ct)"
+       },
+       {
+        "n": "Grilled Nuggets (8 ct)"
+       },
+       {
+        "n": "Grilled Nuggets (12 ct)"
+       },
+       {
+        "n": "Chick-n-Strips (3 ct)"
+       },
+       {
+        "n": "Chick-n-Strips (4 ct)"
+       },
+       {
+        "n": "Grilled Cool Wrap"
+       }
+      ]
+     },
+     {
+      "name": "Salads",
+      "items": [
+       {
+        "n": "Cobb Salad"
+       },
+       {
+        "n": "Spicy Southwest Salad"
+       },
+       {
+        "n": "Market Salad"
+       }
+      ]
+     },
+     {
+      "name": "Sides",
+      "items": [
+       {
+        "n": "Waffle Potato Fries (medium)"
+       },
+       {
+        "n": "Mac & Cheese (medium)"
+       },
+       {
+        "n": "Side Salad"
+       },
+       {
+        "n": "Fruit Cup (medium)"
+       },
+       {
+        "n": "Chicken Noodle Soup (cup)"
+       }
+      ]
+     },
+     {
+      "name": "Sauces",
+      "items": [
+       {
+        "n": "Chick-fil-A Sauce"
+       },
+       {
+        "n": "Polynesian"
+       },
+       {
+        "n": "Honey Mustard"
+       },
+       {
+        "n": "Garden Herb Ranch"
+       },
+       {
+        "n": "Zesty Buffalo"
+       },
+       {
+        "n": "Barbeque"
+       },
+       {
+        "n": "Sweet & Spicy Sriracha"
+       }
+      ]
+     },
+     {
+      "name": "Drinks & treats",
+      "items": [
+       {
+        "n": "Chick-fil-A Lemonade (medium)"
+       },
+       {
+        "n": "Diet Lemonade (medium)"
+       },
+       {
+        "n": "Sweet Tea (medium)"
+       },
+       {
+        "n": "Unsweetened Tea (medium)"
+       },
+       {
+        "n": "Frosted Lemonade"
+       },
+       {
+        "n": "Cookies & Cream Milkshake"
+       },
+       {
+        "n": "Chocolate Milkshake"
+       },
+       {
+        "n": "Strawberry Milkshake"
+       },
+       {
+        "n": "Vanilla Milkshake"
+       },
+       {
+        "n": "Chocolate Chunk Cookie"
+       },
+       {
+        "n": "Coffee (medium)"
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}
