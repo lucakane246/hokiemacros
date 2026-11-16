@@ -466,6 +466,20 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 .pfal .mchip{flex:0 1 auto}
 .dmore .dwarn span,.dmore .dwarn b{color:var(--fat)}
 .dmore b{text-align:right;max-width:62%}
+
+/* ---------- picked for you ---------- */
+.rec{position:relative;margin:2px 0 14px;border-radius:20px;padding:1px;background:linear-gradient(120deg,rgba(238,138,60,.45),rgba(138,36,71,.35) 45%,rgba(255,255,255,.06))}
+.rec[hidden]{display:none}
+.recmain{display:block;width:100%;text-align:left;color:inherit;font:inherit;border-radius:19px;padding:14px 56px 14px 16px;background:linear-gradient(120deg,rgba(238,138,60,.08),transparent 60%),var(--surface)}
+.rectop{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.recbadge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--orange-hi)}
+.recfocus{font-size:12px;font-weight:650;color:var(--faint)}
+.recname{font-size:17px;font-weight:750;letter-spacing:-.2px;margin-top:6px;line-height:1.25}
+.recwhy{font-size:13.5px;color:var(--text-2);font-weight:600;margin-top:3px}
+.recloc{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);font-weight:600;margin-top:8px;flex-wrap:wrap}
+.recloc .sd{margin-left:4px}
+.recnext{position:absolute;top:50%;right:12px;transform:translateY(-50%);width:36px;height:36px;border-radius:12px;display:grid;place-items:center;color:var(--muted);background:var(--surface-2);border:1px solid var(--hair);transition:transform .4s var(--spring)}
+.recnext:active{transform:translateY(-50%) rotate(-90deg) scale(.92)}
 </style>
 </head>
 <body>
@@ -511,6 +525,8 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
     <div class="macros" id="macros"></div>
     <div class="stack" id="stack"><i style="background:var(--carb)"></i><i style="background:var(--fat)"></i><i style="background:var(--protein)"></i></div>
   </div>
+
+  <div class="rec rise" style="--i:4" id="recCard" hidden></div>
 
   <div class="section-h rise" style="--i:4"><h2>Dining halls</h2><button class="link" onclick="go('map')">See map</button></div>
   <div class="carousel rise" style="--i:5" id="hallCards"></div>
@@ -1251,7 +1267,7 @@ function wireSwipes(){
 function closeOtherSwipes(keep){ document.querySelectorAll('#meals .swipe.open').forEach(r=>{ if(r!==keep){ r.classList.remove('open'); r.querySelector('.fg').style.transform=''; } }); }
 function swipeDelete(id,btn){ const row=btn.closest('.swipe'); row.style.height=row.offsetHeight+'px'; row.offsetHeight; row.classList.add('gone'); setTimeout(()=>deleteEntry(id),260); }
 
-function refreshLog(){ renderToday(); renderDiary(); if(document.body.classList.contains('prog-open')) renderProgress(); }
+function refreshLog(){ renderToday(); renderDiary(); renderRec(); if(document.body.classList.contains('prog-open')) renderProgress(); }
 
 // ================= exercise, weight, steps, water, quick add =================
 STORE.weights=STORE.weights||[]; STORE.profile=STORE.profile||{};
@@ -1572,12 +1588,100 @@ function afterPrefs(){
   const on=prefsActive(), n=(STORE.prefs.diet?1:0)+STORE.prefs.avoid.length;
   $('filterBtn').classList.toggle('on',on); $('filterBtn').dataset.n=on?n:'';
   $('filterBar').innerHTML=on?`<button class="fchip pressable" onclick="openPrefs()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>${esc(prefsSummary())}</button><button class="fclear" onclick="clearPrefs()" aria-label="Turn filters off">Clear</button>`:'';
-  if(DATA){ renderMenu(); }
+  if(DATA){ renderMenu(); renderRec(); }
   if(document.body.classList.contains('add-open')) renderResults&&renderResults();
   $('prefsSub')&&($('prefsSub').textContent=on?prefsSummary():'');
 }
 function clearPrefs(){ const old=STORE.prefs; STORE.prefs={diet:'',avoid:[]}; saveStore(); afterPrefs(); undoToast('Filters off',()=>{STORE.prefs=old; saveStore(); afterPrefs();}); }
 function toggleHidden(){ showHidden=!showHidden; renderMenu(); }
+
+// ================= "Picked for you": one dining suggestion on Today =================
+let recSkip=0;
+// What the person's goal emphasises, read from their macro split (no extra setting).
+function recFocus(){
+  const pr=STORE.profile, g=STORE.goals, cal=g.cal||2200;
+  const pc=g.c*400/cal, pp=g.p*400/cal, pf=g.f*900/cal;
+  if(pc<=32) return 'lowcarb';
+  if(pp>=28) return 'protein';
+  if(pf<=22) return 'lowfat';
+  if(pr.goal==='lose') return 'light';
+  if(pr.goal==='gain') return 'gain';
+  return 'balanced';
+}
+const FOCUS_LABEL={protein:'High protein',lowcarb:'Low carb',lowfat:'Low fat',light:'Light',gain:'Fuel up',balanced:'Balanced'};
+// The menu a hall is serving now, or will serve next (today or tomorrow).
+function upcomingMenu(n){
+  const st=statusOf([{key:n}]); if(!st.known) return null;
+  const {date,min}=etNow(), menus=DATA.menus[n]||{};
+  const pick=(d,m)=>{ const meals=menus[d]||[]; if(!meals.length) return null;
+    const slot=slotsOf({key:n},d).find(s=>(d!==date||m<toMin(s.close))&&s.label);
+    let i=slot?meals.findIndex(x=>x.meal.toLowerCase()===slot.label.toLowerCase()):-1; if(i<0) i=d===date?pickMealFor(n):0;
+    return {date:d,meal:meals[i],st}; };
+  if(st.open) return pick(date,min);
+  if(/tomorrow/.test(st.next)) return pick(addDays(date,1),0);
+  if(/^Opens at/.test(st.next)&&!/ [A-Z][a-z]+day$/.test(st.next)) return pick(date,min);
+  return null;
+}
+function recCandidates(){
+  if(!DATA) return [];
+  const t=dayTotals(todayISO()), g=STORE.goals, out=[], seen=new Set();
+  const logged=new Set(Object.values(dayRec(todayISO()).meals||{}).flat().map(e=>e.f.id));
+  for(const n of CHIP_ORDER){
+    const u=upcomingMenu(n); if(!u||!u.meal) continue;
+    const later=u.date!==todayISO();
+    const left=later?g.cal*.35:Math.max(250,g.cal-t.cal+exCal(todayISO()));
+    for(const s of u.meal.sections) for(const id of s.items){
+      const x=DATA.items[id]; if(!x||seen.has(id)||logged.has(id)) continue;
+      if(x.cal==null||x.p==null||x.c==null||x.f==null||x.cal<120||x.cal>Math.min(900,left*1.1,g.cal*.4)) continue;
+      if(/sauce|dressing|syrup|gravy|topping|condiment|beverage|drink|bar$/i.test(s.name+' '+x.n)) continue;
+      if(prefsActive()&&conflicts(x.t,x.a).length) continue;
+      seen.add(id); out.push({id,x,hall:n,station:s.name,u,left});
+    }
+  }
+  return out;
+}
+function recScore(c,focus){
+  const {x}=c, cal=x.cal, pR=x.p*4/cal, cR=x.c*4/cal, fR=x.f*9/cal;
+  switch(focus){
+    case 'protein': return x.p<15?-1:pR*100+x.p*.6;
+    case 'lowcarb': return x.p<10?-1:(1-cR)*80+x.p*.5;
+    case 'lowfat':  return (1-fR)*80+Math.min(x.p,35)*.6+(x.fib||0);
+    case 'light':   return x.p<10?-1:pR*70+(x.fib||0)*2-cal/40;
+    case 'gain':    return x.p<12?-1:cal/12+x.p*.5;
+    default: { const g=STORE.goals, t=dayTotals(todayISO());
+      const want=[Math.max(0,g.p-t.p),Math.max(0,g.c-t.c),Math.max(0,g.f-t.f)], tot=want[0]*4+want[1]*4+want[2]*9||1;
+      const w=[want[0]*4/tot,want[1]*4/tot,want[2]*9/tot];
+      return 100-(Math.abs(pR-w[0])+Math.abs(cR-w[1])+Math.abs(fR-w[2]))*100+Math.min(x.p,30)*.3-Math.abs(cal-g.cal*.22)/15; }
+  }
+}
+function recReason(x,focus){
+  switch(focus){
+    case 'protein': return `${Math.round(x.p)} g protein for ${x.cal} cal`;
+    case 'lowcarb': return `${Math.round(x.c)} g carbs · ${Math.round(x.p)} g protein`;
+    case 'lowfat':  return `${Math.round(x.f)} g fat · ${Math.round(x.p)} g protein`;
+    case 'light':   return `${x.cal} cal · ${Math.round(x.p)} g protein to keep you full`;
+    case 'gain':    return `${x.cal} cal · ${Math.round(x.p)} g protein`;
+    default:        return `${x.cal} cal · fits what you have left today`;
+  }
+}
+function renderRec(){
+  const el=$('recCard'); if(!el) return;
+  const focus=recFocus(), all=recCandidates().map(c=>[recScore(c,focus),c]).filter(a=>a[0]>=0).sort((a,b)=>b[0]-a[0]);
+  // a few of the best, in a daily order, so it isn't the same dish every day
+  const top=all.slice(0,6).map(a=>a[1]); if(!top.length){ el.innerHTML=''; el.hidden=true; return; }
+  let seed=[...todayISO()].reduce((h,ch)=>h*31+ch.charCodeAt(0)|0,7);
+  const c=top[(Math.abs(seed)+recSkip)%top.length], {x,u}=c, st=u.st;
+  const later=u.date!==todayISO();
+  const when=st.open?`Open until ${st.until}`:st.next;
+  el.hidden=false;
+  el.innerHTML=`<button class="recmain" onclick="openDiningItem('${c.id}')">
+      <div class="rectop"><span class="recbadge"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2z"/></svg>Picked for you</span><span class="recfocus">${FOCUS_LABEL[focus]}${later?' · '+esc(u.meal.meal.toLowerCase())+' tomorrow':' · '+esc(u.meal.meal.toLowerCase())}</span></div>
+      <div class="recname">${esc(x.n)}</div>
+      <div class="recwhy">${esc(recReason(x,focus))}</div>
+      <div class="recloc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.3"/></svg>${esc(VENUE[c.hall]||'')} · ${esc(c.station)}<i class="sd ${st.open?'on':''}"></i>${esc(when)}</div>
+    </button>
+    ${top.length>1?`<button class="recnext" onclick="recSkip++;renderRec()" aria-label="Show another suggestion"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>`:''}`;
+}
 
 // ---------- Today: dining hall cards ----------
 const HALLCARDS=[
@@ -1614,7 +1718,7 @@ let tt; function toast(m){const t=$('toast');t.classList.remove('has-undo');undo
 
 // first paint
 refreshLog(); renderProfile(); afterPrefs(); $('v-today').classList.add('active'); requestAnimationFrame(()=>enter($('v-today')));
-function onData(){
+function onData(){ try{renderRec()}catch(e){}
   renderHallCards(); hall='15'; mealIdx=pickMealFor(hall); renderDining(); refreshPins(); if(popIdx>=0) openPop(popIdx);
   const t=DATA.updated?new Date(DATA.updated):null;
   $('dataNote').textContent=LIVE?`Menus, nutrition and hours from VT Dining Services and Rec Sports${t?' · updated '+t.toLocaleString('en-US',{weekday:'short',hour:'numeric',minute:'2-digit'}):''}.`
