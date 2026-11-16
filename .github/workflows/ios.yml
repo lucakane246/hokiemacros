@@ -40,7 +40,12 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - name: Pick Xcode
-        run: sudo xcode-select -s "$(ls -d /Applications/Xcode_16*.app | sort -V | tail -1)" && xcodebuild -version
+        run: |
+          ls -d /Applications/Xcode_*.app
+          X=$(ls -d /Applications/Xcode_2[6-9]*.app 2>/dev/null | grep -v -i beta | sort -V | tail -1)
+          [ -n "$X" ] || X=$(ls -d /Applications/Xcode_2[6-9]*.app | sort -V | tail -1)
+          [ -n "$X" ] || { echo "::error::No Xcode 26 on this runner"; exit 1; }
+          sudo xcode-select -s "$X" && xcodebuild -version
       - name: Install Capacitor
         run: npm install --no-audit --no-fund
       - name: Create the iOS project
@@ -63,6 +68,10 @@ jobs:
           $B -c "Add :NSHealthShareUsageDescription string 'Reads your step count from Apple Health so your daily steps fill in automatically.'" $P
           $B -c "Add :NSHealthUpdateUsageDescription string 'HokieMacros does not write to Apple Health; iOS requires this description for apps that use HealthKit.'" $P
           cp App.entitlements ios/App/App/App.entitlements
+          # HealthKit entitlements for the app target only (not the Capacitor plugin frameworks)
+          perl -0pi -e 's/(PRODUCT_BUNDLE_IDENTIFIER = [^;]+;)/$1\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = App\/App.entitlements;/g' ios/App/App.xcodeproj/project.pbxproj
+          grep -c "CODE_SIGN_ENTITLEMENTS" ios/App/App.xcodeproj/project.pbxproj
+          grep "PRODUCT_BUNDLE_IDENTIFIER" ios/App/App.xcodeproj/project.pbxproj
       - name: API key
         run: |
           mkdir -p ~/private_keys
@@ -76,7 +85,7 @@ jobs:
             -archivePath $RUNNER_TEMP/App.xcarchive archive \
             -allowProvisioningUpdates \
             -authenticationKeyPath ~/private_keys/AuthKey_$ASC_KEY_ID.p8 -authenticationKeyID $ASC_KEY_ID -authenticationKeyIssuerID $ASC_ISSUER_ID \
-            DEVELOPMENT_TEAM=$APPLE_TEAM_ID CODE_SIGN_STYLE=Automatic CODE_SIGN_ENTITLEMENTS=App/App.entitlements PRODUCT_BUNDLE_IDENTIFIER=io.github.lucakane246.hokiemacros \
+            DEVELOPMENT_TEAM=$APPLE_TEAM_ID CODE_SIGN_STYLE=Automatic \
             | tail -40
           test -d $RUNNER_TEMP/App.xcarchive
       - name: Upload to TestFlight
