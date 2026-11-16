@@ -255,6 +255,15 @@
         }
        },
        {
+        "n": "Frosted Diet Lemonade",
+        "k": {
+         "cal": 280,
+         "p": 7,
+         "c": 50,
+         "f": 7
+        }
+       },
+       {
         "n": "Cookies & Cream Milkshake",
         "fs": 68753521
        },
@@ -3283,6 +3292,15 @@
          "sod": 135,
          "fib": 0,
          "sug": 65
+        }
+       },
+       {
+        "n": "Frosted Diet Lemonade",
+        "k": {
+         "cal": 280,
+         "p": 7,
+         "c": 50,
+         "f": 7
         }
        },
        {
