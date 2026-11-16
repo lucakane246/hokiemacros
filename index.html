@@ -312,7 +312,7 @@ body.add-open .addscreen{transform:none;visibility:visible}
 body.detail-open .dscrim{opacity:1;pointer-events:auto}
 .dsheet{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:430px;z-index:27;background:var(--surface);border:1px solid var(--hair-2);border-bottom:none;border-radius:28px 28px 0 0;
   padding:10px 18px calc(var(--safe-b) + 18px);transform:translateY(105%);transition:transform .55s var(--ease);max-height:92vh;overflow-y:auto}
-body.detail-open .dsheet:not(.asheet){transform:none}
+body.detail-open #dsheet{transform:none}
 .dsheet h3{font-size:21px;font-weight:800;letter-spacing:-.4px;line-height:1.2}
 .dsrc{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:13px;font-weight:600;margin-top:6px}
 .dgrid{display:grid;grid-template-columns:1.5fr 1fr;gap:10px;margin-top:16px}
@@ -379,6 +379,39 @@ body.about-open .asheet{transform:none}
 .delbtn{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:rgba(226,109,143,.14);color:var(--fat);align-self:end}
 .toast.has-undo{pointer-events:auto;display:flex;align-items:center;gap:14px;padding-right:8px}
 .toast .undo{color:var(--orange-hi);font-weight:800;padding:6px 10px;border-radius:99px;background:rgba(238,138,60,.14)}
+
+/* ---------- activity ---------- */
+.fscrim{position:fixed;inset:0;z-index:28;background:rgba(5,2,4,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .35s}
+body.form-open .fscrim{opacity:1;pointer-events:auto}
+.fsheet{z-index:29}
+body.form-open .fsheet{transform:none}
+.fbody{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.fsave{grid-template-columns:1fr}
+.fsave.editing{grid-template-columns:auto 1fr}
+.numin{height:46px;border-radius:13px;background:var(--surface-2);border:1px solid var(--hair);color:var(--text);font:inherit;font-size:16px;font-weight:650;padding:0 14px;outline:none;width:100%;min-width:0}
+.numin:focus{border-color:rgba(238,138,60,.5)}
+input[type=date].numin{color-scheme:dark}
+.stepper .numin{height:100%;border:none;background:none;text-align:center;padding:0}
+.places{margin-bottom:0;flex-wrap:wrap}
+.places .mchip{flex:1 1 auto;padding:8px 12px}
+.pstat{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);font-weight:600;margin-top:2px;min-height:16px}
+.exest{display:flex;align-items:baseline;gap:10px;padding:14px 16px;border-radius:16px;background:rgba(226,109,143,.1);border:1px solid rgba(226,109,143,.2)}
+.exest b{font-size:30px;font-weight:800;letter-spacing:-.8px;color:var(--fat)}.exest span{color:var(--text-2);font-weight:600;font-size:13.5px}
+.qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fnote{color:var(--muted);font-size:13px;line-height:1.45}
+button.card.mini{text-align:left;width:100%;color:inherit;font:inherit;display:block;align-self:stretch;vertical-align:top}
+.duo{align-items:stretch}
+.exrow{width:100%;text-align:left;color:inherit;font:inherit}
+body.prog-open .progscreen{transform:none;visibility:visible}
+.progscreen{z-index:24}
+.pgchart{margin-top:14px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--hair);min-height:150px;display:grid;place-items:center}
+.pgsvg{width:100%;height:auto;display:block}
+.pgsvg text{fill:var(--faint);font-size:10px;font-weight:600}
+.pgempty{color:var(--muted);font-size:13.5px;font-weight:600;text-align:center;padding:30px 10px}
+#pgChange.down{color:var(--green)} #pgChange.up{color:var(--carb)}
+#pgList .row{display:grid;grid-template-columns:1fr auto auto;gap:12px}
+#pgList .row b{font-weight:750}
+.pgd{font-size:12.5px;font-weight:700;color:var(--muted)}.pgd.down{color:var(--green)}.pgd.up{color:var(--carb)}
 </style>
 </head>
 <body>
@@ -426,16 +459,17 @@ body.about-open .asheet{transform:none}
   <div id="mealCards"></div>
 
   <div class="duo rise" style="--i:11">
-    <div class="card">
+    <button class="card pressable mini" onclick="openSteps()">
       <div class="mini-h"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--protein)" stroke-width="2.2" stroke-linecap="round"><path d="M13 4a2 2 0 1 0 0 .01M9 20l2-6 3 2v5M8 11l3-3 3 2 3 1M11 14l-2-3"/></svg>Steps</div>
-      <div class="mini-v soon">–</div>
-      <div class="label" style="margin-top:12px;font-size:12px;line-height:1.45">Step tracking<br>coming soon</div>
-    </div>
-    <div class="card">
+      <div class="mini-v" id="stepsV">–</div>
+      <div class="track" style="height:6px;margin-top:12px"><div class="fill" id="stepsFill" style="background:linear-gradient(90deg,#3f9c8b,var(--protein))"></div></div>
+      <div class="label" style="margin-top:8px;font-size:12px" id="stepsL">Tap to add today’s steps</div>
+    </button>
+    <button class="card pressable mini" onclick="openExercise()">
       <div class="mini-h"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rose)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z"/></svg>Exercise</div>
-      <div class="mini-v">0<small>cal</small></div>
-      <div class="label" style="margin-top:12px;font-size:12px;line-height:1.45">Exercise logging<br>coming soon</div>
-    </div>
+      <div class="mini-v"><span id="exV">0</span><small>cal</small></div>
+      <div class="label" style="margin-top:12px;font-size:12px;line-height:1.45" id="exL">Tap to log a workout</div>
+    </button>
   </div>
 </section>
 
@@ -457,6 +491,7 @@ body.about-open .asheet{transform:none}
     </div>
   </div>
   <div id="meals"></div>
+  <div id="exCard"></div>
   <div class="card rise" style="--i:8">
     <div class="mealrow" style="justify-content:space-between"><h3>Water</h3><span class="label" style="font-size:14px" id="waterLbl">0 / 64 oz</span></div>
     <div class="water" id="water"></div>
@@ -557,7 +592,7 @@ body.about-open .asheet{transform:none}
 
 <!-- ============ FOOD DETAIL ============ -->
 <div class="dscrim" onclick="closeDetail()"></div>
-<div class="dsheet" role="dialog" aria-label="Food details">
+<div class="dsheet" id="dsheet" role="dialog" aria-label="Food details">
   <div class="grab"></div>
   <h3 id="dName"></h3>
   <div class="dsrc" id="dSrc"></div><div class="ddate" id="dDate"></div>
@@ -598,6 +633,39 @@ body.about-open .asheet{transform:none}
   </div>
   <button class="primary pressable" style="width:100%;margin-top:6px" onclick="closeAbout()">Done</button>
 </div>
+
+<!-- ============ FORM SHEET (exercise, weight, steps, quick add) ============ -->
+<div class="fscrim" onclick="closeForm()"></div>
+<div class="dsheet fsheet" role="dialog" aria-labelledby="fTitle">
+  <div class="grab"></div>
+  <h3 id="fTitle"></h3><div class="ddate" id="fSub"></div>
+  <div class="fbody" id="fBody"></div>
+  <div class="dadd fsave" id="fFoot">
+    <button class="delbtn pressable" id="fDel" onclick="formDelete()" aria-label="Delete"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+    <button class="primary pressable" id="fSave" onclick="formSave()">Save</button>
+  </div>
+</div>
+
+<!-- ============ PROGRESS ============ -->
+<section class="addscreen progscreen" aria-label="Progress">
+  <div class="addtop">
+    <button class="iconbtn" onclick="closeProgress()" aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <h2>Progress</h2><span style="width:40px"></span>
+  </div>
+  <div class="card">
+    <div class="label">Weight</div>
+    <div class="cal-top"><div class="big"><span id="pgCur">–</span><small>lb</small></div>
+      <div class="left-n"><b id="pgChange">–</b><span>since <span id="pgStart">–</span></span></div></div>
+    <div class="pgchart" id="pgChart"></div>
+    <button class="primary pressable" style="width:100%;margin-top:14px" onclick="openWeight()">Log weight</button>
+  </div>
+  <div class="duo" style="margin-bottom:12px">
+    <div class="card"><div class="label">7-day average</div><div class="mini-v"><span id="pgAvg">–</span><small>cal</small></div></div>
+    <div class="card"><div class="label">Streak</div><div class="mini-v"><span id="pgStreak">0</span><small id="pgStreakU">days</small></div></div>
+  </div>
+  <div class="station">Weigh-ins</div>
+  <div class="card group" id="pgList"></div>
+</section>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -987,7 +1055,7 @@ function sumEntries(list){ const t={cal:0,p:0,c:0,f:0}; for(const e of list){con
 const dayTotals=d=>sumEntries(MEALS.flatMap(m=>entriesOf(d,m)));
 const mealTotals=(d,m)=>sumEntries(entriesOf(d,m));
 const servLabel=e=>{const q=e.qty, s=e.serv.label; return (q===1?'':`${+q.toFixed(2)} × `)+s};
-const entrySub=e=>[e.f.vt?e.f.b:(e.f.b||''),servLabel(e)].filter(Boolean).join(' · ');
+const entrySub=e=>e.f.quick?['Quick add',...[['p','protein'],['c','carbs'],['f','fat']].filter(([k])=>e.f.k[k]).map(([k,l])=>e.f.k[k]+'g '+l)].join(' · '):[e.f.vt?e.f.b:(e.f.b||''),servLabel(e)].filter(Boolean).join(' · ');
 const fmtN=n=>Math.round(n).toLocaleString();
 function relDay(d){ const t=todayISO(); if(d===t) return 'Today'; if(d===addDays(t,-1)) return 'Yesterday'; if(d===addDays(t,1)) return 'Tomorrow';
   return new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}); }
@@ -1016,7 +1084,7 @@ function doUndo(){ if(undoFn){undoFn(); undoFn=null;} $('toast').classList.remov
 // ---------- Today ----------
 function setCount(id,v){ const el=$(id); if(!el) return; el.dataset.count=Math.round(v); el.textContent=fmtN(v); }
 function renderToday(){
-  const d=todayISO(), t=dayTotals(d), g=STORE.goals, ex=0, left=g.cal-t.cal+ex;
+  const d=todayISO(), t=dayTotals(d), g=STORE.goals, ex=exCal(d), left=g.cal-t.cal+ex;
   setCount('calFood',t.cal); setCount('calLeft',Math.abs(left));
   $('calLeftLbl').textContent=left<0?'over':'remaining'; $('calLeft').parentElement.classList.toggle('over',left<0);
   $('calGoalSmall').textContent='/ '+fmtN(g.cal);
@@ -1024,6 +1092,10 @@ function renderToday(){
   const fill=$('calFill'); fill.dataset.w=Math.min(100,t.cal/g.cal*100); fill.style.width=fill.dataset.w+'%'; fill.classList.toggle('over',left<0);
   MAC[0].g=t.c; MAC[1].g=t.f; MAC[2].g=t.p; MAC[0].goal=g.c; MAC[1].goal=g.f; MAC[2].goal=g.p; setMacros();
   renderWeek(); renderMealCards();
+  const st=dayRec(d).steps; $('stepsV').textContent=st!=null?fmtN(st):'–'; $('stepsFill').style.width=Math.min(100,(st||0)/100)+'%';
+  $('stepsL').textContent=st!=null?'Goal 10,000':'Tap to add today’s steps';
+  $('exV').textContent=fmtN(ex); const xs=exOf(d);
+  $('exL').innerHTML=xs.length?`${esc(xs[0].act)}${xs[0].place?' · '+esc(xs[0].place):''}${xs.length>1?`<br>+ ${xs.length-1} more`:''}`:'Tap to log a workout';
 }
 function weekDates(){ const t=todayISO(), wd=new Date(t+'T12:00:00').getDay(); return Array.from({length:7},(_,i)=>addDays(t,i-wd)); }
 function streakCount(){ let d=todayISO(), n=0; if(!dayTotals(d).cal) d=addDays(d,-1); while(dayTotals(d).cal>0&&n<999){n++; d=addDays(d,-1);} return n; }
@@ -1050,9 +1122,9 @@ function openDiaryOn(d){ diaryDate=d; renderDiary(); go('diary'); }
 function shiftDay(n){ const nd=addDays(diaryDate,n); if(nd>addDays(todayISO(),7)) return; diaryDate=nd; renderDiary(true); }
 function renderDiary(slide){
   if(!diaryDate) diaryDate=todayISO();
-  const d=diaryDate, t=dayTotals(d), g=STORE.goals, left=g.cal-t.cal;
+  const d=diaryDate, t=dayTotals(d), g=STORE.goals, ex=exCal(d), left=g.cal-t.cal+ex;
   $('diaryDate').textContent=relDay(d);
-  $('dqGoal').textContent=fmtN(g.cal); $('dqFood').textContent=fmtN(t.cal); $('dqEx').textContent='0';
+  $('dqGoal').textContent=fmtN(g.cal); $('dqFood').textContent=fmtN(t.cal); $('dqEx').textContent=fmtN(ex);
   $('dqLeft').textContent=fmtN(left); $('dqLeft').parentElement.classList.toggle('over',left<0);
   const y=addDays(d,-1);
   $('meals').innerHTML=MEALS.map((m,i)=>{const list=entriesOf(d,m), mt=mealTotals(d,m), yl=entriesOf(y,m);
@@ -1063,6 +1135,10 @@ function renderDiary(slide){
       ${!list.length&&yl.length?`<button class="copyrow" onclick="copyMeal('${y}','${d}','${m}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>Copy ${relDay(y)==='Yesterday'?"yesterday's":relDay(y)+"'s"} ${m.toLowerCase()} <span>${fmtN(mealTotals(y,m).cal)} cal</span></button>`:''}
       <button class="add" onclick="openAdd('${m}','${d}')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add food</button></div>`}).join('');
   if(slide) $('meals').animate([{opacity:.3,transform:`translateX(${slide>0?12:-12}px)`},{opacity:1,transform:'none'}],{duration:320,easing:'cubic-bezier(.22,.9,.24,1)'});
+  const xs=exOf(d);
+  $('exCard').innerHTML=`<div class="card meal ${slide?'':'rise'}" style="--i:7"><div class="mh"><div class="mealrow" style="gap:12px"><div class="micon" style="background:rgba(226,109,143,.14)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E26D8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z"/></svg></div><h3>Exercise</h3></div><span class="kc">${xs.length?fmtN(ex):''}</span></div>
+    ${xs.map(x=>`<button class="item exrow" onclick="openExercise('${d}','${x.id}')"><div class="it"><div class="nm">${esc(x.act)}</div><div class="ds">${x.min} min${x.place?' · '+esc(x.place):''}</div></div><div class="kc">${fmtN(x.cal)}</div></button>`).join('')}
+    <button class="add" onclick="openExercise('${d}')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add exercise</button></div>`;
   const w=dayRec(d).water||0, goal=STORE.goals.water;
   $('waterLbl').textContent=`${w*8} / ${goal*8} oz`;
   $('water').innerHTML=Array.from({length:goal},(_,k)=>`<button class="${k<w?'f':''}" style="--k:${k}" onclick="setWater(${k<w&&k===w-1?k:k+1})" aria-label="${k+1} glasses"></button>`).join('');
@@ -1088,7 +1164,148 @@ function wireSwipes(){
 function closeOtherSwipes(keep){ document.querySelectorAll('#meals .swipe.open').forEach(r=>{ if(r!==keep){ r.classList.remove('open'); r.querySelector('.fg').style.transform=''; } }); }
 function swipeDelete(id,btn){ const row=btn.closest('.swipe'); row.style.height=row.offsetHeight+'px'; row.offsetHeight; row.classList.add('gone'); setTimeout(()=>deleteEntry(id),260); }
 
-function refreshLog(){ renderToday(); renderDiary(); }
+function refreshLog(){ renderToday(); renderDiary(); if(document.body.classList.contains('prog-open')) renderProgress(); }
+
+// ================= exercise, weight, steps, water, quick add =================
+STORE.weights=STORE.weights||[]; STORE.profile=STORE.profile||{};
+// MET values from the Compendium of Physical Activities. kcal = MET x kg x hours.
+const ACTIVITIES=[
+  ['Gym',[['Weightlifting',3.5],['Weightlifting, vigorous',6],['Circuit training / HIIT',8],['Treadmill run, 6 mph',9.8],['Treadmill run, 7.5 mph',11.5],
+          ['Treadmill walk, brisk',4.3],['Incline walk',6],['Elliptical',5],['Stationary bike, moderate',6.8],['Stationary bike, vigorous',8.8],
+          ['Rowing machine',7],['Stair climber',9],['Yoga',2.5],['Pilates',3],['Stretching',2.3]]],
+  ['Courts & fields',[['Basketball, game',8],['Basketball, shooting around',4.5],['Soccer, casual',7],['Volleyball, casual',3],
+          ['Tennis, singles',8],['Tennis, doubles',6],['Ultimate frisbee',8],['Flag football',8]]],
+  ['Pool',[['Swimming laps, moderate',5.8],['Swimming laps, vigorous',9.8],['Water aerobics',5.3]]],
+  ['Outdoors',[['Walking to class',3.5],['Running, 5 mph',8.3],['Running, 6 mph',9.8],['Running, 7.5 mph',11.5],['Cycling, leisure',4],
+          ['Cycling, moderate',8],['Hiking',6],['Dancing',5]]],
+];
+const ACT_FLAT=Object.fromEntries(ACTIVITIES.flatMap(([,l])=>l));
+const PLACES={'':['Anywhere',null],'McComas':['McComas',[{key:'McComas',gym:true}]],'War Memorial':['War Memorial',[{key:'War Memorial',gym:true}]],'McComas Pool':['McComas Pool',[{key:'McComas Pool',gym:true}]]};
+const latestWeight=()=>{const w=[...STORE.weights].sort((a,b)=>a.d<b.d?-1:1).pop(); return w?w.lb:(STORE.profile.weightLb||null)};
+const kcalFor=(met,min,lb)=>Math.round(met*(lb*0.45359237)*(min/60));
+const exOf=d=>(STORE.days[d]&&STORE.days[d].exercise)||[];
+const exCal=d=>exOf(d).reduce((s,e)=>s+(e.cal||0),0);
+
+// ---------- generic bottom form sheet ----------
+let formCfg=null;
+function openForm(cfg){
+  formCfg=cfg; $('fTitle').textContent=cfg.title; $('fSub').textContent=cfg.sub||''; $('fBody').innerHTML=cfg.body;
+  $('fSave').textContent=cfg.saveLabel||'Save'; $('fDel').style.display=cfg.onDelete?'grid':'none';
+  $('fFoot').classList.toggle('editing',!!cfg.onDelete);
+  document.body.classList.add('form-open'); cfg.onOpen&&cfg.onOpen();
+  const first=$('fBody').querySelector('[autofocus]'); if(first) setTimeout(()=>first.focus(),420);
+}
+function closeForm(){ document.body.classList.remove('form-open'); formCfg=null; document.activeElement&&document.activeElement.blur(); }
+function formSave(){ if(formCfg&&formCfg.onSave()!==false) closeForm(); }
+function formDelete(){ if(formCfg&&formCfg.onDelete){ formCfg.onDelete(); closeForm(); } }
+const numIn=(id,val,ph,attrs='')=>`<input class="numin" id="${id}" inputmode="decimal" value="${val??''}" placeholder="${ph||''}" ${attrs}>`;
+
+// ---------- exercise ----------
+function actOptions(sel,place){
+  const groups=place==='McComas Pool'?ACTIVITIES.filter(g=>g[0]==='Pool'):place?ACTIVITIES.filter(g=>g[0]!=='Outdoors'):ACTIVITIES;
+  return groups.map(([g,l])=>`<optgroup label="${g}">${l.map(([n])=>`<option ${n===sel?'selected':''}>${n}</option>`).join('')}</optgroup>`).join('');
+}
+function placeStatus(p){ const t=PLACES[p]&&PLACES[p][1]; if(!t||!DATA) return ''; const st=statusOf(t); return st.known?`<i class="sd ${st.open?'on':''}"></i>${esc(st.open?'Open until '+st.until:st.next)}`:''; }
+function openExercise(date,entryId){
+  const d=date||todayISO(), e=entryId?exOf(d).find(x=>x.id===entryId):null;
+  let place=e?e.place||'':'' , act=e?e.act:'Weightlifting', min=e?e.min:45, lb=latestWeight()||'';
+  const body=()=>`
+    <div class="field"><span>Where</span><div class="mchips places">${Object.entries(PLACES).map(([k,[lab]])=>`<button class="mchip ${k===place?'on':''}" onclick="exSet('place','${k}')">${lab}</button>`).join('')}</div>
+      <div class="pstat" id="exPlace">${placeStatus(place)}</div></div>
+    <label class="field"><span>Activity</span><select id="exAct" onchange="exCalc()">${actOptions(act,place)}</select></label>
+    <div class="dgrid"><div class="field qty"><span>Minutes</span><div class="stepper"><button onclick="exStep(-5)">−</button>${numIn('exMin',min,'30')}<button onclick="exStep(5)">+</button></div></div>
+      <label class="field"><span>Your weight (lb)</span>${numIn('exLb',lb,'160')}</label></div>
+    <div class="exest"><b id="exCal">–</b><span>calories burned (estimate)</span></div>`;
+  openForm({title:e?'Edit exercise':'Log exercise',sub:relDay(d),body:body(),saveLabel:e?'Save':'Add exercise',
+    onOpen:()=>{ ['exMin','exLb'].forEach(i=>$(i).addEventListener('input',exCalc)); exCalc(); },
+    onSave:()=>{ const a=$('exAct').value, m=parseFloat($('exMin').value), w=parseFloat($('exLb').value);
+      if(!(m>0)) { toast('Enter how many minutes'); return false; } if(!(w>50)) { toast('Enter your weight so we can estimate calories'); return false; }
+      if(!latestWeight()) STORE.profile.weightLb=w;
+      const rec={id:e?e.id:uid(),act:a,place,min:m,cal:kcalFor(ACT_FLAT[a],m,w),at:Date.now()};
+      const day=dayRec(d); day.exercise=(day.exercise||[]).filter(x=>x.id!==rec.id).concat(rec);
+      saveStore(); refreshLog(); toast(`${e?'Saved':'Logged'} ${a} · ${rec.cal} cal`); },
+    onDelete:e?()=>{ const day=dayRec(d); const old=day.exercise; day.exercise=old.filter(x=>x.id!==e.id); saveStore(); refreshLog();
+      undoToast(`Removed ${e.act}`,()=>{dayRec(d).exercise=old; saveStore(); refreshLog();}); }:null});
+  window.exSet=(k,v)=>{ if(k==='place'){ place=v; act=$('exAct').value; min=$('exMin').value; lb=$('exLb').value;
+      const opts=actOptions(act,place); $('exAct').innerHTML=opts; if(!$('exAct').value) $('exAct').selectedIndex=0;
+      document.querySelectorAll('.places .mchip').forEach((b,i)=>b.classList.toggle('on',Object.keys(PLACES)[i]===place)); $('exPlace').innerHTML=placeStatus(place); exCalc(); } };
+}
+function exStep(n){ const i=$('exMin'); i.value=Math.max(5,(parseFloat(i.value)||0)+n); exCalc(); }
+function exCalc(){ const m=parseFloat($('exMin').value), w=parseFloat($('exLb').value), met=ACT_FLAT[$('exAct').value];
+  $('exCal').textContent=(m>0&&w>50)?kcalFor(met,m,w):'–'; }
+
+// ---------- weight ----------
+function openWeight(entryDate){
+  const today=todayISO(), d=entryDate||today, e=STORE.weights.find(w=>w.d===d);
+  openForm({title:e?'Edit weight':'Log weight',sub:relDay(d),saveLabel:'Save',
+    body:`<label class="field"><span>Weight (lb)</span>${numIn('wLb',e?e.lb:(latestWeight()||''),'160','autofocus')}</label>
+      <label class="field" style="margin-top:12px"><span>Date</span><input type="date" class="numin" id="wDate" value="${d}" max="${today}"></label>`,
+    onSave:()=>{ const lb=Math.round(parseFloat($('wLb').value)*10)/10, nd=$('wDate').value||today;
+      if(!(lb>50&&lb<700)) { toast('Enter a weight in pounds'); return false; }
+      STORE.weights=STORE.weights.filter(w=>w.d!==nd&&(!e||w.d!==e.d)).concat({d:nd,lb}); saveStore(); renderProgress(); refreshLog(); toast(`Weight saved · ${lb} lb`); },
+    onDelete:e?()=>{ STORE.weights=STORE.weights.filter(w=>w.d!==e.d); saveStore(); renderProgress(); }:null});
+}
+
+// ---------- steps ----------
+function openSteps(){
+  const d=todayISO();
+  openForm({title:'Steps',sub:'Today · from your phone’s Health or Fitness app',
+    body:`<label class="field"><span>Steps today</span>${numIn('stIn',dayRec(d).steps||'','8,000','autofocus')}</label>
+      <p class="fnote">Websites can’t read your phone’s step counter, so copy today’s number from the Health app.</p>`,
+    onSave:()=>{ const n=Math.round(parseFloat(String($('stIn').value).replace(/,/g,''))); if(!(n>=0)) { toast('Enter a number'); return false; }
+      dayRec(d).steps=n; saveStore(); refreshLog(); }});
+}
+
+// ---------- quick add ----------
+function openQuickAdd(meal,date){
+  const d=date||todayISO(), m=meal||mealNow();
+  openForm({title:'Quick add',sub:relDay(d),saveLabel:'Add',
+    body:`<label class="field"><span>Calories</span>${numIn('qCal','','0','autofocus')}</label>
+      <div class="qgrid"><label class="field"><span>Protein (g)</span>${numIn('qP','','–')}</label><label class="field"><span>Carbs (g)</span>${numIn('qC','','–')}</label><label class="field"><span>Fat (g)</span>${numIn('qF','','–')}</label></div>
+      <div class="dgrid" style="margin-top:12px"><label class="field"><span>Name (optional)</span><input class="numin" id="qName" placeholder="Quick add"></label>
+      <label class="field"><span>Meal</span><select id="qMeal">${MEALS.map(x=>`<option ${x===m?'selected':''}>${x}</option>`).join('')}</select></label></div>`,
+    onSave:()=>{ const cal=parseFloat($('qCal').value); if(!(cal>=0)) { toast('Enter calories'); return false; }
+      const g=id=>{const v=parseFloat($(id).value);return isNaN(v)?0:v};
+      const f={id:'q'+uid(),n:$('qName').value.trim()||'Quick add',b:'',k:{cal,p:g('qP'),c:g('qC'),f:g('qF')},vt:1,quick:1,serving:'1 entry'};
+      addEntry(d,$('qMeal').value,f,{label:'1 entry',g:null},1); STORE.recent=STORE.recent.filter(x=>!x.quick); saveStore();
+      toast(`Added ${Math.round(cal)} cal to ${$('qMeal').value}`); }});
+}
+
+// ---------- water ----------
+function addWater(){ const day=dayRec(todayISO()); day.water=Math.min(STORE.goals.water+4,(day.water||0)+1); saveStore(); refreshLog(); toast(`Water · ${day.water*8} oz today`); }
+
+// ---------- progress screen ----------
+function openProgress(){ renderProgress(); document.body.classList.add('prog-open'); }
+function closeProgress(){ document.body.classList.remove('prog-open'); }
+function renderProgress(){
+  const ws=[...STORE.weights].sort((a,b)=>a.d<b.d?-1:1);
+  const cur=ws.length?ws[ws.length-1].lb:null, start=ws.length?ws[0].lb:null, ch=cur!=null?Math.round((cur-start)*10)/10:null;
+  $('pgCur').textContent=cur??'–'; $('pgStart').textContent=start!=null?start+' lb':'–';
+  $('pgChange').textContent=ch==null?'–':(ch>0?'+':ch<0?'−':'')+Math.abs(ch)+' lb'; $('pgChange').className=ch==null||ch===0?'':ch<0?'down':'up';
+  // chart: last 90 days
+  const W=340,H=150,P=14, cut=addDays(todayISO(),-90), pts=ws.filter(w=>w.d>=cut);
+  if(pts.length<2){ $('pgChart').innerHTML=`<div class="pgempty">${pts.length?'Log another weigh-in to see your trend.':'Log your weight to start a trend.'}</div>`; }
+  else{
+    const t=d=>new Date(d+'T12:00:00').getTime(), x0=t(pts[0].d), x1=t(pts[pts.length-1].d)||x0+1;
+    const lo=Math.min(...pts.map(p=>p.lb))-2, hi=Math.max(...pts.map(p=>p.lb))+2;
+    const X=d=>P+(W-2*P)*((t(d)-x0)/Math.max(1,x1-x0)), Y=v=>P+(H-2*P)*(1-(v-lo)/(hi-lo));
+    const line=pts.map((p,i)=>`${i?'L':'M'}${X(p.d).toFixed(1)},${Y(p.lb).toFixed(1)}`).join(' ');
+    $('pgChart').innerHTML=`<svg viewBox="0 0 ${W} ${H}" class="pgsvg"><defs><linearGradient id="pgG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EE8A3C" stop-opacity=".35"/><stop offset="1" stop-color="#EE8A3C" stop-opacity="0"/></linearGradient></defs>
+      ${[0,.5,1].map(f=>`<line x1="${P}" x2="${W-P}" y1="${P+(H-2*P)*f}" y2="${P+(H-2*P)*f}" stroke="rgba(255,255,255,.06)"/>`).join('')}
+      <path d="${line} L${X(pts[pts.length-1].d)},${H-P} L${X(pts[0].d)},${H-P} Z" fill="url(#pgG)"/>
+      <path class="pgline" d="${line}" fill="none" stroke="#F7A35C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      ${pts.map(p=>`<circle cx="${X(p.d)}" cy="${Y(p.lb)}" r="3.6" fill="#1c1418" stroke="#F7A35C" stroke-width="2"/>`).join('')}
+      <text x="${W-P}" y="11" text-anchor="end">${Math.round(hi-2)} lb</text><text x="${W-P}" y="${H-2}" text-anchor="end">${Math.round(lo+2)} lb</text></svg>`;
+    const pl=$('pgChart').querySelector('.pgline'); const L=pl.getTotalLength(); pl.style.strokeDasharray=L; pl.animate([{strokeDashoffset:L},{strokeDashoffset:0}],{duration:900,easing:'cubic-bezier(.22,.9,.24,1)'});
+  }
+  $('pgList').innerHTML=ws.length?[...ws].reverse().slice(0,30).map((w,i,a)=>{const prev=a[i+1]; const df=prev?Math.round((w.lb-prev.lb)*10)/10:null;
+    return `<button class="row" onclick="openWeight('${w.d}')"><span>${relDay(w.d)}</span><span class="pgd ${df>0?'up':df<0?'down':''}">${df==null||df===0?'':(df>0?'+':'')+df}</span><b>${w.lb} lb</b></button>`}).join('')
+    :'<div class="pgempty" style="padding:18px">No weigh-ins yet.</div>';
+  // 7-day calorie average
+  const days7=Array.from({length:7},(_,i)=>addDays(todayISO(),-i)).filter(d=>dayTotals(d).cal>0);
+  const sk=streakCount(); $('pgStreak').textContent=sk; $('pgStreakU').textContent=sk===1?'day':'days';
+  $('pgAvg').textContent=days7.length?fmtN(days7.reduce((s,d)=>s+dayTotals(d).cal,0)/days7.length):'–';
+}
 
 // ---------- Today: dining hall cards ----------
 const HALLCARDS=[
@@ -1112,14 +1329,14 @@ function openHall(n){ hall=n; mealIdx=pickMealFor(n); renderDining(); go('dining
 
 // ---------- You ----------
 const rowsHTML=rows=>rows.map(r=>`<button class="row" onclick="${r[3]||"toast('Coming soon')"}"><span class="sq" style="background:${r[1]}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${r[2]}"/></svg></span>${r[0]}<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>`).join('');
-$('grp1').innerHTML=rowsHTML([['Goals','#D2611C','M12 3a9 9 0 1 0 9 9M12 7a5 5 0 1 0 5 5M12 11a1 1 0 1 0 1 1M12 12l8-8'],['Nutrition','#3f9c8b','M4 20V10M10 20V4M16 20v-7M22 20H2'],['Progress','#8A2447','M3 17l6-6 4 4 8-8M15 7h6v6']]);
+$('grp1').innerHTML=rowsHTML([['Goals','#D2611C','M12 3a9 9 0 1 0 9 9M12 7a5 5 0 1 0 5 5M12 11a1 1 0 1 0 1 1M12 12l8-8'],['Nutrition','#3f9c8b','M4 20V10M10 20V4M16 20v-7M22 20H2'],['Progress','#8A2447','M3 17l6-6 4 4 8-8M15 7h6v6','openProgress()']]);
 $('grp2').innerHTML=rowsHTML([['About & privacy','#3c5a7a','M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01',"openAbout()"],['Settings','#5b5056','M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1L14.5 3h-5l-.3 2.6a7 7 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.3 2.6h5l.3-2.6a7 7 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6a7 7 0 0 0 .1-1z']]);
 function openAbout(){document.body.classList.add('about-open')}
 function closeAbout(){document.body.classList.remove('about-open')}
 
 // ---------- sheet + toast ----------
 const OPTS=[['Search food','#EE8A3C','M4 13h16a8 8 0 0 1-16 0zM12 9V5'],['Scan','#B4466C','M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2M7 12h10'],['Water','#69C3B2','M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z'],['Exercise','#E26D8F','M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z'],['Weight','#F2A95B','M5 20h14l-2-12H7zM9 8a3 3 0 0 1 6 0'],['Quick add','#9b8cf0','M13 3 4 14h7l-1 7 9-11h-7z']];
-$('opts').innerHTML=OPTS.map((o,k)=>`<button class="opt" style="--k:${k}" onclick="toggleSheet(false);${k===0?"openAdd()":"toast('Coming soon')"}"><span class="oi" style="background:${o[1]}26"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${o[1]}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${o[2]}"/></svg></span>${o[0]}</button>`).join('');
+$('opts').innerHTML=OPTS.map((o,k)=>`<button class="opt" style="--k:${k}" onclick="toggleSheet(false);${['openAdd()',"toast('Barcode scanning is coming soon')",'addWater()','openExercise()','openWeight()','openQuickAdd()'][k]}"><span class="oi" style="background:${o[1]}26"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${o[1]}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${o[2]}"/></svg></span>${o[0]}</button>`).join('');
 function toggleSheet(on){ document.body.classList.toggle('sheet-open',on); }
 let tt; function toast(m){const t=$('toast');t.classList.remove('has-undo');undoFn=null;t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1800)}
 
