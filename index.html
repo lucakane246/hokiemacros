@@ -500,6 +500,23 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 .prbtn{font:inherit;font-size:12.5px;font-weight:750;color:var(--orange-hi);background:rgba(238,138,60,.12);border:1px solid rgba(238,138,60,.28);border-radius:99px;padding:6px 11px;white-space:nowrap}
 .kc .pr{color:var(--orange-hi);font-weight:700}
 .moneyin{display:flex;align-items:center;gap:8px}.moneyin i{font-style:normal;font-size:22px;font-weight:800;color:var(--muted)}.moneyin .numin{font-size:22px;height:54px}
+
+/* ---------- your location ---------- */
+.locbtn{top:calc(var(--safe-t) + 66px)}
+.locbtn.on{color:var(--orange-hi)}
+.locbtn.follow{background:linear-gradient(145deg,var(--orange-hi),var(--orange-deep));color:#fff;border-color:transparent}
+#route{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+#route path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+#route .rcase{stroke:rgba(20,10,14,.55)}
+#route .rline{stroke:#5aa9ff}
+#meDot{position:absolute;display:none;width:0;height:0;pointer-events:none;z-index:2}
+#meDot .acc{position:absolute;border-radius:50%;background:rgba(90,169,255,.16);border:1px solid rgba(90,169,255,.35)}
+#meDot .dot{position:absolute;left:-11px;top:-11px;width:22px;height:22px;border-radius:50%;background:#2f8cff;border:3.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.45)}
+#meDot .dot::after{content:"";position:absolute;inset:-12px;border-radius:50%;border:2px solid rgba(47,140,255,.6);animation:mepulse 2s ease-out infinite}
+@keyframes mepulse{from{transform:scale(.4);opacity:1}to{transform:scale(1.4);opacity:0}}
+.pwalk{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;color:#7fbaff;margin:6px 0 2px}
+.pwalk:empty{display:none}
+.walkbtn{font:inherit;font-size:13px;font-weight:700;color:#7fbaff;padding:0}
 </style>
 </head>
 <body>
@@ -617,11 +634,16 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
         <button class="satbtn" id="satBtn" onclick="toggleSat()" aria-label="Satellite view" aria-pressed="false">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><g transform="rotate(-45 12 12)"><rect x="9.5" y="9.5" width="5" height="5" rx="1.2" fill="currentColor"/><rect x="2" y="7.5" width="4.5" height="9" rx=".8" fill="currentColor" fill-opacity=".3"/><rect x="17.5" y="7.5" width="4.5" height="9" rx=".8" fill="currentColor" fill-opacity=".3"/><path d="M6.5 12h3M14.5 12h3M12 14.5v3"/></g></svg>
         </button>
+        <button class="satbtn locbtn" id="locBtn" onclick="locTap()" aria-label="Show my location">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.6 3.4a.9.9 0 0 0-1-.2L3.9 9.9a.9.9 0 0 0 .1 1.7l6.3 1.9 1.9 6.3a.9.9 0 0 0 1.7.1l6.7-15.7a.9.9 0 0 0 0-.8z"/></svg>
+        </button>
         <div id="attrib"></div>
         <div id="mapInner">
           <img id="satImg" data-src="campus.jpg" width="3200" height="3200" alt="Aerial view of Virginia Tech campus" draggable="false" style="display:block;user-select:none;-webkit-user-drag:none">
           <div id="cleanWrap" style="position:absolute;left:506px;top:-474px;width:2739px;height:2582px;overflow:hidden"><img id="cleanImg" src="campus-clean.webp" alt="Map of Virginia Tech campus" draggable="false" style="position:absolute;left:0;top:0;width:100%;height:100%;user-select:none;-webkit-user-drag:none"><div id="tiles"><div id="t1"></div><div id="t2"></div></div></div>
           <div id="labels"></div>
+          <svg id="route" width="1" height="1" aria-hidden="true"></svg>
+          <div id="meDot" aria-label="Your location"><div class="acc"></div><div class="dot"></div></div>
           <div id="pins"></div>
         </div>
         <div class="pop" id="pop">
@@ -629,6 +651,7 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
           <h3 id="popName"></h3>
           <div class="sub" id="popBldg"></div>
           <div class="pstatus" id="popStatus"></div>
+          <div class="pwalk" id="popWalk"></div>
           <div class="hrs" id="popHrs"></div>
           <button class="popmenu pressable" id="popMenu">See today's menu<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
         </div>
@@ -1810,7 +1833,7 @@ function renderHallCards(){
   <radialGradient id="hr${i}" cx=".85" cy=".1" r=".7"><stop offset="0" stop-color="${h.a}" stop-opacity=".55"/><stop offset="1" stop-color="${h.a}" stop-opacity="0"/></radialGradient></defs>
   <rect width="300" height="150" fill="url(#hg${i})"/><rect width="300" height="150" fill="url(#hr${i})"/>
   <g fill="none" stroke="${h.a}" stroke-opacity=".28" stroke-width="1.5"><circle cx="250" cy="30" r="38"/><circle cx="250" cy="30" r="62"/><circle cx="250" cy="30" r="88"/></g></svg>
-  <span class="tag">${st.known?`<i class="sd ${st.open?'on':''}"></i>${st.open?'Open':'Closed'}`:'Dining'}</span><h3>${h.n}</h3><p>${esc(statusLine(st)||h.b)}</p></button>`}).join('');
+  <span class="tag">${st.known?`<i class="sd ${st.open?'on':''}"></i>${st.open?'Open':'Closed'}`:'Dining'}</span><h3>${h.n}</h3><p>${esc(statusLine(st)||h.b)}${(()=>{try{const sp=spots.find(x=>x.t.some(t=>t.key===h.k)); const w=sp&&LOC.xy?walkTo(sp):null; return w==null||w>16000?'':' · '+(LOC.off?fmtDist(w)+' away':fmtMins(w)+' walk')}catch(e){return ''}})()}</p></button>`}).join('');
 }
 function openHall(n){ hall=n; mealIdx=pickMealFor(n); renderDining(); go('dining'); }
 
@@ -1873,9 +1896,9 @@ function openPop(i){
     const rows=sl.length?sl.map(s=>`<div class="hl"><span>${esc(units.length>1?s.unit.replace(/^.*?\s{2,}/,''):(s.label&&!/regular/i.test(s.label)?s.label:''))}</span><b>${fmtT(s.open)} – ${fmtT(s.close)}${(()=>{const pr=doorPrice(t.key,s.label,date);return pr!=null?`<em class="hp">${money(pr)}</em>`:''})()}</b></div>`).join(''):`<div class="hl"><span></span><b class="muted">Closed today</b></div>`;
     return `<div class="hv"><div class="hn">${esc(name)}</div>${rows}</div>`}).join('');
   const menuBtn=$('popMenu'); menuBtn.style.display=p.gym?'none':'flex'; menuBtn.onclick=()=>{closePop();openHall(p.t[0].key)};
-  $('pop').classList.add('show');
+  $('pop').classList.add('show'); updatePopWalk(); if(drawRoute()) requestAnimationFrame(fitRoute);
 }
-function closePop(){popIdx=-1;$('pop').classList.remove('show');pinsEl.querySelectorAll('.pin').forEach(b=>b.classList.remove('sel'))}
+function closePop(){popIdx=-1;$('pop').classList.remove('show');drawRoute();pinsEl.querySelectorAll('.pin').forEach(b=>b.classList.remove('sel'))}
 
 const card=document.getElementById('mapcard'), inner=document.getElementById('mapInner');
 const MW=3200;
@@ -1883,6 +1906,125 @@ const CR=[506,-474,2739,2582]; // the clean map itself
 const BOUNDS={sat:[0,0,3200,3200],clean:CR};
 let mapStyle='clean',BX=BOUNDS.clean;
 let S=1,TX=0,TY=0,minS=.1;
+// ================= your location, walking times and routes =================
+// Location never leaves the phone: everything below runs in the browser.
+const GEO=(()=>{ // NAD83 / Virginia South (ftUS) Lambert conformal conic, then the map's own pixel grid
+  const a=6378137, f=1/298.257222101, e=Math.sqrt(2*f-f*f), FT=1200/3937, R=Math.PI/180;
+  const p1=(37+58/60)*R, p2=(36+46/60)*R, p0=(36+20/60)*R, l0=-78.5*R;
+  const m=p=>Math.cos(p)/Math.sqrt(1-(e*Math.sin(p))**2), t=p=>Math.tan(Math.PI/4-p/2)/((1-e*Math.sin(p))/(1+e*Math.sin(p)))**(e/2);
+  const n=(Math.log(m(p1))-Math.log(m(p2)))/(Math.log(t(p1))-Math.log(t(p2))), F=m(p1)/(n*t(p1)**n), r0=a*F*t(p0)**n;
+  const PX=3.97387990650441481, OX=10900025.0561122540384531, OY=3635735.30864851921796799, K=3200/3776;
+  return (lat,lon)=>{ const r=a*F*t(lat*R)**n, th=n*(lon*R-l0);
+    const X=(3500000+r*Math.sin(th))/FT, Y=(1000000+r0-r*Math.cos(th))/FT;
+    return [((X-OX)/PX-.5-3768)*K, ((OY-Y)/PX-.5-5218)*K]; };
+})();
+const LOC={on:false,watch:null,pos:null,xy:null,acc:0,follow:false,graph:null,dist:null,prev:null,src:-1,lastXY:null,off:false};
+const M_PER_U=1.42628, WALK_MPS=1.3;
+const fmtDist=m=>{const mi=m/1609.34; return mi<0.1?`${Math.round(m*3.28084/10)*10} ft`:`${mi<10?mi.toFixed(1):Math.round(mi)} mi`};
+const fmtMins=m=>{const s=Math.max(1,Math.round(m/WALK_MPS/60)); return s<60?`${s} min`:`${Math.floor(s/60)} hr ${s%60} min`};
+
+async function loadGraph(){
+  if(LOC.graph) return LOC.graph;
+  const g=await fetch('data/walk.json').then(r=>r.json());
+  const N=g.p.length/2, X=new Float32Array(N), Y=new Float32Array(N), deg=new Uint32Array(N+1);
+  for(let i=0;i<N;i++){X[i]=g.p[2*i];Y[i]=g.p[2*i+1];}
+  for(let k=0;k<g.e.length;k++) deg[g.e[k]+1]++;
+  for(let i=0;i<N;i++) deg[i+1]+=deg[i];
+  const nb=new Uint32Array(g.e.length), w=new Float32Array(g.e.length), fill=deg.slice(0,N);
+  for(let k=0;k<g.e.length;k+=2){ const i=g.e[k], j=g.e[k+1], d=Math.hypot(X[i]-X[j],Y[i]-Y[j]);
+    nb[fill[i]]=j; w[fill[i]++]=d; nb[fill[j]]=i; w[fill[j]++]=d; }
+  LOC.graph={N,X,Y,start:deg,nb,w};
+  spots.forEach(s=>s.node=nearestNode(s.x,s.y));
+  return LOC.graph;
+}
+function nearestNode(x,y){ const G=LOC.graph; let b=-1,bd=1e18; for(let i=0;i<G.N;i++){const d=(G.X[i]-x)**2+(G.Y[i]-y)**2; if(d<bd){bd=d;b=i;}} return b; }
+function dijkstra(src){
+  const G=LOC.graph, dist=new Float64Array(G.N).fill(Infinity), prev=new Int32Array(G.N).fill(-1);
+  const hk=[], hv=[]; const push=(k,v)=>{hk.push(k);hv.push(v);let i=hk.length-1;while(i){const p=(i-1)>>1;if(hk[p]<=hk[i])break;[hk[p],hk[i]]=[hk[i],hk[p]];[hv[p],hv[i]]=[hv[i],hv[p]];i=p;}};
+  const pop=()=>{const k=hk[0],v=hv[0],lk=hk.pop(),lv=hv.pop();if(hk.length){hk[0]=lk;hv[0]=lv;let i=0;for(;;){const l=2*i+1,r=l+1;let m=i;if(l<hk.length&&hk[l]<hk[m])m=l;if(r<hk.length&&hk[r]<hk[m])m=r;if(m===i)break;[hk[m],hk[i]]=[hk[i],hk[m]];[hv[m],hv[i]]=[hv[i],hv[m]];i=m;}}return [k,v]};
+  dist[src]=0; push(0,src);
+  while(hk.length){ const [d,u]=pop(); if(d>dist[u]) continue;
+    for(let k=G.start[u];k<G.start[u+1];k++){ const v=G.nb[k], nd=d+G.w[k]; if(nd<dist[v]){dist[v]=nd;prev[v]=u;push(nd,v);} } }
+  return {dist,prev};
+}
+// Walking metres from you to a spot (by paths when you're on campus, straight line otherwise)
+function walkTo(s){
+  if(!LOC.xy) return null;
+  if(LOC.off||!LOC.dist||s.node==null) return Math.hypot(LOC.xy[0]-s.x,LOC.xy[1]-s.y)*M_PER_U*(LOC.off?1:1.25);
+  const G=LOC.graph, d=LOC.dist[s.node]; if(!isFinite(d)) return Math.hypot(LOC.xy[0]-s.x,LOC.xy[1]-s.y)*M_PER_U*1.25;
+  return (Math.hypot(LOC.xy[0]-G.X[LOC.src],LOC.xy[1]-G.Y[LOC.src])+d+Math.hypot(G.X[s.node]-s.x,G.Y[s.node]-s.y))*M_PER_U;
+}
+const walkLine=s=>{const m=walkTo(s); return m==null?'':LOC.off?`${fmtDist(m)} away`:`${fmtMins(m)} walk · ${fmtDist(m)}`};
+
+function locStart(user){
+  if(!('geolocation' in navigator)){ if(user) toast('This browser can’t share your location'); return; }
+  if(LOC.watch!=null) return;
+  LOC.on=true; $('locBtn').classList.add('on'); if(user) LOC.follow=true;
+  LOC.watch=navigator.geolocation.watchPosition(onPos,err=>{
+    locStop(); if(user) toast(err.code===1?'Location is off for this site. Turn it on in your browser settings.':'Couldn’t find your location');
+    if(err.code===1){ STORE.locOn=false; saveStore(); }
+  },{enableHighAccuracy:true,maximumAge:5000,timeout:20000});
+  if(user&&!STORE.locOn){ STORE.locOn=true; saveStore(); toast('Your location stays on your phone'); }
+  loadGraph().catch(()=>{});
+}
+function locStop(){ if(LOC.watch!=null) navigator.geolocation.clearWatch(LOC.watch); LOC.watch=null; LOC.on=false; $('locBtn').classList.remove('on','follow'); }
+async function onPos(p){
+  const first=!LOC.xy; LOC.pos=p.coords; LOC.acc=p.coords.accuracy; LOC.xy=GEO(p.coords.latitude,p.coords.longitude);
+  const [x,y]=LOC.xy; LOC.off=x<CR[0]-200||y<CR[1]-200||x>CR[0]+CR[2]+200||y>CR[1]+CR[3]+200;
+  try{ await loadGraph(); }catch(e){}
+  if(LOC.graph&&!LOC.off&&(!LOC.lastXY||Math.hypot(x-LOC.lastXY[0],y-LOC.lastXY[1])>6)){
+    LOC.lastXY=[x,y]; LOC.src=nearestNode(x,y); const r=dijkstra(LOC.src); LOC.dist=r.dist; LOC.prev=r.prev; }
+  drawMe();
+  if(first&&LOC.off) toast(`You’re ${fmtDist(Math.hypot(x-1700,y-700)*M_PER_U)} from campus`);
+  if(LOC.follow&&!LOC.off) centerOn(x,y,first);
+  $('locBtn').classList.toggle('follow',LOC.follow&&!LOC.off);
+  if(popIdx>=0) updatePopWalk(); drawRoute(); renderHallCards&&renderHallCards();
+}
+function drawMe(){
+  const me=$('meDot'); if(!LOC.xy||LOC.off){ me.style.display='none'; return; }
+  const [x,y]=LOC.xy, ar=Math.min(400,LOC.acc/M_PER_U);
+  me.style.display='block'; me.style.left=x+'px'; me.style.top=y+'px';
+  me.querySelector('.acc').style.cssText=`width:${2*ar}px;height:${2*ar}px;margin:${-ar}px 0 0 ${-ar}px`;
+  me.querySelector('.dot').style.transform=`scale(${1/S})`;
+}
+function centerOn(x,y,zoomIn){
+  const r=card.getBoundingClientRect(); if(!r.width) return;
+  if(zoomIn) S=Math.max(S,Math.min(2.2,Math.max(minS,1.1)));
+  TX=r.width/2-x*S; TY=(r.height-120)/2-y*S;
+  inner.style.transition='transform .55s cubic-bezier(.22,.9,.24,1)'; apply(); setTimeout(()=>inner.style.transition='',600);
+}
+function locTap(){
+  if(!LOC.on) return locStart(true);
+  if(LOC.off&&LOC.xy) return toast(`You’re ${fmtDist(Math.hypot(LOC.xy[0]-1700,LOC.xy[1]-700)*M_PER_U)} from campus`);
+  LOC.follow=true; $('locBtn').classList.add('follow'); if(LOC.xy) centerOn(LOC.xy[0],LOC.xy[1],false);
+}
+function drawRoute(){
+  const svg=$('route'); LOC.routePts=null; if(popIdx<0||!LOC.xy||LOC.off||!LOC.prev){ svg.innerHTML=''; return false; }
+  const G=LOC.graph, s=spots[popIdx]; if(!isFinite(LOC.dist[s.node])){ svg.innerHTML=''; return false; }
+  const pts=[[s.x,s.y]]; for(let v=s.node;v!==-1;v=LOC.prev[v]) pts.push([G.X[v],G.Y[v]]); pts.push(LOC.xy);
+  const d='M'+pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join('L');
+  svg.innerHTML=`<path class="rcase" d="${d}"/><path class="rline" d="${d}"/>`; routeWidth(); LOC.routePts=pts; return true;
+}
+// Frame the whole walk in the part of the map the pop-up doesn't cover
+function fitRoute(){
+  const pts=LOC.routePts; if(!pts) return; LOC.follow=false; $('locBtn').classList.remove('follow');
+  const r=card.getBoundingClientRect(), top=110, bottom=r.height-$('pop').offsetHeight-70, pad=50;
+  const xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]), x0=Math.min(...xs), x1=Math.max(...xs), y0=Math.min(...ys), y1=Math.max(...ys);
+  const h=Math.max(120,bottom-top);
+  S=Math.max(minS,Math.min(2.5,(r.width-2*pad)/Math.max(40,x1-x0),(h-pad)/Math.max(40,y1-y0)));
+  TX=r.width/2-(x0+x1)/2*S; TY=top+h/2-(y0+y1)/2*S;
+  inner.style.transition='transform .6s cubic-bezier(.22,.9,.24,1)'; apply(); setTimeout(()=>inner.style.transition='',650);
+}
+function routeWidth(){ const svg=$('route'); svg.querySelectorAll('.rcase').forEach(p=>p.style.strokeWidth=9/S); svg.querySelectorAll('.rline').forEach(p=>{p.style.strokeWidth=5/S;p.style.strokeDasharray=`${.1/S} ${10/S}`}); }
+function updatePopWalk(){
+  const el=$('popWalk'), s=spots[popIdx]; if(!el||!s) return;
+  el.innerHTML=LOC.xy?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="M9 21l2-6 3 2v5M8 11l3-3 3 2 3 1M11 14l-2-3"/></svg>${esc(walkLine(s))}`
+    :`<button class="walkbtn" onclick="locStart(true)">Show walking time</button>`;
+}
+document.addEventListener('visibilitychange',()=>{ if(document.hidden) locStop(); else if(STORE.locOn) locStart(false); });
+// resume quietly if you allowed location before
+(async()=>{ if(!STORE.locOn) return; try{ const st=await navigator.permissions.query({name:'geolocation'}); if(st.state==='granted') locStart(false); }catch(e){} })();
+
 function apply(){
   const r=card.getBoundingClientRect(), w=BX[2]*S, h=BX[3]*S;
   TX = w<r.width ? (r.width-w)/2-BX[0]*S : Math.min(-BX[0]*S,Math.max(r.width-w-BX[0]*S,TX));
@@ -1890,6 +2032,7 @@ function apply(){
   TY = h<r.height-NAV ? (r.height-NAV-h)/2-BX[1]*S : Math.min(-BX[1]*S,Math.max(r.height-NAV-h-BX[1]*S,TY));
   inner.style.transform=`translate(${TX}px,${TY}px) scale(${S})`;
   pinsEl.querySelectorAll('.pin').forEach(b=>b.style.transform=`scale(${1/S})`);
+  drawMe(); routeWidth();
   if(typeof updateTiles==='function'){updateTiles();updateLabels();}
 }
 
@@ -1959,7 +2102,7 @@ const pts=new Map();let pinch0=null;
 card.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
 card.addEventListener('mousedown',e=>{if(!e.target.closest('.pop,.satbtn,.pin'))e.preventDefault()});
 card.addEventListener('dragstart',e=>e.preventDefault());
-card.addEventListener('pointerdown',e=>{if(e.target.closest('.pop,.satbtn'))return;card.setPointerCapture(e.pointerId);pts.set(e.pointerId,{x:e.clientX,y:e.clientY});inner.classList.add('drag');if(pts.size===2){const [a,b]=[...pts.values()];pinch0={d:Math.hypot(a.x-b.x,a.y-b.y),s:S}}});
+card.addEventListener('pointerdown',e=>{if(e.target.closest('.pop,.satbtn'))return;LOC.follow=false;$('locBtn').classList.remove('follow');card.setPointerCapture(e.pointerId);pts.set(e.pointerId,{x:e.clientX,y:e.clientY});inner.classList.add('drag');if(pts.size===2){const [a,b]=[...pts.values()];pinch0={d:Math.hypot(a.x-b.x,a.y-b.y),s:S}}});
 card.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;const prev=pts.get(e.pointerId);pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
   if(pts.size===1){TX+=e.clientX-prev.x;TY+=e.clientY-prev.y;apply()}
   else if(pts.size===2&&pinch0){const [a,b]=[...pts.values()],r=card.getBoundingClientRect();zoomAt(pinch0.s*Math.hypot(a.x-b.x,a.y-b.y)/pinch0.d/S,(a.x+b.x)/2-r.left,(a.y+b.y)/2-r.top)}});
