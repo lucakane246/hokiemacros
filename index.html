@@ -451,6 +451,21 @@ body.goals-open .goalscreen{transform:none;visibility:visible}
 .setup b{display:block;font-weight:750;font-size:16px}.setup span{display:block;color:var(--text-2);font-size:13px;margin-top:2px;line-height:1.4}
 .setup .chev{margin-left:auto;color:var(--muted);flex:none}
 button.profile{width:100%;text-align:left;color:inherit;font:inherit}
+
+/* ---------- diet filters ---------- */
+.filterbtn{position:relative;width:34px;height:34px;margin:-6px -6px -6px 0;border-radius:10px;display:grid;place-items:center;color:var(--muted);transition:all .3s}
+.filterbtn.on{color:var(--orange-hi);background:rgba(238,138,60,.14)}
+.filterbtn.on::after{content:attr(data-n);position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;padding:0 4px;border-radius:99px;background:var(--orange);color:#1a0f08;font-size:10.5px;font-weight:800;display:grid;place-items:center}
+.filterbar{display:flex;gap:8px;align-items:center;margin:-4px 0 12px}
+.filterbar:empty{display:none}
+.fchip{display:flex;align-items:center;gap:7px;padding:7px 12px;border-radius:99px;background:rgba(238,138,60,.12);border:1px solid rgba(238,138,60,.28);color:var(--orange-hi);font:inherit;font-size:13px;font-weight:700;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fclear{font:inherit;font-size:13px;font-weight:700;color:var(--muted);padding:7px 4px}
+.food.nomatch{opacity:.55}
+.badl{font-size:12px;font-weight:700;color:var(--fat);margin-top:2px}
+.hiddenln{display:block;width:100%;text-align:center;font:inherit;font-size:13.5px;font-weight:650;color:var(--muted);padding:16px 10px 4px}
+.pfal .mchip{flex:0 1 auto}
+.dmore .dwarn span,.dmore .dwarn b{color:var(--fat)}
+.dmore b{text-align:right;max-width:62%}
 </style>
 </head>
 <body>
@@ -549,7 +564,9 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
   <label class="search rise" style="--i:1">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     <input placeholder="Search menus" aria-label="Search menus">
+    <button class="filterbtn" id="filterBtn" onclick="event.preventDefault();openPrefs()" aria-label="Diet and allergy filters"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg></button>
   </label>
+  <div class="filterbar" id="filterBar"></div>
   <div class="chips rise" style="--i:2" id="halls"></div>
   <div class="segment rise" style="--i:3" id="periods"><div class="thumb" id="thumb"></div></div>
   <div class="menuhead rise" style="--i:4"><div><h2 id="menuTitle">D2</h2><div class="hstat" id="hallStatus"></div></div><span class="badge" id="hallBadge"></span></div>
@@ -886,10 +903,10 @@ function renderDining(){
 function selectHall(n){ hall=n; mealIdx=pickMealFor(n); renderDining(); }
 function setPeriod(i){ mealIdx=i; $('thumb').style.transform=`translateX(${i*100}%)`; document.querySelectorAll('#periods button').forEach(b=>b.classList.toggle('on',+b.dataset.i===i)); renderMenu(); }
 function foodRow(id){
-  const x=DATA.items[id]; if(!x) return '';
+  const x=DATA.items[id]; if(!x) return ''; const bad=conflicts(x.t,x.a);
   const tag=(x.t||[]).includes('vegan')?'<span class="vtag">Vegan</span>':(x.t||[]).includes('vegetarian')?'<span class="vtag">Vegetarian</span>':'';
   const nut=x.cal!=null?`<div class="mm"><span><b style="color:var(--protein)">P</b>${x.p??'–'}g</span><span><b style="color:var(--carb)">C</b>${x.c??'–'}g</span><span><b style="color:var(--fat)">F</b>${x.f??'–'}g</span>${tag}</div>`:(tag?`<div class="mm">${tag}</div>`:'');
-  return `<div class="food"><div><div class="nm">${esc(x.n)}</div><div class="kc">${x.cal!=null?x.cal+' cal · ':''}${esc(x.s)}</div>${nut}</div>
+  return `<div class="food${bad.length?' nomatch':''}"><div><div class="nm">${esc(x.n)}</div>${bad.length?`<div class="badl">${esc(bad.join(' · '))}</div>`:''}<div class="kc">${x.cal!=null?x.cal+' cal · ':''}${esc(x.s)}</div>${nut}</div>
     <button class="plus" data-id="${id}" onclick="openDiningItem('${id}')" aria-label="Add ${esc(x.n)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>`;
 }
 function renderMenu(){
@@ -902,7 +919,12 @@ function renderMenu(){
   let sections=meals[mealIdx]?.sections||[];
   if(q) sections=meals.flatMap(ml=>ml.sections.map(s=>({name:`${ml.meal} · ${s.name}`,items:s.items.filter(id=>(DATA.items[id]?.n||'').toLowerCase().includes(q))}))).filter(s=>s.items.length);
   if(!sections.length){ m.innerHTML=`<div class="empty card">Nothing matches “${esc(query)}”.</div>`; return; }
-  m.innerHTML=sections.map((s,si)=>`<div class="station">${esc(s.name)}</div><div class="card list0" style="animation:rise .5s var(--ease) both;animation-delay:${Math.min(si,6)*50}ms;opacity:0">${s.items.map(foodRow).join('')}</div>`).join('');
+  let hidden=0;
+  if(prefsActive()&&!showHidden) sections=sections.map(s=>{const keep=s.items.filter(id=>{const x=DATA.items[id]; const ok=!x||!conflicts(x.t,x.a).length; if(!ok) hidden++; return ok}); return {...s,items:keep}}).filter(s=>s.items.length);
+  else if(prefsActive()) sections.forEach(s=>s.items.forEach(id=>{const x=DATA.items[id]; if(x&&conflicts(x.t,x.a).length) hidden++;}));
+  const foot=hidden?`<button class="hiddenln" onclick="toggleHidden()">${showHidden?`Hide the ${hidden} item${hidden>1?'s':''} that don’t match your filters`:`${hidden} item${hidden>1?'s':''} hidden by your filters · Show`}</button>`:'';
+  if(!sections.length){ m.innerHTML=`<div class="empty card">Nothing here matches your filters.<span>${esc(prefsSummary())}</span></div>`+foot; return; }
+  m.innerHTML=sections.map((s,si)=>`<div class="station">${esc(s.name)}</div><div class="card list0" style="animation:rise .5s var(--ease) both;animation-delay:${Math.min(si,6)*50}ms;opacity:0">${s.items.map(foodRow).join('')}</div>`).join('')+foot;
 }
 function addFood(btn){ btn.classList.add('done'); btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'; toast('Food logging is coming soon'); }
 document.querySelector('#v-dining .search input').addEventListener('input',e=>{query=e.target.value;renderMenu()});
@@ -951,7 +973,7 @@ function diningIndex(){
     const meals=days[d]||days[DATA.menuDays[0]]||[];
     for(const m of meals) for(const s of m.sections) for(const id of s.items){
       const x=DATA.items[id]; if(!x||x.cal==null||seen.has(id)) continue;
-      seen.set(id,{id,n:x.n,b:VENUE[num]||'',hall:num,station:s.name,k:{cal:x.cal,p:x.p,c:x.c,f:x.f,fib:x.fib,sug:x.sug,sod:x.sod},serving:x.s,vt:1,tags:x.t||[],_h:norm(x.n+' '+(VENUE[num]||''))});
+      seen.set(id,{id,n:x.n,b:VENUE[num]||'',hall:num,station:s.name,k:{cal:x.cal,p:x.p,c:x.c,f:x.f,fib:x.fib,sug:x.sug,sod:x.sod},serving:x.s,vt:1,tags:x.t||[],al:x.a||'',_h:norm(x.n+' '+(VENUE[num]||''))});
     }
   }
   const v=[...seen.values()]; diningIndex.cache={k:DATA.updated+d,v}; return v;
@@ -964,6 +986,7 @@ function searchFoods(q,tab){
   const out=[];
   for(const f of pool){
     if(!toks.every(t=>hit(f._h,t))) continue;
+    if(f.vt&&!f.quick&&prefsActive()&&conflicts(f.tags,f.al).length) continue;
     const name=norm(f.n), q=toks.join(' ');
     const seg=norm(f.n.split(/[,(;]/)[0]).trim();            // "Bananas, raw" -> "bananas"
     let s=0;
@@ -1035,7 +1058,7 @@ function renderResults(){
 function openDetail(i){ showDetail(lastResults[i]); }
 function openDiningItem(id){
   const x=DATA.items[id]; if(!x) return;
-  const f=diningIndex().find(d=>d.id===id)||{id,n:x.n,b:VENUE[hall]||'',station:'',k:{cal:x.cal,p:x.p,c:x.c,f:x.f,fib:x.fib,sug:x.sug,sod:x.sod},serving:x.s,vt:1,tags:x.t||[]};
+  const f=diningIndex().find(d=>d.id===id)||{id,n:x.n,b:VENUE[hall]||'',station:'',k:{cal:x.cal,p:x.p,c:x.c,f:x.f,fib:x.fib,sug:x.sug,sod:x.sod},serving:x.s,vt:1,tags:x.t||[],al:x.a||''};
   addMeal=mealNow(); addDate=todayISO();
   showDetail(f,{standalone:true});
 }
@@ -1071,7 +1094,9 @@ function renderDetail(first){
   $('dMacros').innerHTML=[['Carbs','c','var(--carb)'],['Fat','f','var(--fat)'],['Protein','p','var(--protein)']].map(([l,k,col])=>
     `<div><i style="background:${col}"></i><b>${n[k]??'–'}<small>g</small></b><span>${l} · ${Math.round(kc[k]/tot*100)}%</span></div>`).join('');
   $('dMore').innerHTML=[['Fiber',n.fib,'g'],['Sugar',n.sug,'g'],['Sodium',n.sod,'mg']].map(([l,v,u])=>`<div><span>${l}</span><b>${v==null?'–':v+' '+u}</b></div>`).join('')
-    +(f.tags&&f.tags.length?`<div><span>Diet</span><b>${f.tags.map(t=>t[0].toUpperCase()+t.slice(1)).join(', ')}</b></div>`:'');
+    +(f.tags&&f.tags.length?`<div><span>Diet</span><b>${f.tags.map(t=>t==='alcohol'?'Made with alcohol':t[0].toUpperCase()+t.slice(1)).join(', ')}</b></div>`:'')
+    +(f.vt&&f.al!=null?`<div><span>Contains</span><b>${esc(allergensOf(f.al).join(', ')||'No major allergens listed')}</b></div>`:'')
+    +(f.vt&&prefsActive()&&conflicts(f.tags,f.al).length?`<div class="dwarn"><span>Doesn’t match your filters</span><b>${esc(conflicts(f.tags,f.al).join(' · '))}</b></div>`:'');
   if(first) $('dRing').querySelectorAll('circle').forEach((c,i)=>{ if(!i) return; c.animate([{strokeDasharray:`0 ${C}`},{strokeDasharray:c.getAttribute('stroke-dasharray')}],{duration:700,easing:'cubic-bezier(.22,.9,.24,1)'}); });
 }
 function stepQty(d){ const q=$('dQty'); q.value=Math.max(.25,Math.round(((parseFloat(q.value)||1)+d)*4)/4); renderDetail(); }
@@ -1507,6 +1532,53 @@ function renderProfile(){
   $('setupCard').style.display=pr.setup?'none':'';
 }
 
+// ================= diet & allergy filters (VT Dining labels) =================
+STORE.prefs=STORE.prefs||{diet:'',avoid:[]};
+const DIETS=[['','Any'],['vegetarian','Vegetarian'],['vegan','Vegan'],['halal','Halal']];
+const ALLERGENS=[['Milk','Milk'],['Eggs','Eggs'],['Wheat','Wheat'],['Gluten','Gluten'],['Soybeans','Soy'],['Peanuts','Peanuts'],
+  ['Tree Nuts','Tree nuts'],['Sesame','Sesame'],['Fish','Fish'],['Crustacean Shellfish','Shellfish'],['alcohol','Alcohol']];
+const ALG_LABEL=Object.fromEntries(ALLERGENS);
+let showHidden=false;
+const allergensOf=a=>(a||'').split(',').map(s=>s.trim()).filter(Boolean);
+// What makes an item fail the user's filters. Empty list = OK.
+function conflicts(tags,al){
+  const p=STORE.prefs, t=tags||[], out=[];
+  if(p.diet==='vegan'&&!t.includes('vegan')) out.push('Not vegan');
+  else if(p.diet==='vegetarian'&&!t.includes('vegan')&&!t.includes('vegetarian')) out.push('Not vegetarian');
+  else if(p.diet==='halal'&&!t.includes('halal')) out.push('Not marked halal');
+  const has=allergensOf(al);
+  for(const a of p.avoid){ if(a==='alcohol'?t.includes('alcohol'):has.includes(a)) out.push(ALG_LABEL[a]); }
+  return out;
+}
+const prefsActive=()=>!!(STORE.prefs.diet||STORE.prefs.avoid.length);
+function prefsSummary(){
+  const p=STORE.prefs, parts=[];
+  if(p.diet) parts.push(DIETS.find(d=>d[0]===p.diet)[1]);
+  if(p.avoid.length) parts.push('No '+p.avoid.map(a=>ALG_LABEL[a].toLowerCase()).join(', '));
+  return parts.join(' · ');
+}
+function openPrefs(){
+  let diet=STORE.prefs.diet, avoid=[...STORE.prefs.avoid];
+  const body=()=>`
+    <div class="field"><span>Diet</span><div class="mchips gpills" id="pfDiet">${DIETS.map(([k,l])=>`<button class="mchip ${k===diet?'on':''}" onclick="pfDiet('${k}')">${l}</button>`).join('')}</div></div>
+    <div class="field"><span>Avoid</span><div class="mchips gpills pfal" id="pfAvoid">${ALLERGENS.map(([k,l])=>`<button class="mchip ${avoid.includes(k)?'on':''}" onclick="pfAvoid('${k}')">${l}</button>`).join('')}</div></div>
+    <p class="fnote">Uses VT Dining’s own labels and hides anything that doesn’t match on the Dining tab and in search. Dining halls share kitchens, so cross-contact is possible. With a serious allergy, ask the staff or email VT Dining’s dietitians at yes@vt.edu.</p>`;
+  openForm({title:'Diet & allergies',sub:'Filters VT Dining menus',body:body(),saveLabel:'Save',
+    onSave:()=>{ STORE.prefs={diet,avoid}; saveStore(); showHidden=false; diningIndex.cache=null; afterPrefs(); toast(prefsActive()?'Filters on · '+prefsSummary():'Filters off'); }});
+  window.pfDiet=k=>{ diet=k; document.querySelectorAll('#pfDiet .mchip').forEach((b,i)=>b.classList.toggle('on',DIETS[i][0]===k)); };
+  window.pfAvoid=k=>{ avoid=avoid.includes(k)?avoid.filter(x=>x!==k):[...avoid,k]; document.querySelectorAll('#pfAvoid .mchip').forEach((b,i)=>b.classList.toggle('on',avoid.includes(ALLERGENS[i][0]))); };
+}
+function afterPrefs(){
+  const on=prefsActive(), n=(STORE.prefs.diet?1:0)+STORE.prefs.avoid.length;
+  $('filterBtn').classList.toggle('on',on); $('filterBtn').dataset.n=on?n:'';
+  $('filterBar').innerHTML=on?`<button class="fchip pressable" onclick="openPrefs()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>${esc(prefsSummary())}</button><button class="fclear" onclick="clearPrefs()" aria-label="Turn filters off">Clear</button>`:'';
+  if(DATA){ renderMenu(); }
+  if(document.body.classList.contains('add-open')) renderResults&&renderResults();
+  $('prefsSub')&&($('prefsSub').textContent=on?prefsSummary():'');
+}
+function clearPrefs(){ const old=STORE.prefs; STORE.prefs={diet:'',avoid:[]}; saveStore(); afterPrefs(); undoToast('Filters off',()=>{STORE.prefs=old; saveStore(); afterPrefs();}); }
+function toggleHidden(){ showHidden=!showHidden; renderMenu(); }
+
 // ---------- Today: dining hall cards ----------
 const HALLCARDS=[
   {k:'15',n:'D2',b:'Dietrick Hall',g:['#8A2447','#3b0f22'],a:'#EE8A3C'},
@@ -1529,7 +1601,7 @@ function openHall(n){ hall=n; mealIdx=pickMealFor(n); renderDining(); go('dining
 
 // ---------- You ----------
 const rowsHTML=rows=>rows.map(r=>`<button class="row" onclick="${r[3]||"toast('Coming soon')"}"><span class="sq" style="background:${r[1]}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${r[2]}"/></svg></span>${r[0]}<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>`).join('');
-$('grp1').innerHTML=rowsHTML([['Goals','#D2611C','M12 3a9 9 0 1 0 9 9M12 7a5 5 0 1 0 5 5M12 11a1 1 0 1 0 1 1M12 12l8-8','openGoals()'],['Nutrition','#3f9c8b','M4 20V10M10 20V4M16 20v-7M22 20H2'],['Progress','#8A2447','M3 17l6-6 4 4 8-8M15 7h6v6','openProgress()']]);
+$('grp1').innerHTML=rowsHTML([['Goals','#D2611C','M12 3a9 9 0 1 0 9 9M12 7a5 5 0 1 0 5 5M12 11a1 1 0 1 0 1 1M12 12l8-8','openGoals()'],['Diet & allergies','#3f9c8b','M12 21c-4-3-8-6.5-8-11a5 5 0 0 1 8-4 5 5 0 0 1 8 4c0 4.5-4 8-8 11zM9 11h6','openPrefs()'],['Progress','#8A2447','M3 17l6-6 4 4 8-8M15 7h6v6','openProgress()']]);
 $('grp2').innerHTML=rowsHTML([['About & privacy','#3c5a7a','M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01',"openAbout()"],['Settings','#5b5056','M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1L14.5 3h-5l-.3 2.6a7 7 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.3 2.6h5l.3-2.6a7 7 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6a7 7 0 0 0 .1-1z']]);
 function openAbout(){document.body.classList.add('about-open')}
 function closeAbout(){document.body.classList.remove('about-open')}
@@ -1541,7 +1613,7 @@ function toggleSheet(on){ document.body.classList.toggle('sheet-open',on); }
 let tt; function toast(m){const t=$('toast');t.classList.remove('has-undo');undoFn=null;t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1800)}
 
 // first paint
-refreshLog(); renderProfile(); $('v-today').classList.add('active'); requestAnimationFrame(()=>enter($('v-today')));
+refreshLog(); renderProfile(); afterPrefs(); $('v-today').classList.add('active'); requestAnimationFrame(()=>enter($('v-today')));
 function onData(){
   renderHallCards(); hall='15'; mealIdx=pickMealFor(hall); renderDining(); refreshPins(); if(popIdx>=0) openPop(popIdx);
   const t=DATA.updated?new Date(DATA.updated):null;
