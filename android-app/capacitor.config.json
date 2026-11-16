@@ -1,0 +1,16 @@
+{
+  "appId": "io.github.lucakane246.hokiemacros",
+  "appName": "HokieMacros",
+  "webDir": "www",
+  "server": {
+    "url": "https://lucakane246.github.io/hokiemacros/?source=android",
+    "cleartext": false,
+    "androidScheme": "https"
+  },
+  "backgroundColor": "#110b0e",
+  "android": {
+    "backgroundColor": "#110b0e",
+    "adjustMarginsForEdgeToEdge": "auto",
+    "allowMixedContent": false
+  }
+}

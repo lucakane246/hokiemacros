@@ -2056,9 +2056,15 @@ function openSettings(){
       <p class="fnote">HokieMacros has no accounts. Nothing you log is sent anywhere, so a backup file is how you move it to a new phone.</p>`,
     onSave:()=>{}});
 }
-function exportData(){
-  const blob=new Blob([JSON.stringify({app:'HokieMacros',version:1,exported:new Date().toISOString(),data:STORE},null,1)],{type:'application/json'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`hokiemacros-backup-${todayISO()}.json`; document.body.appendChild(a); a.click(); a.remove();
+async function exportData(){
+  const name=`hokiemacros-backup-${todayISO()}.json`, text=JSON.stringify({app:'HokieMacros',version:1,exported:new Date().toISOString(),data:STORE},null,1);
+  const cap=window.Capacitor; // inside the Android/iPhone app, save the file and open the share sheet
+  if(cap&&cap.isNativePlatform&&cap.isNativePlatform()&&cap.Plugins&&cap.Plugins.Filesystem&&cap.Plugins.Share){
+    try{ const r=await cap.Plugins.Filesystem.writeFile({path:name,data:text,directory:'CACHE',encoding:'utf8'});
+      await cap.Plugins.Share.share({title:'HokieMacros backup',files:[r.uri]}); return; }catch(e){ if(String(e).includes('cancel')) return; }
+  }
+  const blob=new Blob([text],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(a.href),4000); toast('Backup downloaded');
 }
 async function importData(file){
