@@ -8,7 +8,7 @@ Sources (all public, the same ones VT's own websites use):
   - Dining hours:              https://apps.students.vt.edu/hours/
   - Rec Sports hours:          https://apps.students.vt.edu/rshours/
 """
-import json, os, sys, time, urllib.parse, urllib.request
+import html as htmllib, json, os, re, sys, time, urllib.parse, urllib.request
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
@@ -25,6 +25,33 @@ OUT = os.path.join(os.path.dirname(__file__), "..", "data", "dining.json")
 UA = "HokieMacros/1.0 (free student app; github.com/lucakane246/hokiemacros)"
 
 NUTRIENTS = {"Cals": "cal", "Prot": "p", "Carb": "c", "Fat-T": "f", "Fiber": "fib", "Sugar": "sug", "Sod": "sod"}
+
+
+# All-you-care-to-eat door prices, from each dining center's page on dining.vt.edu
+DOOR_PAGES = {"15": "https://dining.vt.edu/dining_centers/dietrick-hall.html",
+              "39": "https://dining.vt.edu/dining_centers/owens.html"}
+
+
+def door_prices(url):
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": UA})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            page = r.read().decode("utf-8", "replace")
+    except Exception as e:
+        print(f"  ! failed {url}: {e}", file=sys.stderr)
+        return None
+    i = page.find("Door Entry Rates")
+    if i < 0:
+        return None
+    table = page[i:page.find("</table>", i)]
+    rows = []
+    for tr in re.findall(r"<tr>(.*?)</tr>", table, re.S):
+        cells = [htmllib.unescape(re.sub(r"<[^>]+>", "", c)).strip() for c in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", tr, re.S)]
+        if len(cells) >= 2:
+            m = re.search(r"\$\s*(\d+(?:\.\d\d)?)", cells[1])
+            if m:
+                rows.append({"meal": cells[0], "price": float(m.group(1))})
+    return rows or None
 
 
 def get_json(url, tries=3):
@@ -136,6 +163,14 @@ def main():
                     v = num(nut.get("value"))
                     if v is not None:
                         item[k] = round(v) if k in ("cal", "sod") else v
+
+    # door prices at the all-you-care-to-eat halls
+    data["doorPrices"] = {}
+    for n, url in DOOR_PAGES.items():
+        rows = door_prices(url)
+        if rows:
+            data["doorPrices"][n] = rows
+    print(f"door prices: {data['doorPrices']}")
 
     # Rec Sports gyms
     for g in GYMS:

@@ -480,6 +480,16 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 .recloc .sd{margin-left:4px}
 .recnext{position:absolute;top:50%;right:12px;transform:translateY(-50%);width:36px;height:36px;border-radius:12px;display:grid;place-items:center;color:var(--muted);background:var(--surface-2);border:1px solid var(--hair);transition:transform .4s var(--spring)}
 .recnext:active{transform:translateY(-50%) rotate(-90deg) scale(.92)}
+
+/* ---------- door prices ---------- */
+.doorstrip{margin:0 0 14px;padding:14px 16px;border-radius:18px;background:linear-gradient(120deg,rgba(138,36,71,.22),rgba(238,138,60,.08)),var(--surface);border:1px solid var(--hair)}
+.dsh b{display:block;font-size:14.5px;font-weight:750}.dsh span{display:block;font-size:12.5px;color:var(--muted);font-weight:600;margin-top:2px}
+.dsrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:12px}
+.dsrow::-webkit-scrollbar{display:none}
+.dsrow div{padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--hair);transition:all .3s}
+.dsrow span{display:block;font-size:11.5px;color:var(--muted);font-weight:650;white-space:nowrap}.dsrow b{display:block;font-size:16px;font-weight:800;margin-top:1px}
+.dsrow div.on{background:rgba(238,138,60,.14);border-color:rgba(238,138,60,.35)}.dsrow div.on b{color:var(--orange-hi)}
+.hp{font-style:normal;font-weight:700;color:var(--orange-hi);margin-left:8px}
 </style>
 </head>
 <body>
@@ -586,6 +596,7 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
   <div class="chips rise" style="--i:2" id="halls"></div>
   <div class="segment rise" style="--i:3" id="periods"><div class="thumb" id="thumb"></div></div>
   <div class="menuhead rise" style="--i:4"><div><h2 id="menuTitle">D2</h2><div class="hstat" id="hallStatus"></div></div><span class="badge" id="hallBadge"></span></div>
+  <div id="doorStrip"></div>
   <div id="menu"></div>
   <p class="note" id="dataNote"></p>
 </section>
@@ -890,6 +901,28 @@ async function loadData(){
   onData();
 }
 
+// ================= door prices at the all-you-care-to-eat halls =================
+// Fallback copy of dining.vt.edu's tables (checked Nov 16, 2026); the daily data job refreshes them.
+const DOOR_FALLBACK={'15':[{meal:'Breakfast',price:13},{meal:'Lunch',price:17.95},{meal:'Dinner',price:17.95},{meal:'Saturday and Sunday Brunch',price:17.95}],
+                     '39':[{meal:'Lunch',price:17.95},{meal:'Dinner',price:17.95}]};
+const doorRows=n=>(DATA&&DATA.doorPrices&&DATA.doorPrices[n])||DOOR_FALLBACK[n]||null;
+const money=v=>'$'+v.toFixed(2);
+const doorLabel=m=>/brunch/i.test(m)?'Weekend brunch':m;
+// Price for a meal period by name ("Lunch", "Brunch", "Lunch/Dinner"...)
+function doorPrice(n,meal,date){
+  const rows=doorRows(n); if(!rows||!meal) return null; const m=meal.toLowerCase();
+  const wk=[0,6].includes(new Date((date||etNow().date)+'T12:00:00').getDay());
+  const hit=rows.find(r=>m.includes('brunch')?/brunch/i.test(r.meal):!/brunch/i.test(r.meal)&&m.includes(r.meal.toLowerCase()));
+  return hit?hit.price:(m.includes('brunch')||wk?(rows.find(r=>/brunch/i.test(r.meal))||{}).price:null)??null;
+}
+function doorStrip(n){
+  const rows=doorRows(n); if(!rows) return '';
+  const cur=((todayMenu(n)[mealIdx]||{}).meal||'').toLowerCase();
+  const onIdx=rows.findIndex(r=>cur.includes('brunch')?/brunch/i.test(r.meal):!/brunch/i.test(r.meal)&&cur.includes(r.meal.toLowerCase()));
+  return `<div class="doorstrip"><div class="dsh"><b>All you care to eat</b><span>Free with an Unlimited plan swipe. Everyone else pays at the door.</span></div>
+    <div class="dsrow">${rows.map((r,i)=>`<div class="${i===onIdx?'on':''}"><span>${esc(doorLabel(r.meal))}</span><b>${money(r.price)}</b></div>`).join('')}</div></div>`;
+}
+
 // ---------- Dining ----------
 let hall='15', mealIdx=0, query='';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -930,6 +963,7 @@ function renderMenu(){
   $('menuTitle').textContent=VENUE[hall]||hall;
   const b=$('hallBadge'); b.className='badge'+(st.open?'':' closed'); b.innerHTML=st.known?`<i></i>${st.open?'Open':'Closed'}`:'';
   $('hallStatus').textContent=statusLine(st);
+  $('doorStrip').innerHTML=doorStrip(hall);
   const meals=todayMenu(hall), m=$('menu'), q=query.trim().toLowerCase();
   if(!meals.length){ m.innerHTML=`<div class="empty card">No menu posted for today.<span>${esc(statusLine(st))}</span></div>`; return; }
   let sections=meals[mealIdx]?.sections||[];
@@ -1759,7 +1793,7 @@ function openPop(i){
   $('popHrs').innerHTML=p.t.map(t=>{
     const sl=slotsOf(t,date), units=[...new Set(sl.map(s=>s.unit))];
     const name=t.label||VENUE[t.key]||t.key;
-    const rows=sl.length?sl.map(s=>`<div class="hl"><span>${esc(units.length>1?s.unit.replace(/^.*?\s{2,}/,''):(s.label&&!/regular/i.test(s.label)?s.label:''))}</span><b>${fmtT(s.open)} – ${fmtT(s.close)}</b></div>`).join(''):`<div class="hl"><span></span><b class="muted">Closed today</b></div>`;
+    const rows=sl.length?sl.map(s=>`<div class="hl"><span>${esc(units.length>1?s.unit.replace(/^.*?\s{2,}/,''):(s.label&&!/regular/i.test(s.label)?s.label:''))}</span><b>${fmtT(s.open)} – ${fmtT(s.close)}${(()=>{const pr=doorPrice(t.key,s.label,date);return pr!=null?`<em class="hp">${money(pr)}</em>`:''})()}</b></div>`).join(''):`<div class="hl"><span></span><b class="muted">Closed today</b></div>`;
     return `<div class="hv"><div class="hn">${esc(name)}</div>${rows}</div>`}).join('');
   const menuBtn=$('popMenu'); menuBtn.style.display=p.gym?'none':'flex'; menuBtn.onclick=()=>{closePop();openHall(p.t[0].key)};
   $('pop').classList.add('show');
