@@ -490,6 +490,14 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 .dsrow span{display:block;font-size:11.5px;color:var(--muted);font-weight:650;white-space:nowrap}.dsrow b{display:block;font-size:16px;font-weight:800;margin-top:1px}
 .dsrow div.on{background:rgba(238,138,60,.14);border-color:rgba(238,138,60,.35)}.dsrow div.on b{color:var(--orange-hi)}
 .hp{font-style:normal;font-weight:700;color:var(--orange-hi);margin-left:8px}
+
+/* ---------- item prices ---------- */
+.dmore .prrow{display:flex;align-items:center;gap:10px}
+.dmore .prrow .prv{padding:0;border:0;justify-content:center;flex:1;text-align:right;display:flex;flex-direction:column;align-items:flex-end}
+.prrow .prv b{max-width:none}.prrow .prv small{font-size:11.5px;color:var(--muted);font-weight:600;margin-top:2px}
+.prbtn{font:inherit;font-size:12.5px;font-weight:750;color:var(--orange-hi);background:rgba(238,138,60,.12);border:1px solid rgba(238,138,60,.28);border-radius:99px;padding:6px 11px;white-space:nowrap}
+.kc .pr{color:var(--orange-hi);font-weight:700}
+.moneyin{display:flex;align-items:center;gap:8px}.moneyin i{font-style:normal;font-size:22px;font-weight:800;color:var(--muted)}.moneyin .numin{font-size:22px;height:54px}
 </style>
 </head>
 <body>
@@ -923,6 +931,7 @@ function doorStrip(n){
     <div class="dsrow">${rows.map((r,i)=>`<div class="${i===onIdx?'on':''}"><span>${esc(doorLabel(r.meal))}</span><b>${money(r.price)}</b></div>`).join('')}</div></div>`;
 }
 
+
 // ---------- Dining ----------
 let hall='15', mealIdx=0, query='';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -955,7 +964,7 @@ function foodRow(id){
   const x=DATA.items[id]; if(!x) return ''; const bad=conflicts(x.t,x.a);
   const tag=(x.t||[]).includes('vegan')?'<span class="vtag">Vegan</span>':(x.t||[]).includes('vegetarian')?'<span class="vtag">Vegetarian</span>':'';
   const nut=x.cal!=null?`<div class="mm"><span><b style="color:var(--protein)">P</b>${x.p??'–'}g</span><span><b style="color:var(--carb)">C</b>${x.c??'–'}g</span><span><b style="color:var(--fat)">F</b>${x.f??'–'}g</span>${tag}</div>`:(tag?`<div class="mm">${tag}</div>`:'');
-  return `<div class="food${bad.length?' nomatch':''}"><div><div class="nm">${esc(x.n)}</div>${bad.length?`<div class="badl">${esc(bad.join(' · '))}</div>`:''}<div class="kc">${x.cal!=null?x.cal+' cal · ':''}${esc(x.s)}</div>${nut}</div>
+  return `<div class="food${bad.length?' nomatch':''}"><div><div class="nm">${esc(x.n)}</div>${bad.length?`<div class="badl">${esc(bad.join(' · '))}</div>`:''}<div class="kc">${x.cal!=null?x.cal+' cal · ':''}${esc(x.s)}${(()=>{const pr=!AYCE.has(hall)&&priceOf(hall,id);return pr?` · <span class="pr">${money(pr.p)}</span>`:''})()}</div>${nut}</div>
     <button class="plus" data-id="${id}" onclick="openDiningItem('${id}')" aria-label="Add ${esc(x.n)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>`;
 }
 function renderMenu(){
@@ -1108,7 +1117,7 @@ function renderResults(){
 function openDetail(i){ showDetail(lastResults[i]); }
 function openDiningItem(id){
   const x=DATA.items[id]; if(!x) return;
-  const f=diningIndex().find(d=>d.id===id)||{id,n:x.n,b:VENUE[hall]||'',station:'',k:{cal:x.cal,p:x.p,c:x.c,f:x.f,fib:x.fib,sug:x.sug,sod:x.sod},serving:x.s,vt:1,tags:x.t||[],al:x.a||''};
+  const f=diningIndex().find(d=>d.id===id)||{id,n:x.n,b:VENUE[hall]||'',hall,station:'',k:{cal:x.cal,p:x.p,c:x.c,f:x.f,fib:x.fib,sug:x.sug,sod:x.sod},serving:x.s,vt:1,tags:x.t||[],al:x.a||''};
   addMeal=mealNow(); addDate=todayISO();
   showDetail(f,{standalone:true});
 }
@@ -1146,6 +1155,7 @@ function renderDetail(first){
   $('dMore').innerHTML=[['Fiber',n.fib,'g'],['Sugar',n.sug,'g'],['Sodium',n.sod,'mg']].map(([l,v,u])=>`<div><span>${l}</span><b>${v==null?'–':v+' '+u}</b></div>`).join('')
     +(f.tags&&f.tags.length?`<div><span>Diet</span><b>${f.tags.map(t=>t==='alcohol'?'Made with alcohol':t[0].toUpperCase()+t.slice(1)).join(', ')}</b></div>`:'')
     +(f.vt&&f.al!=null?`<div><span>Contains</span><b>${esc(allergensOf(f.al).join(', ')||'No major allergens listed')}</b></div>`:'')
+    +priceRowHTML(f)
     +(f.vt&&prefsActive()&&conflicts(f.tags,f.al).length?`<div class="dwarn"><span>Doesn’t match your filters</span><b>${esc(conflicts(f.tags,f.al).join(' · '))}</b></div>`:'');
   if(first) $('dRing').querySelectorAll('circle').forEach((c,i)=>{ if(!i) return; c.animate([{strokeDasharray:`0 ${C}`},{strokeDasharray:c.getAttribute('stroke-dasharray')}],{duration:700,easing:'cubic-bezier(.22,.9,.24,1)'}); });
 }
@@ -1715,6 +1725,45 @@ function renderRec(){
       <div class="recloc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.3"/></svg>${esc(VENUE[c.hall]||'')} · ${esc(c.station)}<i class="sd ${st.open?'on':''}"></i>${esc(when)}</div>
     </button>
     ${top.length>1?`<button class="recnext" onclick="recSkip++;renderRec()" aria-label="Show another suggestion"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>`:''}`;
+}
+
+// ================= student-reported item prices =================
+// Submissions go to a Google Sheet (backend/Code.gs). Nothing shows here until the moderator approves it.
+const PRICE_API='';   // Apps Script web app URL; empty = reporting turned off
+STORE.priceSubs=STORE.priceSubs||{};
+STORE.device=STORE.device||(crypto.randomUUID?crypto.randomUUID():'d'+Date.now().toString(16)+Math.random().toString(16).slice(2));
+const AYCE=new Set(['15','39']);
+const priceOf=(h,id)=>(DATA&&DATA.prices&&DATA.prices[`${h}|${id}`])||null;
+function priceRowHTML(f){
+  if(!f.vt||!f.hall||AYCE.has(f.hall)) return '';
+  const k=`${f.hall}|${f.id}`, pr=priceOf(f.hall,f.id), mine=STORE.priceSubs[k];
+  const btn=PRICE_API?`<button class="prbtn" onclick="openPriceForm()">${pr?'Wrong?':'Add price'}</button>`:'';
+  const sub=mine&&(!pr||Math.abs(pr.p-mine.p)>.004)?`<small>You sent ${money(mine.p)} · waiting for review</small>`:pr?`<small>Student-reported · ${relDay(pr.d).replace(/^[A-Z][a-z]{2}, /,'')}</small>`:'';
+  return `<div class="prrow"><span>Price</span><div class="prv"><b>${pr?money(pr.p):'Not listed yet'}</b>${sub}</div>${btn}</div>`;
+}
+function openPriceForm(){
+  const f=detail.f, pr=priceOf(f.hall,f.id);
+  openForm({title:pr?'Update price':'Add a price',sub:`${f.n} · ${VENUE[f.hall]||''}`,saveLabel:'Send for review',
+    body:`<label class="field"><span>Price on the menu board or receipt</span><div class="moneyin"><i>$</i>${numIn('prIn',pr?pr.p.toFixed(2):'','0.00','autofocus')}</div></label>
+      <p class="fnote">A student moderator checks every price before it shows in the app. Prices that look wrong are turned down automatically.</p>`,
+    onSave:()=>{
+      const raw=String($('prIn').value).replace(/[$\s]/g,''), p=parseFloat(raw);
+      if(!/^\d{1,2}(\.\d{1,2})?$/.test(raw)||!(p>0)) { toast('Enter a price like 7.49'); return false; }
+      if(p>30) { toast('That’s more than anything at VT Dining costs'); return false; }
+      if(pr&&Math.abs(pr.p-p)<.01) { toast('That’s the price already listed'); return false; }
+      sendPrice(f,p); }});
+}
+async function sendPrice(f,p){
+  const k=`${f.hall}|${f.id}`;
+  try{
+    const r=await fetch(PRICE_API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify({hall:f.hall,id:f.id,name:f.n,price:p,cal:f.k&&f.k.cal,device:STORE.device})}).then(r=>r.json());
+    if(!r.ok) throw 0;
+    if(r.status==='denied'){ toast('That price looks off, so it wasn’t sent'); return; }
+    if(r.status==='confirmed'){ toast('Thanks for confirming the price'); return; }
+    STORE.priceSubs[k]={p,at:Date.now()}; saveStore(); toast('Thanks! It shows up once it’s approved');
+    if(detail&&detail.f===f) renderDetail();
+  }catch(e){ toast('Couldn’t send. Check your connection and try again'); }
 }
 
 // ---------- Today: dining hall cards ----------

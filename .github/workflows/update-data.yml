@@ -28,6 +28,8 @@ jobs:
           python-version: "3.12"
       - name: Fetch menus, nutrition and hours
         run: python scripts/update_data.py
+        env:
+          PRICES_URL: ${{ vars.PRICES_URL }}
       - name: Save the new data
         run: |
           git config user.name "hokiemacros-bot"

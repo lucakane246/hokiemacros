@@ -172,6 +172,28 @@ def main():
             data["doorPrices"][n] = rows
     print(f"door prices: {data['doorPrices']}")
 
+    # student-reported item prices that the moderator approved (Google Apps Script web app)
+    prices_url = os.environ.get("PRICES_URL", "").strip()
+    if not prices_url:  # same URL the app posts to
+        try:
+            with open(os.path.join(os.path.dirname(__file__), "..", "index.html"), encoding="utf-8") as f:
+                m = re.search(r"const PRICE_API='([^']*)'", f.read())
+                prices_url = m.group(1) if m else ""
+        except Exception:
+            pass
+    if prices_url:
+        got = get_json(prices_url)
+        if got and got.get("ok"):
+            data["prices"] = got.get("prices") or {}
+            print(f"{len(data['prices'])} approved prices")
+        else:
+            print("  ! couldn't read approved prices; keeping last good copy", file=sys.stderr)
+            try:
+                with open(os.path.join(os.path.dirname(__file__), "..", "data", "dining.json")) as f:
+                    data["prices"] = json.load(f).get("prices") or {}
+            except Exception:
+                pass
+
     # Rec Sports gyms
     for g in GYMS:
         data["gyms"][g] = {}
