@@ -1,0 +1,16 @@
+{
+  "name": "hokiemacros-ios",
+  "private": true,
+  "version": "1.0.0",
+  "description": "iPhone shell for HokieMacros (the app itself is the web app at lucakane246.github.io/hokiemacros)",
+  "dependencies": {
+    "@capacitor/cli": "^7.4.0",
+    "@capacitor/core": "^7.4.0",
+    "@capacitor/filesystem": "^7.1.0",
+    "@capacitor/ios": "^7.4.0",
+    "@capacitor/share": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
+  }
+}

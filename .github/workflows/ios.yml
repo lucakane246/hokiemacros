@@ -1,0 +1,101 @@
+name: Build iPhone app (TestFlight)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['ios-app/**', '.github/workflows/ios.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      ready: ${{ steps.c.outputs.ready }}
+    steps:
+      - id: c
+        env:
+          A: ${{ secrets.ASC_KEY_ID }}
+          B: ${{ secrets.ASC_ISSUER_ID }}
+          C: ${{ secrets.ASC_KEY_P8 }}
+          D: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ -n "$A" ] && [ -n "$B" ] && [ -n "$C" ] && [ -n "$D" ]; then echo "ready=true" >> $GITHUB_OUTPUT; else echo "::notice::Add the four App Store secrets to build the iPhone app."; echo "ready=false" >> $GITHUB_OUTPUT; fi
+  build:
+    needs: check
+    if: needs.check.outputs.ready == 'true'
+    runs-on: macos-15
+    defaults:
+      run:
+        working-directory: ios-app
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Pick Xcode
+        run: sudo xcode-select -s "$(ls -d /Applications/Xcode_16*.app | sort -V | tail -1)" && xcodebuild -version
+      - name: Install Capacitor
+        run: npm install --no-audit --no-fund
+      - name: Create the iOS project
+        run: |
+          npx cap add ios
+          npx capacitor-assets generate --ios --iconBackgroundColor '#110b0e' --splashBackgroundColor '#110b0e'
+          npx cap sync ios
+      - name: App settings
+        run: |
+          P=ios/App/App/Info.plist
+          B=/usr/libexec/PlistBuddy
+          $B -c "Set :CFBundleShortVersionString 1.0" $P
+          $B -c "Set :CFBundleVersion ${{ github.run_number }}" $P
+          $B -c "Add :ITSAppUsesNonExemptEncryption bool false" $P
+          $B -c "Add :NSLocationWhenInUseUsageDescription string 'Shows where you are on the campus map and how long it takes to walk to each dining hall and gym.'" $P
+          $B -c "Delete :UISupportedInterfaceOrientations" $P || true
+          $B -c "Add :UISupportedInterfaceOrientations array" $P
+          $B -c "Add :UISupportedInterfaceOrientations:0 string UIInterfaceOrientationPortrait" $P
+          $B -c "Set :UIRequiresFullScreen true" $P 2>/dev/null || $B -c "Add :UIRequiresFullScreen bool true" $P
+      - name: API key
+        run: |
+          mkdir -p ~/private_keys
+          printf '%s' "$ASC_KEY_P8" > ~/private_keys/AuthKey_$ASC_KEY_ID.p8
+      - name: Archive
+        run: |
+          cd ios/App
+          PROJ=$(ls -d *.xcworkspace 2>/dev/null | head -1); [ -n "$PROJ" ] && SRC="-workspace $PROJ" || SRC="-project App.xcodeproj"
+          xcodebuild $SRC -scheme App -configuration Release -destination 'generic/platform=iOS' \
+            -archivePath $RUNNER_TEMP/App.xcarchive archive \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/private_keys/AuthKey_$ASC_KEY_ID.p8 -authenticationKeyID $ASC_KEY_ID -authenticationKeyIssuerID $ASC_ISSUER_ID \
+            DEVELOPMENT_TEAM=$APPLE_TEAM_ID CODE_SIGN_STYLE=Automatic PRODUCT_BUNDLE_IDENTIFIER=io.github.lucakane246.hokiemacros \
+            | tail -40
+          test -d $RUNNER_TEMP/App.xcarchive
+      - name: Upload to TestFlight
+        run: |
+          cat > $RUNNER_TEMP/export.plist <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>destination</key><string>upload</string>
+            <key>teamID</key><string>$APPLE_TEAM_ID</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>manageAppVersionAndBuildNumber</key><false/>
+          </dict></plist>
+          PLIST
+          xcodebuild -exportArchive -archivePath $RUNNER_TEMP/App.xcarchive -exportOptionsPlist $RUNNER_TEMP/export.plist \
+            -exportPath $RUNNER_TEMP/export -allowProvisioningUpdates \
+            -authenticationKeyPath ~/private_keys/AuthKey_$ASC_KEY_ID.p8 -authenticationKeyID $ASC_KEY_ID -authenticationKeyIssuerID $ASC_ISSUER_ID 2>&1 | tail -30
+      - name: Report result
+        if: always()
+        working-directory: .
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view ios >/dev/null 2>&1 || gh release create ios --title "iPhone app" --notes "status" --latest=false
+          gh release edit ios --notes "Build ${{ github.run_number }} ($(date -u "+%Y-%m-%d %H:%M") UTC): ${{ job.status }}. See the Actions tab for details."
