@@ -595,6 +595,10 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 .xsrc{color:var(--muted);font-size:12.5px;font-weight:600;margin:-2px 0 10px}
 .xgrp{padding:2px 0 4px}.xgrp+.xgrp{border-top:1px solid var(--hair);padding-top:12px}
 .xgh{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.xgh b{font-size:15px;font-weight:750}.xgh span{font-size:12px;color:var(--muted);font-weight:650}.xgh span.req{color:var(--orange-hi)}
+.xopt{font:inherit;font-size:13px;font-weight:650;padding:7px 11px;border-radius:99px;background:var(--surface-2);border:1px solid var(--hair);color:var(--text);cursor:pointer;display:inline-flex;gap:6px;align-items:baseline}
+.xopt small{font-size:11px;color:var(--muted);font-weight:600}.xopt.on{background:rgba(232,119,34,.16);border-color:var(--orange-hi);color:#fff}.xopt.on small{color:var(--orange-hi)}
+.xbtot{position:sticky;top:-2px;z-index:2;background:var(--surface,#1c1518);padding:10px 0 12px;margin-bottom:6px;border-bottom:1px solid var(--hair);display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.xbtot b{font-size:28px;font-weight:800;letter-spacing:-.5px}.xbtot span{color:var(--muted);font-size:13px;font-weight:600;flex-basis:100%}
 .xopts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.xopts span{font-size:13px;font-weight:650;padding:6px 10px;border-radius:99px;background:var(--surface-2);border:1px solid var(--hair)}
 .xopts em{font-style:normal;color:var(--orange-hi);font-weight:700}
 </style>
@@ -1092,7 +1096,7 @@ const xRests=h=>(VENUES&&VENUES.halls&&VENUES.halls[h])||[];
 function xRow(it,ri,si,ii){
   const opts=it.build?it.build.reduce((n,g)=>n+g.o.length,0):0, fid=it.fs?[].concat(it.fs).join('_'):'';
   return `<div class="food xfood"><div><div class="nm">${esc(it.n)}</div>${it.d?`<div class="xd">${esc(it.d)}</div>`:''}
-    <div class="kc">${it.price!=null?`<span class="pr">${money(it.price)}</span> · `:''}${fid?`<span class="xn" data-fs="${fid}">…</span>`:`<span class="soon">Nutrition coming soon</span>`}</div>
+    <div class="kc">${it.price!=null?`<span class="pr">${money(it.price)}</span> · `:''}${fid?`<span class="xn" data-fs="${fid}">…</span>`:it.build&&it.build.every(g=>g.o.every(o=>o.k))?`<span class="xn">From <b>${fmtN(xsum([...(it.base?[it.base.k]:[]),...it.build.filter(g=>g.req).map(g=>g.o.reduce((m,o)=>o.k.cal<m.cal?o.k:m,g.o[0].k))]).cal)}</b> cal · adds up as you build</span>`:`<span class="soon">Nutrition coming soon</span>`}</div>
     ${it.build?`<button class="xbuild" onclick="openXItem(${ri},${si},${ii})">Build your own · ${it.build.length} steps, ${opts} choices ›</button>`:''}</div>
     <button class="plus" onclick="openXItem(${ri},${si},${ii})" aria-label="Log ${esc(it.n)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>`;
 }
@@ -1118,11 +1122,43 @@ function openXItem(ri,si,ii){
   if(it.fs&&!it.build){ fsCombo(it.fs).then(f=>{ if(!f) return openQuickAdd(null,null,label);
       addMeal=mealNow(); addDate=todayISO(); showDetail({...f,n:it.n,b:r.name},{standalone:true}); }); return; }
   if(!it.build) return openQuickAdd(null,null,label,`${it.price!=null?money(it.price)+' at ':'From '}${r.name}. Nutrition for ${r.name} arrives soon; for now, enter what you know.`);
+  if(it.build.every(g=>g.o.every(o=>o.k))) return openBuilder(r,it);
   openForm({title:it.n,sub:`${r.name}${it.price!=null?' · '+money(it.price):''}`,saveLabel:'Log it',
     body:it.build.map(g=>`<div class="xgrp"><div class="xgh"><b>${esc(g.g)}</b><span class="${g.req?'req':''}">${esc(g.rule)}${g.req?' · required':''}</span></div>
       <div class="xopts">${g.o.map(o=>`<span>${esc(o.n)}${o.p?` <em>+${money(o.p)}</em>`:''}</span>`).join('')}</div></div>`).join('')
       +`<p class="fnote">Nutrition for ${esc(r.name)} is on the way. Until then you can log it with your own numbers.</p>`,
     onSave:()=>{ setTimeout(()=>openQuickAdd(null,null,label),380); }});
+}
+
+
+// interactive build-your-own with per-ingredient nutrition (e.g. Qdoba)
+let xb=null;
+const xsum=ks=>{ const t={cal:0,p:0,c:0,f:0,sod:0}; let sod=true; for(const k of ks){ for(const x of ['cal','p','c','f']) t[x]+=+k[x]||0; if(k.sod==null&&k.cal) sod=false; else t.sod+=+k.sod||0; } if(!sod) t.sod=null; return t; };
+function xbKs(){ const ks=xb.it.base?[xb.it.base.k]:[]; xb.it.build.forEach((g,gi)=>xb.sel[gi].forEach(oi=>ks.push(g.o[oi].k))); return ks; }
+function xbRender(){
+  const t=xsum(xbKs());
+  $('xbTot').innerHTML=`<b>${fmtN(t.cal)}</b> cal<span>${Math.round(t.p)}g protein · ${Math.round(t.c)}g carbs · ${Math.round(t.f)}g fat</span>`;
+  xb.it.build.forEach((g,gi)=>g.o.forEach((o,oi)=>{ const el=document.getElementById(`xo${gi}_${oi}`); if(el) el.classList.toggle('on',xb.sel[gi].includes(oi)); }));
+}
+function xbTap(gi,oi){
+  const g=xb.it.build[gi], sel=xb.sel[gi], i=sel.indexOf(oi);
+  if(i>=0) sel.splice(i,1); else { if(g.max===1) sel.length=0; else if(sel.length>=g.max) sel.shift(); sel.push(oi); }
+  xbRender();
+}
+function openBuilder(r,it){
+  xb={r,it,sel:it.build.map(g=>g.req?[0]:[])};
+  openForm({title:it.n,sub:`${r.name}${it.price!=null?' · '+money(it.price):''}`,saveLabel:'Log it',
+    body:`<div class="xbtot" id="xbTot"></div>${it.base?`<p class="fnote" style="margin:-4px 0 10px">Includes ${esc(it.base.n)}.</p>`:''}`
+      +it.build.map((g,gi)=>`<div class="xgrp"><div class="xgh"><b>${esc(g.g)}</b><span class="${g.req?'req':''}">${esc(g.rule)}${g.req?' · required':''}</span></div>
+      <div class="xopts">${g.o.map((o,oi)=>`<button class="xopt" id="xo${gi}_${oi}" onclick="xbTap(${gi},${oi})">${esc(o.n)}<small>${o.k.cal} cal</small></button>`).join('')}</div></div>`).join('')
+      +`<p class="fnote">Nutrition from ${esc(r.nsrc||r.name)}, using standard portions. Extra scoops add more.</p>`,
+    onOpen:()=>xbRender(),
+    onSave:()=>{
+      const miss=it.build.find((g,gi)=>g.req&&!xb.sel[gi].length); if(miss){ toast(`Pick a ${miss.g.toLowerCase()}`); return false; }
+      const picks=it.build.flatMap((g,gi)=>xb.sel[gi].map(oi=>g.o[oi].n)).filter(n=>!/^No /.test(n));
+      const k=xsum(xbKs()), food={id:'xb'+Date.now(),n:`${it.n}${picks.length?' · '+picks.slice(0,4).join(', ')+(picks.length>4?'…':''):''}`,b:r.name,k,u:[['1 order',100]],nog:true,src:'X'};
+      addMeal=mealNow(); addDate=todayISO(); setTimeout(()=>showDetail(food,{standalone:true}),380);
+    }});
 }
 
 // ---------- Dining ----------
@@ -1191,7 +1227,7 @@ function renderMenu(){
       const g=venuePick&&cards.find(x=>x.key===venuePick)||(cards.length===1?cards[0]:null);
       if(g&&g.x!=null){ const r=xr[g.x];
         m.innerHTML=(cards.length>1?`<button class="vback pressable" onclick="venueBack()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>All restaurants</button>`:'')
-          +`<h3 class="vtitle">${esc(r.name)}</h3><p class="xsrc">${r.sections.some(x=>x.items.some(i=>i.fs))?`${r.basis?`Based on ${esc(r.basis)}. VT prices coming soon.`:`Prices from ${esc(r.source||"the restaurant")}.`} Nutrition: ${FS_BADGE.replace('class="fsbadge"','class="fsinline"')}`:r.basis?`Based on ${esc(r.basis)}. VT prices and nutrition coming soon.`:`Prices from ${esc(r.source||"the restaurant")}. Nutrition coming soon.`}</p>`
+          +`<h3 class="vtitle">${esc(r.name)}</h3><p class="xsrc">${r.nsrc?`${r.basis?'VT prices coming soon. ':''}Nutrition from ${esc(r.nsrc)}.`:r.sections.some(x=>x.items.some(i=>i.fs))?`${r.basis?`Based on ${esc(r.basis)}. VT prices coming soon.`:`Prices from ${esc(r.source||"the restaurant")}.`} Nutrition: ${FS_BADGE.replace('class="fsbadge"','class="fsinline"')}`:r.basis?`Based on ${esc(r.basis)}. VT prices and nutrition coming soon.`:`Prices from ${esc(r.source||"the restaurant")}. Nutrition coming soon.`}</p>`
           +r.sections.map((s,si)=>`<div class="station">${esc(s.name)}</div><div class="card list0" style="animation:rise .5s var(--ease) both;animation-delay:${Math.min(si,6)*50}ms;opacity:0">${s.items.map((it,ii)=>xRow(it,g.x,si,ii)).join('')}</div>`).join('');
         fillXNutrition();
         return; }

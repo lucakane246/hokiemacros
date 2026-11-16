@@ -745,111 +745,301 @@
       "items": [
        {
         "n": "Burrito",
+        "base": {
+         "n": "12.5\" flour tortilla",
+         "k": {
+          "cal": 300,
+          "p": 8,
+          "c": 52,
+          "f": 7,
+          "sod": 760
+         }
+        },
         "build": [
          {
           "g": "Protein",
           "rule": "Pick one",
+          "max": 1,
           "req": true,
           "o": [
            {
-            "n": "Grilled Adobo Chicken"
+            "n": "Grilled Adobo Chicken",
+            "k": {
+             "cal": 190,
+             "p": 19,
+             "c": 2,
+             "f": 12,
+             "sod": 440
+            }
            },
            {
-            "n": "Grilled Steak"
+            "n": "Grilled Steak",
+            "k": {
+             "cal": 360,
+             "p": 20,
+             "c": 5,
+             "f": 28,
+             "sod": 600
+            }
            },
            {
-            "n": "Smoked Brisket"
+            "n": "Ground Beef",
+            "k": {
+             "cal": 180,
+             "p": 16,
+             "c": 4,
+             "f": 11,
+             "sod": 610
+            }
            },
            {
-            "n": "Pulled Pork"
+            "n": "Pork Carnitas",
+            "k": {
+             "cal": 110,
+             "p": 14,
+             "c": 0,
+             "f": 4.5,
+             "sod": 560
+            }
            },
            {
-            "n": "Ground Beef"
+            "n": "Brisket Birria",
+            "k": {
+             "cal": 140,
+             "p": 15,
+             "c": 3,
+             "f": 7,
+             "sod": 450
+            }
            },
            {
-            "n": "Impossible (plant-based)"
-           },
-           {
-            "n": "Fajita Veggies"
+            "n": "Fajita Veggies (no meat)",
+            "k": {
+             "cal": 40,
+             "p": 1,
+             "c": 3,
+             "f": 3
+            }
            }
           ]
          },
          {
           "g": "Rice",
           "rule": "Pick one",
+          "max": 1,
           "req": false,
           "o": [
            {
-            "n": "Cilantro Lime Rice"
+            "n": "Cilantro Lime Rice",
+            "k": {
+             "cal": 190,
+             "p": 3,
+             "c": 38,
+             "f": 2.5
+            }
            },
            {
-            "n": "Brown Rice"
+            "n": "Seasoned Brown Rice",
+            "k": {
+             "cal": 170,
+             "p": 4,
+             "c": 36,
+             "f": 1.5
+            }
            },
            {
-            "n": "No Rice"
+            "n": "No Rice",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            }
            }
           ]
          },
          {
           "g": "Beans",
-          "rule": "Pick one",
+          "rule": "Pick up to 2",
+          "max": 2,
           "req": false,
           "o": [
            {
-            "n": "Black Beans"
+            "n": "Black Beans",
+            "k": {
+             "cal": 140,
+             "p": 9,
+             "c": 24,
+             "f": 1
+            }
            },
            {
-            "n": "Pinto Beans"
-           },
-           {
-            "n": "No Beans"
+            "n": "Pinto Beans",
+            "k": {
+             "cal": 130,
+             "p": 8,
+             "c": 23,
+             "f": 1
+            }
            }
           ]
          },
          {
           "g": "Queso",
           "rule": "Optional",
+          "max": 1,
           "req": false,
           "o": [
            {
-            "n": "3-Cheese Queso"
+            "n": "3-Cheese Queso",
+            "k": {
+             "cal": 80,
+             "p": 3,
+             "c": 3,
+             "f": 8
+            }
+           },
+           {
+            "n": "Queso Diablo",
+            "k": {
+             "cal": 90,
+             "p": 2,
+             "c": 3,
+             "f": 7
+            }
+           }
+          ]
+         },
+         {
+          "g": "Salsa",
+          "rule": "Pick any",
+          "max": 9,
+          "req": false,
+          "o": [
+           {
+            "n": "Pico de Gallo",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 1,
+             "f": 0
+            }
+           },
+           {
+            "n": "Roasted Tomato Salsa",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 1,
+             "f": 0
+            }
+           },
+           {
+            "n": "Salsa Verde",
+            "k": {
+             "cal": 10,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            }
+           },
+           {
+            "n": "Chile Corn Salsa",
+            "k": {
+             "cal": 25,
+             "p": 1,
+             "c": 5,
+             "f": 0
+            }
+           },
+           {
+            "n": "Salsa Roja",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 2,
+             "f": 0
+            }
+           },
+           {
+            "n": "Habanero Salsa",
+            "k": {
+             "cal": 10,
+             "p": 0,
+             "c": 2,
+             "f": 0
+            }
            }
           ]
          },
          {
           "g": "Toppings",
           "rule": "Pick any",
+          "max": 9,
           "req": false,
           "o": [
            {
-            "n": "Pico de Gallo"
+            "n": "Shredded Cheese",
+            "k": {
+             "cal": 110,
+             "p": 7,
+             "c": 1,
+             "f": 9
+            }
            },
            {
-            "n": "Roasted Tomato Salsa"
+            "n": "Cotija Cheese",
+            "k": {
+             "cal": 25,
+             "p": 1,
+             "c": 0,
+             "f": 2
+            }
            },
            {
-            "n": "Salsa Verde"
+            "n": "Sour Cream",
+            "k": {
+             "cal": 50,
+             "p": 1,
+             "c": 3,
+             "f": 5
+            }
            },
            {
-            "n": "Corn Salsa"
+            "n": "Lettuce",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            }
            },
            {
-            "n": "Fajita Veggies"
+            "n": "Pickled Jalapeños",
+            "k": {
+             "cal": 15,
+             "p": 0,
+             "c": 3,
+             "f": 0
+            }
            },
            {
-            "n": "Shredded Cheese"
+            "n": "Guacamole",
+            "k": {
+             "cal": 80,
+             "p": 1,
+             "c": 5,
+             "f": 8
+            }
            },
            {
-            "n": "Sour Cream"
-           },
-           {
-            "n": "Lettuce"
-           },
-           {
-            "n": "Pickled Jalapeños"
-           },
-           {
-            "n": "Guacamole"
+            "n": "Fajita Veggies",
+            "k": {
+             "cal": 40,
+             "p": 1,
+             "c": 3,
+             "f": 3
+            }
            }
           ]
          }
@@ -861,219 +1051,570 @@
          {
           "g": "Protein",
           "rule": "Pick one",
+          "max": 1,
           "req": true,
           "o": [
            {
-            "n": "Grilled Adobo Chicken"
+            "n": "Grilled Adobo Chicken",
+            "k": {
+             "cal": 190,
+             "p": 19,
+             "c": 2,
+             "f": 12,
+             "sod": 440
+            }
            },
            {
-            "n": "Grilled Steak"
+            "n": "Grilled Steak",
+            "k": {
+             "cal": 360,
+             "p": 20,
+             "c": 5,
+             "f": 28,
+             "sod": 600
+            }
            },
            {
-            "n": "Smoked Brisket"
+            "n": "Ground Beef",
+            "k": {
+             "cal": 180,
+             "p": 16,
+             "c": 4,
+             "f": 11,
+             "sod": 610
+            }
            },
            {
-            "n": "Pulled Pork"
+            "n": "Pork Carnitas",
+            "k": {
+             "cal": 110,
+             "p": 14,
+             "c": 0,
+             "f": 4.5,
+             "sod": 560
+            }
            },
            {
-            "n": "Ground Beef"
+            "n": "Brisket Birria",
+            "k": {
+             "cal": 140,
+             "p": 15,
+             "c": 3,
+             "f": 7,
+             "sod": 450
+            }
            },
            {
-            "n": "Impossible (plant-based)"
-           },
-           {
-            "n": "Fajita Veggies"
+            "n": "Fajita Veggies (no meat)",
+            "k": {
+             "cal": 40,
+             "p": 1,
+             "c": 3,
+             "f": 3
+            }
            }
           ]
          },
          {
           "g": "Rice",
           "rule": "Pick one",
+          "max": 1,
           "req": false,
           "o": [
            {
-            "n": "Cilantro Lime Rice"
+            "n": "Cilantro Lime Rice",
+            "k": {
+             "cal": 190,
+             "p": 3,
+             "c": 38,
+             "f": 2.5
+            }
            },
            {
-            "n": "Brown Rice"
+            "n": "Seasoned Brown Rice",
+            "k": {
+             "cal": 170,
+             "p": 4,
+             "c": 36,
+             "f": 1.5
+            }
            },
            {
-            "n": "No Rice"
+            "n": "No Rice",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            }
            }
           ]
          },
          {
           "g": "Beans",
-          "rule": "Pick one",
+          "rule": "Pick up to 2",
+          "max": 2,
           "req": false,
           "o": [
            {
-            "n": "Black Beans"
+            "n": "Black Beans",
+            "k": {
+             "cal": 140,
+             "p": 9,
+             "c": 24,
+             "f": 1
+            }
            },
            {
-            "n": "Pinto Beans"
-           },
-           {
-            "n": "No Beans"
+            "n": "Pinto Beans",
+            "k": {
+             "cal": 130,
+             "p": 8,
+             "c": 23,
+             "f": 1
+            }
            }
           ]
          },
          {
           "g": "Queso",
           "rule": "Optional",
+          "max": 1,
           "req": false,
           "o": [
            {
-            "n": "3-Cheese Queso"
+            "n": "3-Cheese Queso",
+            "k": {
+             "cal": 80,
+             "p": 3,
+             "c": 3,
+             "f": 8
+            }
+           },
+           {
+            "n": "Queso Diablo",
+            "k": {
+             "cal": 90,
+             "p": 2,
+             "c": 3,
+             "f": 7
+            }
+           }
+          ]
+         },
+         {
+          "g": "Salsa",
+          "rule": "Pick any",
+          "max": 9,
+          "req": false,
+          "o": [
+           {
+            "n": "Pico de Gallo",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 1,
+             "f": 0
+            }
+           },
+           {
+            "n": "Roasted Tomato Salsa",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 1,
+             "f": 0
+            }
+           },
+           {
+            "n": "Salsa Verde",
+            "k": {
+             "cal": 10,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            }
+           },
+           {
+            "n": "Chile Corn Salsa",
+            "k": {
+             "cal": 25,
+             "p": 1,
+             "c": 5,
+             "f": 0
+            }
+           },
+           {
+            "n": "Salsa Roja",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 2,
+             "f": 0
+            }
+           },
+           {
+            "n": "Habanero Salsa",
+            "k": {
+             "cal": 10,
+             "p": 0,
+             "c": 2,
+             "f": 0
+            }
            }
           ]
          },
          {
           "g": "Toppings",
           "rule": "Pick any",
+          "max": 9,
           "req": false,
           "o": [
            {
-            "n": "Pico de Gallo"
+            "n": "Shredded Cheese",
+            "k": {
+             "cal": 110,
+             "p": 7,
+             "c": 1,
+             "f": 9
+            }
            },
            {
-            "n": "Roasted Tomato Salsa"
+            "n": "Cotija Cheese",
+            "k": {
+             "cal": 25,
+             "p": 1,
+             "c": 0,
+             "f": 2
+            }
            },
            {
-            "n": "Salsa Verde"
+            "n": "Sour Cream",
+            "k": {
+             "cal": 50,
+             "p": 1,
+             "c": 3,
+             "f": 5
+            }
            },
            {
-            "n": "Corn Salsa"
+            "n": "Lettuce",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            }
            },
            {
-            "n": "Fajita Veggies"
+            "n": "Pickled Jalapeños",
+            "k": {
+             "cal": 15,
+             "p": 0,
+             "c": 3,
+             "f": 0
+            }
            },
            {
-            "n": "Shredded Cheese"
+            "n": "Guacamole",
+            "k": {
+             "cal": 80,
+             "p": 1,
+             "c": 5,
+             "f": 8
+            }
            },
            {
-            "n": "Sour Cream"
-           },
-           {
-            "n": "Lettuce"
-           },
-           {
-            "n": "Pickled Jalapeños"
-           },
-           {
-            "n": "Guacamole"
+            "n": "Fajita Veggies",
+            "k": {
+             "cal": 40,
+             "p": 1,
+             "c": 3,
+             "f": 3
+            }
            }
           ]
          }
         ]
        },
        {
-        "n": "Tacos",
+        "n": "Tacos (3)",
         "build": [
          {
-          "g": "Protein",
+          "g": "Shells",
           "rule": "Pick one",
+          "max": 1,
           "req": true,
           "o": [
            {
-            "n": "Grilled Adobo Chicken"
+            "n": "Soft flour tortillas (3)",
+            "k": {
+             "cal": 210,
+             "p": 6,
+             "c": 36,
+             "f": 4.5
+            }
            },
            {
-            "n": "Grilled Steak"
-           },
-           {
-            "n": "Smoked Brisket"
-           },
-           {
-            "n": "Pulled Pork"
-           },
-           {
-            "n": "Ground Beef"
-           },
-           {
-            "n": "Impossible (plant-based)"
-           },
-           {
-            "n": "Fajita Veggies"
+            "n": "Crispy corn shells (3)",
+            "k": {
+             "cal": 180,
+             "p": 3,
+             "c": 24,
+             "f": 7.5
+            }
            }
           ]
          },
          {
-          "g": "Rice",
+          "g": "Protein",
           "rule": "Pick one",
-          "req": false,
+          "max": 1,
+          "req": true,
           "o": [
            {
-            "n": "Cilantro Lime Rice"
+            "n": "Grilled Adobo Chicken",
+            "k": {
+             "cal": 190,
+             "p": 19,
+             "c": 2,
+             "f": 12,
+             "sod": 440
+            }
            },
            {
-            "n": "Brown Rice"
+            "n": "Grilled Steak",
+            "k": {
+             "cal": 360,
+             "p": 20,
+             "c": 5,
+             "f": 28,
+             "sod": 600
+            }
            },
            {
-            "n": "No Rice"
+            "n": "Ground Beef",
+            "k": {
+             "cal": 180,
+             "p": 16,
+             "c": 4,
+             "f": 11,
+             "sod": 610
+            }
+           },
+           {
+            "n": "Pork Carnitas",
+            "k": {
+             "cal": 110,
+             "p": 14,
+             "c": 0,
+             "f": 4.5,
+             "sod": 560
+            }
+           },
+           {
+            "n": "Brisket Birria",
+            "k": {
+             "cal": 140,
+             "p": 15,
+             "c": 3,
+             "f": 7,
+             "sod": 450
+            }
+           },
+           {
+            "n": "Fajita Veggies (no meat)",
+            "k": {
+             "cal": 40,
+             "p": 1,
+             "c": 3,
+             "f": 3
+            }
            }
           ]
          },
          {
           "g": "Beans",
-          "rule": "Pick one",
+          "rule": "Pick up to 2",
+          "max": 2,
           "req": false,
           "o": [
            {
-            "n": "Black Beans"
+            "n": "Black Beans",
+            "k": {
+             "cal": 140,
+             "p": 9,
+             "c": 24,
+             "f": 1
+            }
            },
            {
-            "n": "Pinto Beans"
-           },
-           {
-            "n": "No Beans"
+            "n": "Pinto Beans",
+            "k": {
+             "cal": 130,
+             "p": 8,
+             "c": 23,
+             "f": 1
+            }
            }
           ]
          },
          {
           "g": "Queso",
           "rule": "Optional",
+          "max": 1,
           "req": false,
           "o": [
            {
-            "n": "3-Cheese Queso"
+            "n": "3-Cheese Queso",
+            "k": {
+             "cal": 80,
+             "p": 3,
+             "c": 3,
+             "f": 8
+            }
+           },
+           {
+            "n": "Queso Diablo",
+            "k": {
+             "cal": 90,
+             "p": 2,
+             "c": 3,
+             "f": 7
+            }
+           }
+          ]
+         },
+         {
+          "g": "Salsa",
+          "rule": "Pick any",
+          "max": 9,
+          "req": false,
+          "o": [
+           {
+            "n": "Pico de Gallo",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 1,
+             "f": 0
+            }
+           },
+           {
+            "n": "Roasted Tomato Salsa",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 1,
+             "f": 0
+            }
+           },
+           {
+            "n": "Salsa Verde",
+            "k": {
+             "cal": 10,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            }
+           },
+           {
+            "n": "Chile Corn Salsa",
+            "k": {
+             "cal": 25,
+             "p": 1,
+             "c": 5,
+             "f": 0
+            }
+           },
+           {
+            "n": "Salsa Roja",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 2,
+             "f": 0
+            }
+           },
+           {
+            "n": "Habanero Salsa",
+            "k": {
+             "cal": 10,
+             "p": 0,
+             "c": 2,
+             "f": 0
+            }
            }
           ]
          },
          {
           "g": "Toppings",
           "rule": "Pick any",
+          "max": 9,
           "req": false,
           "o": [
            {
-            "n": "Pico de Gallo"
+            "n": "Shredded Cheese",
+            "k": {
+             "cal": 110,
+             "p": 7,
+             "c": 1,
+             "f": 9
+            }
            },
            {
-            "n": "Roasted Tomato Salsa"
+            "n": "Cotija Cheese",
+            "k": {
+             "cal": 25,
+             "p": 1,
+             "c": 0,
+             "f": 2
+            }
            },
            {
-            "n": "Salsa Verde"
+            "n": "Sour Cream",
+            "k": {
+             "cal": 50,
+             "p": 1,
+             "c": 3,
+             "f": 5
+            }
            },
            {
-            "n": "Corn Salsa"
+            "n": "Lettuce",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            }
            },
            {
-            "n": "Fajita Veggies"
+            "n": "Pickled Jalapeños",
+            "k": {
+             "cal": 15,
+             "p": 0,
+             "c": 3,
+             "f": 0
+            }
            },
            {
-            "n": "Shredded Cheese"
+            "n": "Guacamole",
+            "k": {
+             "cal": 80,
+             "p": 1,
+             "c": 5,
+             "f": 8
+            }
            },
            {
-            "n": "Sour Cream"
-           },
-           {
-            "n": "Lettuce"
-           },
-           {
-            "n": "Pickled Jalapeños"
-           },
-           {
-            "n": "Guacamole"
+            "n": "Fajita Veggies",
+            "k": {
+             "cal": 40,
+             "p": 1,
+             "c": 3,
+             "f": 3
+            }
            }
           ]
          }
@@ -1081,111 +1622,239 @@
        },
        {
         "n": "Quesadilla",
+        "base": {
+         "n": "12.5\" flour tortilla and cheese",
+         "k": {
+          "cal": 410,
+          "p": 15,
+          "c": 53,
+          "f": 16
+         }
+        },
         "build": [
          {
           "g": "Protein",
           "rule": "Pick one",
+          "max": 1,
           "req": true,
           "o": [
            {
-            "n": "Grilled Adobo Chicken"
+            "n": "Grilled Adobo Chicken",
+            "k": {
+             "cal": 190,
+             "p": 19,
+             "c": 2,
+             "f": 12,
+             "sod": 440
+            }
            },
            {
-            "n": "Grilled Steak"
+            "n": "Grilled Steak",
+            "k": {
+             "cal": 360,
+             "p": 20,
+             "c": 5,
+             "f": 28,
+             "sod": 600
+            }
            },
            {
-            "n": "Smoked Brisket"
+            "n": "Ground Beef",
+            "k": {
+             "cal": 180,
+             "p": 16,
+             "c": 4,
+             "f": 11,
+             "sod": 610
+            }
            },
            {
-            "n": "Pulled Pork"
+            "n": "Pork Carnitas",
+            "k": {
+             "cal": 110,
+             "p": 14,
+             "c": 0,
+             "f": 4.5,
+             "sod": 560
+            }
            },
            {
-            "n": "Ground Beef"
+            "n": "Brisket Birria",
+            "k": {
+             "cal": 140,
+             "p": 15,
+             "c": 3,
+             "f": 7,
+             "sod": 450
+            }
            },
            {
-            "n": "Impossible (plant-based)"
-           },
-           {
-            "n": "Fajita Veggies"
-           }
-          ]
-         },
-         {
-          "g": "Rice",
-          "rule": "Pick one",
-          "req": false,
-          "o": [
-           {
-            "n": "Cilantro Lime Rice"
-           },
-           {
-            "n": "Brown Rice"
-           },
-           {
-            "n": "No Rice"
-           }
-          ]
-         },
-         {
-          "g": "Beans",
-          "rule": "Pick one",
-          "req": false,
-          "o": [
-           {
-            "n": "Black Beans"
-           },
-           {
-            "n": "Pinto Beans"
-           },
-           {
-            "n": "No Beans"
+            "n": "Fajita Veggies (no meat)",
+            "k": {
+             "cal": 40,
+             "p": 1,
+             "c": 3,
+             "f": 3
+            }
            }
           ]
          },
          {
           "g": "Queso",
           "rule": "Optional",
+          "max": 1,
           "req": false,
           "o": [
            {
-            "n": "3-Cheese Queso"
+            "n": "3-Cheese Queso",
+            "k": {
+             "cal": 80,
+             "p": 3,
+             "c": 3,
+             "f": 8
+            }
+           },
+           {
+            "n": "Queso Diablo",
+            "k": {
+             "cal": 90,
+             "p": 2,
+             "c": 3,
+             "f": 7
+            }
+           }
+          ]
+         },
+         {
+          "g": "Salsa",
+          "rule": "Pick any",
+          "max": 9,
+          "req": false,
+          "o": [
+           {
+            "n": "Pico de Gallo",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 1,
+             "f": 0
+            }
+           },
+           {
+            "n": "Roasted Tomato Salsa",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 1,
+             "f": 0
+            }
+           },
+           {
+            "n": "Salsa Verde",
+            "k": {
+             "cal": 10,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            }
+           },
+           {
+            "n": "Chile Corn Salsa",
+            "k": {
+             "cal": 25,
+             "p": 1,
+             "c": 5,
+             "f": 0
+            }
+           },
+           {
+            "n": "Salsa Roja",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 2,
+             "f": 0
+            }
+           },
+           {
+            "n": "Habanero Salsa",
+            "k": {
+             "cal": 10,
+             "p": 0,
+             "c": 2,
+             "f": 0
+            }
            }
           ]
          },
          {
           "g": "Toppings",
           "rule": "Pick any",
+          "max": 9,
           "req": false,
           "o": [
            {
-            "n": "Pico de Gallo"
+            "n": "Shredded Cheese",
+            "k": {
+             "cal": 110,
+             "p": 7,
+             "c": 1,
+             "f": 9
+            }
            },
            {
-            "n": "Roasted Tomato Salsa"
+            "n": "Cotija Cheese",
+            "k": {
+             "cal": 25,
+             "p": 1,
+             "c": 0,
+             "f": 2
+            }
            },
            {
-            "n": "Salsa Verde"
+            "n": "Sour Cream",
+            "k": {
+             "cal": 50,
+             "p": 1,
+             "c": 3,
+             "f": 5
+            }
            },
            {
-            "n": "Corn Salsa"
+            "n": "Lettuce",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            }
            },
            {
-            "n": "Fajita Veggies"
+            "n": "Pickled Jalapeños",
+            "k": {
+             "cal": 15,
+             "p": 0,
+             "c": 3,
+             "f": 0
+            }
            },
            {
-            "n": "Shredded Cheese"
+            "n": "Guacamole",
+            "k": {
+             "cal": 80,
+             "p": 1,
+             "c": 5,
+             "f": 8
+            }
            },
            {
-            "n": "Sour Cream"
-           },
-           {
-            "n": "Lettuce"
-           },
-           {
-            "n": "Pickled Jalapeños"
-           },
-           {
-            "n": "Guacamole"
+            "n": "Fajita Veggies",
+            "k": {
+             "cal": 40,
+             "p": 1,
+             "c": 3,
+             "f": 3
+            }
            }
           ]
          }
@@ -1193,111 +1862,266 @@
        },
        {
         "n": "Nachos",
+        "base": {
+         "n": "Tortilla chips (4 oz)",
+         "k": {
+          "cal": 560,
+          "p": 7,
+          "c": 75,
+          "f": 26,
+          "sod": 220
+         }
+        },
         "build": [
          {
           "g": "Protein",
           "rule": "Pick one",
+          "max": 1,
           "req": true,
           "o": [
            {
-            "n": "Grilled Adobo Chicken"
+            "n": "Grilled Adobo Chicken",
+            "k": {
+             "cal": 190,
+             "p": 19,
+             "c": 2,
+             "f": 12,
+             "sod": 440
+            }
            },
            {
-            "n": "Grilled Steak"
+            "n": "Grilled Steak",
+            "k": {
+             "cal": 360,
+             "p": 20,
+             "c": 5,
+             "f": 28,
+             "sod": 600
+            }
            },
            {
-            "n": "Smoked Brisket"
+            "n": "Ground Beef",
+            "k": {
+             "cal": 180,
+             "p": 16,
+             "c": 4,
+             "f": 11,
+             "sod": 610
+            }
            },
            {
-            "n": "Pulled Pork"
+            "n": "Pork Carnitas",
+            "k": {
+             "cal": 110,
+             "p": 14,
+             "c": 0,
+             "f": 4.5,
+             "sod": 560
+            }
            },
            {
-            "n": "Ground Beef"
+            "n": "Brisket Birria",
+            "k": {
+             "cal": 140,
+             "p": 15,
+             "c": 3,
+             "f": 7,
+             "sod": 450
+            }
            },
            {
-            "n": "Impossible (plant-based)"
-           },
-           {
-            "n": "Fajita Veggies"
-           }
-          ]
-         },
-         {
-          "g": "Rice",
-          "rule": "Pick one",
-          "req": false,
-          "o": [
-           {
-            "n": "Cilantro Lime Rice"
-           },
-           {
-            "n": "Brown Rice"
-           },
-           {
-            "n": "No Rice"
+            "n": "Fajita Veggies (no meat)",
+            "k": {
+             "cal": 40,
+             "p": 1,
+             "c": 3,
+             "f": 3
+            }
            }
           ]
          },
          {
           "g": "Beans",
-          "rule": "Pick one",
+          "rule": "Pick up to 2",
+          "max": 2,
           "req": false,
           "o": [
            {
-            "n": "Black Beans"
+            "n": "Black Beans",
+            "k": {
+             "cal": 140,
+             "p": 9,
+             "c": 24,
+             "f": 1
+            }
            },
            {
-            "n": "Pinto Beans"
-           },
-           {
-            "n": "No Beans"
+            "n": "Pinto Beans",
+            "k": {
+             "cal": 130,
+             "p": 8,
+             "c": 23,
+             "f": 1
+            }
            }
           ]
          },
          {
           "g": "Queso",
           "rule": "Optional",
+          "max": 1,
           "req": false,
           "o": [
            {
-            "n": "3-Cheese Queso"
+            "n": "3-Cheese Queso",
+            "k": {
+             "cal": 80,
+             "p": 3,
+             "c": 3,
+             "f": 8
+            }
+           },
+           {
+            "n": "Queso Diablo",
+            "k": {
+             "cal": 90,
+             "p": 2,
+             "c": 3,
+             "f": 7
+            }
+           }
+          ]
+         },
+         {
+          "g": "Salsa",
+          "rule": "Pick any",
+          "max": 9,
+          "req": false,
+          "o": [
+           {
+            "n": "Pico de Gallo",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 1,
+             "f": 0
+            }
+           },
+           {
+            "n": "Roasted Tomato Salsa",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 1,
+             "f": 0
+            }
+           },
+           {
+            "n": "Salsa Verde",
+            "k": {
+             "cal": 10,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            }
+           },
+           {
+            "n": "Chile Corn Salsa",
+            "k": {
+             "cal": 25,
+             "p": 1,
+             "c": 5,
+             "f": 0
+            }
+           },
+           {
+            "n": "Salsa Roja",
+            "k": {
+             "cal": 5,
+             "p": 0,
+             "c": 2,
+             "f": 0
+            }
+           },
+           {
+            "n": "Habanero Salsa",
+            "k": {
+             "cal": 10,
+             "p": 0,
+             "c": 2,
+             "f": 0
+            }
            }
           ]
          },
          {
           "g": "Toppings",
           "rule": "Pick any",
+          "max": 9,
           "req": false,
           "o": [
            {
-            "n": "Pico de Gallo"
+            "n": "Shredded Cheese",
+            "k": {
+             "cal": 110,
+             "p": 7,
+             "c": 1,
+             "f": 9
+            }
            },
            {
-            "n": "Roasted Tomato Salsa"
+            "n": "Cotija Cheese",
+            "k": {
+             "cal": 25,
+             "p": 1,
+             "c": 0,
+             "f": 2
+            }
            },
            {
-            "n": "Salsa Verde"
+            "n": "Sour Cream",
+            "k": {
+             "cal": 50,
+             "p": 1,
+             "c": 3,
+             "f": 5
+            }
            },
            {
-            "n": "Corn Salsa"
+            "n": "Lettuce",
+            "k": {
+             "cal": 0,
+             "p": 0,
+             "c": 0,
+             "f": 0
+            }
            },
            {
-            "n": "Fajita Veggies"
+            "n": "Pickled Jalapeños",
+            "k": {
+             "cal": 15,
+             "p": 0,
+             "c": 3,
+             "f": 0
+            }
            },
            {
-            "n": "Shredded Cheese"
+            "n": "Guacamole",
+            "k": {
+             "cal": 80,
+             "p": 1,
+             "c": 5,
+             "f": 8
+            }
            },
            {
-            "n": "Sour Cream"
-           },
-           {
-            "n": "Lettuce"
-           },
-           {
-            "n": "Pickled Jalapeños"
-           },
-           {
-            "n": "Guacamole"
+            "n": "Fajita Veggies",
+            "k": {
+             "cal": 40,
+             "p": 1,
+             "c": 3,
+             "f": 3
+            }
            }
           ]
          }
@@ -1322,7 +2146,8 @@
        }
       ]
      }
-    ]
+    ],
+    "nsrc": "Qdoba’s 2026 nutrition guide"
    }
   ],
   "06": [
