@@ -1112,19 +1112,29 @@ function renderMenu(){
   if(!sections.length){ m.innerHTML=`<div class="empty card">Nothing matches “${esc(query)}”.</div>`; return; }
   // halls with several restaurants: pick one first (search still covers the whole hall)
   let head='';
-  if(!q){ const groups=venueGroups(sections);
-    if(groups.length>=2&&groups.filter(g=>g.sections.length>1).length>=2){
-      const g=venuePick&&groups.find(x=>x.key===venuePick);
-      if(!g){ venuePick=null; m.innerHTML=`<div class="station">Restaurants</div>`+venueGrid(groups); return; }
-      sections=g.sections;
-      head=`<button class="vback pressable" onclick="venueBack()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>All restaurants</button><h3 class="vtitle">${esc(g.name)}</h3>`;
+  if(!q){ const groups=venueGroups(sections), multi=groups.filter(g=>g.sections.length>1).length;
+    let cards=null, label='restaurants';
+    const named=g=>/[A-Za-z]{3}/.test(g.name)&&!/^(BYO|Build|Grab|Hot|Cold|Daily|Breakfast)\b/i.test(g.name);
+    if(groups.length>=2&&multi>=2&&groups.filter(g=>g.sections.length>1).every(named)) cards=groups.map(g=>({key:g.key,name:g.name,count:g.count,sections:g.sections}));
+    else if(sections.length>=3&&sections.length<=30){   // one restaurant: show its stations instead
+      label='stations';
+      const strip=multi===1;   // one restaurant plus extras: drop its name from each station ("DX Burgers" -> "Burgers")
+      cards=groups.flatMap(g=>g.sections.map((sec,k)=>{ const orig=cleanSec(sections.find(x=>x.items===sec.items)?.name||sec.name);
+        const nm=g.sections.length>1?(strip?(sec.name==='Main menu'?g.name:sec.name):orig):g.name;
+        return {key:'s:'+g.key+'|'+sec.name,name:nm,count:sec.items.length,sections:[{...sec,name:nm}]}; }));
+    }
+    if(cards){
+      const g=venuePick&&cards.find(x=>x.key===venuePick);
+      if(!g){ venuePick=null; m.innerHTML=`<div class="station">${label==='restaurants'?'Restaurants':'Stations'}</div>`+venueGrid(cards); return; }
+      sections=g.sections.length===1&&label==='stations'?[{...g.sections[0],name:''}]:g.sections;
+      head=`<button class="vback pressable" onclick="venueBack()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>All ${label}</button><h3 class="vtitle">${esc(g.name)}</h3>`;
     } }
   let hidden=0;
   if(prefsActive()&&!showHidden) sections=sections.map(s=>{const keep=s.items.filter(id=>{const x=DATA.items[id]; const ok=!x||!conflicts(x.t,x.a).length; if(!ok) hidden++; return ok}); return {...s,items:keep}}).filter(s=>s.items.length);
   else if(prefsActive()) sections.forEach(s=>s.items.forEach(id=>{const x=DATA.items[id]; if(x&&conflicts(x.t,x.a).length) hidden++;}));
   const foot=hidden?`<button class="hiddenln" onclick="toggleHidden()">${showHidden?`Hide the ${hidden} item${hidden>1?'s':''} that don’t match your filters`:`${hidden} item${hidden>1?'s':''} hidden by your filters · Show`}</button>`:'';
   if(!sections.length){ m.innerHTML=head+`<div class="empty card">Nothing here matches your filters.<span>${esc(prefsSummary())}</span></div>`+foot; return; }
-  m.innerHTML=head+sections.map((s,si)=>`<div class="station">${esc(s.name)}</div><div class="card list0" style="animation:rise .5s var(--ease) both;animation-delay:${Math.min(si,6)*50}ms;opacity:0">${s.items.map(foodRow).join('')}</div>`).join('')+foot;
+  m.innerHTML=head+sections.map((s,si)=>`${s.name?`<div class="station">${esc(s.name)}</div>`:''}<div class="card list0" style="animation:rise .5s var(--ease) both;animation-delay:${Math.min(si,6)*50}ms;opacity:0">${s.items.map(foodRow).join('')}</div>`).join('')+foot;
 }
 function addFood(btn){ btn.classList.add('done'); btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'; toast('Food logging is coming soon'); }
 document.querySelector('#v-dining .search input').addEventListener('input',e=>{query=e.target.value;renderMenu()});
