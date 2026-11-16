@@ -87,6 +87,7 @@ function doPost(e) {
   if (!lock.tryLock(10000)) return json_({ ok: false, error: 'busy' });
   try {
     let sub; try { sub = JSON.parse(e.postData.contents); } catch (err) { return json_({ ok: false, error: 'bad json' }); }
+    if (sub.type === 'wait') return json_(postWait_(sub));
     sub.price = Math.round(Number(sub.price) * 100) / 100;
     const now = new Date(), key = key_(sub), review = sheet_(REVIEW);
     const rows = review.getDataRange().getValues().slice(1);
@@ -117,6 +118,39 @@ function doPost(e) {
   } finally { lock.releaseLock(); }
 }
 
+// ---------------- line reports: students tap how long the line is at a station ----------------
+// No review needed: reports expire after 20 minutes and the app shows the median, so one troll can't move it.
+const WAIT = { values: [0, 5, 10, 15], windowMin: 20, perStationMin: 8, perDevicePerDay: 40 };
+function judgeWait(sub, ctx) {
+  if (!HALLS[sub.hall]) return { status: 'denied', reason: 'Unknown location' };
+  if (!/^[\p{L}\p{N} .,'’&()\/+:!-]{1,80}$/u.test(String(sub.station || '')) || /https?:|www\.|\.com/i.test(sub.station)) return { status: 'denied', reason: 'Bad station' };
+  if (!/^[0-9a-f-]{8,40}$/i.test(String(sub.device || ''))) return { status: 'denied', reason: 'No device id' };
+  if (WAIT.values.indexOf(Number(sub.wait)) < 0) return { status: 'denied', reason: 'Bad wait value' };
+  if (ctx.sameStationRecent) return { status: 'denied', reason: 'Already reported this line just now' };
+  if (ctx.deviceToday >= WAIT.perDevicePerDay) return { status: 'denied', reason: 'Too many line reports today' };
+  return { status: 'ok' };
+}
+function waitList_() { const c = CacheService.getScriptCache().get('waits'); return c ? JSON.parse(c) : []; }
+function postWait_(sub) {
+  const now = Date.now(), all = waitList_().filter(r => now - r.t < 6 * 3600e3), key = `${sub.hall}|${sub.station}`;
+  const sameStationRecent = all.some(r => r.d === sub.device && r.k === key && now - r.t < WAIT.perStationMin * 60e3);
+  const deviceToday = all.filter(r => r.d === sub.device).length;   // the cache keeps ~6 hours, good enough for a daily cap
+  const v = judgeWait(sub, { sameStationRecent, deviceToday });
+  if (v.status !== 'ok') return { ok: true, status: 'denied' };
+  all.push({ k: key, v: Number(sub.wait), t: now, d: String(sub.device) });
+  CacheService.getScriptCache().put('waits', JSON.stringify(all.slice(-800)), 21600);
+  try { (sheet_(WAIT_LOG) || SpreadsheetApp.getActive().insertSheet(WAIT_LOG)).appendRow([new Date(), HALLS[sub.hall], sub.station, Number(sub.wait)]); } catch (e) {}
+  return { ok: true, status: 'ok' };
+}
+const WAIT_LOG = 'Line reports';
+// Current lines: median of the last 20 minutes per station
+function waits_() {
+  const now = Date.now(), out = {};
+  for (const r of waitList_()) { if (now - r.t > WAIT.windowMin * 60e3) continue; (out[r.k] = out[r.k] || { v: [], last: 0 }); out[r.k].v.push(r.v); out[r.k].last = Math.max(out[r.k].last, r.t); }
+  const res = {}; for (const k in out) res[k] = { wait: median(out[k].v), n: out[k].v.length, ageMin: Math.round((now - out[k].last) / 60e3) };
+  return { ok: true, at: new Date().toISOString(), waits: res };
+}
+
 // ---------------- live gym occupancy (VT Rec Sports' public occupancy page) ----------------
 const OCC_URL = 'https://connect.recsports.vt.edu/facilityoccupancy';
 function fetchOccupancy_() {
@@ -144,6 +178,7 @@ const OCC_LOG = 'Occupancy log';
 // Approved prices (read by the app's daily data job), or live gym occupancy with ?occ=1.
 function doGet(e) {
   if (e && e.parameter && e.parameter.occ) return json_(occupancy_());
+  if (e && e.parameter && e.parameter.waits) return json_(waits_());
   const a = approvedPrices_(), out = {};
   for (const k in a) out[k] = { p: a[k].p, d: Utilities.formatDate(new Date(a[k].t), 'America/New_York', 'yyyy-MM-dd') };
   return json_({ ok: true, updated: new Date().toISOString(), prices: out });
@@ -188,4 +223,4 @@ function setup() {
   if (!ss.getSheetByName(OCC_LOG)) ss.insertSheet(OCC_LOG).appendRow(['Time', 'Facility', 'Count', 'Max']);
 }
 
-if (typeof module !== 'undefined') module.exports = { judge, median, RULES };
+if (typeof module !== 'undefined') module.exports = { judge, judgeWait, median, RULES };

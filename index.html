@@ -527,6 +527,15 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 .occ.mid b{color:var(--orange-hi)}.occ.mid .occbar i{background:var(--orange)}
 .occ.hi b,.occ.max b{color:var(--fat)}.occ.hi .occbar i,.occ.max .occbar i{background:var(--fat)}
 .occc{font-weight:700}.occc.lo{color:var(--green)}.occc.mid{color:var(--orange-hi)}.occc.hi,.occc.max{color:var(--fat)}
+
+/* ---------- line reports ---------- */
+.shead{display:flex;align-items:center;gap:8px}
+.shead>span:first-child{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wchip{flex:none;font-size:11px;font-weight:800;letter-spacing:.2px;text-transform:none;padding:3px 8px;border-radius:99px}
+.wchip.lo{color:var(--green);background:rgba(95,203,143,.13)}.wchip.mid{color:var(--orange-hi);background:rgba(238,138,60,.14)}
+.wchip.hi,.wchip.max{color:var(--fat);background:rgba(226,109,143,.14)}
+.wbtn{flex:none;font:inherit;font-size:11.5px;font-weight:750;letter-spacing:.2px;text-transform:none;color:var(--muted);padding:3px 2px}
+.wopts .mchip{flex:1 1 40%;padding:12px}
 </style>
 </head>
 <body>
@@ -1029,7 +1038,10 @@ function renderMenu(){
   else if(prefsActive()) sections.forEach(s=>s.items.forEach(id=>{const x=DATA.items[id]; if(x&&conflicts(x.t,x.a).length) hidden++;}));
   const foot=hidden?`<button class="hiddenln" onclick="toggleHidden()">${showHidden?`Hide the ${hidden} item${hidden>1?'s':''} that don’t match your filters`:`${hidden} item${hidden>1?'s':''} hidden by your filters · Show`}</button>`:'';
   if(!sections.length){ m.innerHTML=`<div class="empty card">Nothing here matches your filters.<span>${esc(prefsSummary())}</span></div>`+foot; return; }
-  m.innerHTML=sections.map((s,si)=>`<div class="station">${esc(s.name)}</div><div class="card list0" style="animation:rise .5s var(--ease) both;animation-delay:${Math.min(si,6)*50}ms;opacity:0">${s.items.map(foodRow).join('')}</div>`).join('')+foot;
+  const openNow=!q&&st.known&&st.open;
+  if(openNow&&PRICE_API&&(!WAITS||Date.now()-waitsAt>45000)&&!waitsBusy) getWaits().then(()=>{ if(hall===renderMenu._h) renderMenu(); });
+  renderMenu._h=hall;
+  m.innerHTML=sections.map((s,si)=>`${openNow?stationHead(hall,s.name,true):`<div class="station">${esc(s.name)}</div>`}<div class="card list0" style="animation:rise .5s var(--ease) both;animation-delay:${Math.min(si,6)*50}ms;opacity:0">${s.items.map(foodRow).join('')}</div>`).join('')+foot;
 }
 function addFood(btn){ btn.classList.add('done'); btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'; toast('Food logging is coming soon'); }
 document.querySelector('#v-dining .search input').addEventListener('input',e=>{query=e.target.value;renderMenu()});
@@ -1855,6 +1867,40 @@ async function updatePopOcc(){
   const keys=p.t.map(t=>t.key).filter(k=>OCC_NAMES[k]); if(!keys.length) return;
   await getOcc(); if(spots[popIdx]!==p) return;
   el.innerHTML=keys.map(k=>occHTML(k)).join('');
+}
+
+// ================= line reports (crowdsourced, last 20 minutes) =================
+const WAIT_OPTS=[[0,'No line'],[5,'~5 min'],[10,'~10 min'],[15,'15+ min']];
+let WAITS=null, waitsAt=0, waitsBusy=null;
+const waitLabel=w=>w<2.5?'No line':w<7.5?'~5 min line':w<12.5?'~10 min line':'15+ min line';
+const waitCls=w=>w<2.5?'lo':w<7.5?'mid':w<12.5?'hi':'max';
+function getWaits(force){
+  if(!PRICE_API) return Promise.resolve(null);
+  if(!force&&WAITS&&Date.now()-waitsAt<45000) return Promise.resolve(WAITS);
+  if(waitsBusy) return waitsBusy;
+  return waitsBusy=fetch(PRICE_API+'?waits=1').then(r=>r.json()).then(o=>{ if(o&&o.ok){WAITS=o.waits;waitsAt=Date.now();} return WAITS; }).catch(()=>WAITS).finally(()=>waitsBusy=null);
+}
+function stationHead(h,name,open){
+  if(!PRICE_API||!open) return `<div class="station">${esc(name)}</div>`;
+  const w=WAITS&&WAITS[`${h}|${name}`];
+  const chip=w?`<span class="wchip ${waitCls(w.wait)}" title="${w.n} report${w.n>1?'s':''}, latest ${w.ageMin} min ago">${waitLabel(w.wait)}</span>`:'';
+  return `<div class="station shead"><span>${esc(name)}</span>${chip}<button class="wbtn" onclick="openWaitForm('${h}',this.dataset.s)" data-s="${esc(name)}">${w?'Update':'Line?'}</button></div>`;
+}
+function openWaitForm(h,station){
+  let pick=null;
+  openForm({title:'How’s the line?',sub:`${station} · ${VENUE[h]||''}`,saveLabel:'Send',
+    body:`<div class="mchips gpills wopts" id="wOpts">${WAIT_OPTS.map(([v,l])=>`<button class="mchip" onclick="wPick(${v})">${l}</button>`).join('')}</div>
+      <p class="fnote">Shared anonymously with other students for 20 minutes. The app shows the typical answer, so one report can’t skew it.</p>`,
+    onSave:()=>{ if(pick==null){ toast('Pick how long the line is'); return false; } sendWait(h,station,pick); }});
+  window.wPick=v=>{ pick=v; document.querySelectorAll('#wOpts .mchip').forEach((b,i)=>b.classList.toggle('on',WAIT_OPTS[i][0]===v)); };
+}
+async function sendWait(h,station,wait){
+  try{
+    const r=await fetch(PRICE_API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({type:'wait',hall:h,station,wait,device:STORE.device})}).then(r=>r.json());
+    if(!r.ok) throw 0;
+    toast(r.status==='denied'?'You just reported this line. Try again in a few minutes':'Thanks! Other students can see it now');
+    await getWaits(true); renderMenu();
+  }catch(e){ toast('Couldn’t send. Check your connection and try again'); }
 }
 
 // ---------- Today: dining hall cards ----------
