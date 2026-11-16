@@ -1150,9 +1150,11 @@ function renderResults(){
 
 // ---------- food detail ----------
 function openDetail(i){ showDetail(lastResults[i]); }
-function openDiningItem(id){
-  const x=DATA.items[id]; if(!x) return;
-  const f=diningIndex().find(d=>d.id===id)||{id,n:x.n,b:VENUE[hall]||'',hall,station:'',k:{cal:x.cal,p:x.p,c:x.c,f:x.f,fib:x.fib,sug:x.sug,sod:x.sod},serving:x.s,vt:1,tags:x.t||[],al:x.a||''};
+function openDiningItem(id,h){
+  const x=DATA.items[id]; if(!x) return; h=h||hall;
+  // always tie the item to the hall it was opened from (the same dish can be on several menus)
+  const base=diningIndex().find(d=>d.id===id)||{id,n:x.n,station:'',k:{cal:x.cal,p:x.p,c:x.c,f:x.f,fib:x.fib,sug:x.sug,sod:x.sod},serving:x.s,vt:1,tags:x.t||[],al:x.a||''};
+  const f={...base,hall:h,b:VENUE[h]||base.b,station:base.hall===h?base.station:''};
   addMeal=mealNow(); addDate=todayISO();
   showDetail(f,{standalone:true});
 }
@@ -1754,7 +1756,7 @@ function renderRec(){
   const later=u.date!==todayISO();
   const when=st.open?`Open until ${st.until}`:st.next;
   el.hidden=false;
-  el.innerHTML=`<button class="recmain" onclick="openDiningItem('${c.id}')">
+  el.innerHTML=`<button class="recmain" onclick="openDiningItem('${c.id}','${c.hall}')">
       <div class="rectop"><span class="recbadge"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2z"/></svg>Picked for you</span><span class="recfocus">${FOCUS_LABEL[focus]}${later?' · '+esc(u.meal.meal.toLowerCase())+' tomorrow':' · '+esc(u.meal.meal.toLowerCase())}</span></div>
       <div class="recname">${esc(x.n)}</div>
       <div class="recwhy">${esc(recReason(x,focus))}</div>
