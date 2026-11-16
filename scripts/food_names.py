@@ -35,7 +35,7 @@ JUNK = _full([
     r"made with .* oil", r"made with butter", r"made with margarine", r"not further specified", r"all types",
     r"all varieties", r"all commercial varieties", r"with refuse", r"usda commodity", r"commodity", r"untrimmed",
     r"denuded", r"steak/roast", r"roast/steak", r"bnls", r"farmed", r"wild", r"raw or unheated", r"uncooked",
-    r"with salt added", r"without added salt", r"with added salt", r"from raw", r"from pre-cooked", r"from precooked", r"unroasted", r"whole kernel", r"all forms", r"salad or cooking",
+    r"with salt added", r"long-grain", r"medium-grain", r"short-grain", r"without added salt", r"with added salt", r"from raw", r"from pre-cooked", r"from precooked", r"unroasted", r"whole kernel", r"all forms", r"salad or cooking",
 ])
 RENAME = [  # part -> nicer wording
     (r"^meat and skin$", "with skin"), (r"^skin eaten$", "with skin"), (r"^separable lean only$", "lean"),
@@ -145,7 +145,9 @@ def clean(name, brand=None):
         head = "white fish" if head.lower() == "white" else "fish"
     hl = head.lower()
     hl = SINGULAR.get(hl, hl)
-    grain = hl in GRAIN_HEADS or any(g in hl for g in ("rice", "pasta", "spaghetti", "macaroni", "noodle"))
+    rest = ", ".join(parts[1:]).lower()
+    grain = (hl in GRAIN_HEADS or any(re.search(r"\b" + g + r"\b", hl) for g in ("rice", "pasta", "spaghetti", "macaroni", "noodles?"))) \
+        and not re.search(r"\b(snap|string|green|yellow|wax|canned|refried|baked|squash|links|wasabi|cakes?|pudding|milk|bran|flour|crackers|chips|cereal|bread|salad|soup)\b", hl + " " + rest)
     method = dry = False
     quals = []
     for q in parts[1:]:
