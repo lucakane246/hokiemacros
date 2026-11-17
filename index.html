@@ -703,6 +703,15 @@ body.night #recCard{display:none!important}
 .msrow span{display:block;font-size:13px;color:var(--muted);font-weight:550;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .msrow em{font-style:normal;font-size:16px;font-weight:750;color:var(--text-2)}
 .mshint{font-size:14px;color:var(--text-2);margin:8px 0 4px}
+.qrow{padding:0!important;gap:0!important}
+.qrow .rhit{flex:1;min-width:0;display:flex;align-items:center;gap:12px;text-align:left;padding:13px 6px 13px 16px;font:inherit;color:inherit}
+.qrow .rhit:active{background:var(--surface-2)}
+.qrow:active{background:none}
+.qadd{flex-shrink:0;width:40px;height:40px;margin:0 12px 0 4px;border-radius:50%;display:grid;place-items:center;background:rgba(var(--acc),.16);color:var(--orange-hi);transition:background .15s,transform .15s}
+.qadd svg{transition:transform .2s}
+.qadd.done{background:#2f9e6b;color:#fff}.qadd.done svg{transform:rotate(45deg) scale(0)}
+.qadd.done::after{content:"";position:absolute;width:12px;height:7px;border-left:2.6px solid #fff;border-bottom:2.6px solid #fff;transform:translateY(-2px) rotate(-45deg)}
+.qadd{position:relative}.qadd.busy{opacity:.5}
 .rb.dk{background:rgba(168,85,247,.2);color:#d8b4fe}
 .drk{font-size:11.5px;font-weight:700;color:#d8b4fe;background:rgba(168,85,247,.16);padding:2px 7px;border-radius:99px;margin-left:6px;white-space:nowrap}
 </style>
@@ -1535,13 +1544,14 @@ function setAddTab(t){ addTab=t; const i=['all','vt','foods','rest'].indexOf(t);
   document.querySelectorAll('#addTabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t)); renderResults(); }
 let addTimer; function onAddInput(v){ addQ=v; clearTimeout(addTimer); addTimer=setTimeout(renderResults,90); }
 
-const srcLabel=f=>f.src==='F'?(f.b?esc(f.b):'fatsecret'):f.my?(f.b?esc(f.b):'My food'):f.vt?`${esc(f.b)} · ${esc(f.station)}`:f.b?esc(f.b):f.src==='V'?'USDA · as eaten':'USDA';
+const srcLabel=f=>f.src==='F'?(f.b?esc(f.b):'fatsecret'):f.my?(f.b?esc(f.b):'My food'):f.vt?`${esc(f.b)}${f.station?' · '+esc(f.station):''}`:f.b?esc(f.b):f.src==='V'?'USDA · as eaten':'USDA';
+const lastServOf=f=>{ const l=STORE.lastServ&&STORE.lastServ[foodKey(f)]; return l?{serv:{label:l.label,g:l.g},qty:l.qty||1}:null; };
 function resultRow(f,i){
-  const sv=defaultServing(f), n=per(f,sv);
+  const ls=lastServOf(f), sv=ls?ls.serv:defaultServing(f), n=per(f,sv,ls?ls.qty:1);
   const badge=f.my?'<span class="rb my">Mine</span>':f.vt?'<span class="rb vt">VT</span>':f.r?'<span class="rb rs">Restaurant</span>':'';
-  return `<button class="rrow" style="--d:${Math.min(i,12)*22}ms" onclick="openDetail(${i})">
-    <div class="rmain"><div class="rn">${esc(f.n)}</div><div class="rs2">${badge}${srcLabel(f)} · ${esc(sv.label)}</div></div>
-    <div class="rcal"><b>${n.cal??'–'}</b><span>cal</span></div></button>`;
+  return `<div class="rrow qrow" style="--d:${Math.min(i,12)*22}ms"><button class="rhit" onclick="openDetail(${i})">
+    <div class="rmain"><div class="rn">${esc(f.n)}</div><div class="rs2">${badge}${srcLabel(f)} · ${ls&&ls.qty!==1?+ls.qty.toFixed(2)+' × ':''}${esc(sv.label)}</div></div>
+    <div class="rcal"><b>${n.cal??'–'}</b><span>cal</span></div></button>${QBTN(i,f.n)}</div>`;
 }
 let lastResults=[];
 let venuePrefetched=false;
@@ -1611,6 +1621,33 @@ function openFsFood(x){
   fsFood(x.fsid).then(full=>{ const f=full&&fsToFood(full);
     if(f&&detail&&detail.f&&detail.f.fsid===x.fsid&&document.body.classList.contains('detail-open')&&!detail.entry){
       const qty=detail.qty; showDetail(f); if(qty!==1){ setQty(qty); } } });
+}
+
+
+// ---------- quick add: the + on a search/recent row logs it right away, with the serving you used last ----------
+const QBTN=(i,n)=>`<button class="qadd pressable" onclick="quickAdd(${i},this)" aria-label="Quick add ${esc(n)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>`;
+async function quickAdd(i,btn){
+  const x=lastResults[i]; if(!x) return; const date=addDate||todayISO(), meal=addMeal||mealNow();
+  if(builder&&builder.picking) return openDetail(i);                // building a meal: use the normal flow
+  let f=x;
+  if(x.items){ for(const it of x.items) addEntry(date,meal,it.f,it.serv,it.qty); return quickDone(btn,`${x.n} · ${fmtN(mealNut(x).cal)} cal`,meal,x.items.length); }
+  if(x.vr){ const [ri,si,ii,h]=x.venue, r=xRests(h)[ri], it=r.sections[si].items[ii];
+    if(it.k){ const k=it.g?Object.fromEntries(Object.entries(it.k).map(([a,v])=>[a,v*100/it.g])):it.k;
+      f={id:'xk'+ri+'_'+si+'_'+ii,n:it.n,b:r.name,k,u:menuServs(it,r.sections[si].name,it.g||100),nog:true,src:'X'}; }
+    else if(it.fs){ btn.classList.add('busy'); const ff=await fsCombo(it.fs); btn.classList.remove('busy');
+      if(!ff) return toast('Couldn’t load nutrition. Check your connection.');
+      const G=(ff.u&&ff.u[0]&&ff.u[0][1])||100; f={...ff,n:it.n,b:r.name,u:menuServs(it,r.sections[si].name,G),nog:true}; }
+    else return openDetail(i); }
+  const ls=lastServOf(f), serv=ls?ls.serv:defaultServing(f), qty=ls?ls.qty:1;
+  addEntry(date,meal,f,serv,qty);
+  quickDone(btn,`${f.n} · ${fmtN(per(f,serv,qty).cal||0)} cal`,meal,1);
+}
+function quickDone(btn,label,meal,n){
+  if(btn){ btn.classList.add('done'); setTimeout(()=>btn.classList.remove('done'),1300); }
+  try{ navigator.vibrate&&navigator.vibrate(8); }catch(e){}
+  const date=addDate||todayISO(), list=dayRec(date).meals[meal]||[], added=list.slice(-n).map(e=>e.id);
+  undoToast(`Added ${label} to ${meal}`,()=>{ for(const id of added) deleteEntry(id,true); });
+  if(!addQ.trim()) setTimeout(()=>{ if(document.body.classList.contains('add-open')&&!addQ.trim()) renderResults(); },1350);
 }
 
 // ---------- food detail ----------
@@ -1747,6 +1784,8 @@ function slimFood(f){ const {_h,...rest}=f; return rest; }
 function rememberRecent(f){ const k=foodKey(f); STORE.recent=[slimFood(f),...STORE.recent.filter(x=>foodKey(x)!==k)].slice(0,25); }
 function addEntry_(date,meal,f,serv,qty){
   const day=dayRec(date); (day.meals[meal]=day.meals[meal]||[]).push({id:uid(),f:slimFood(f),serv:{label:serv.label,g:serv.g},qty,at:Date.now()});
+  STORE.lastServ=STORE.lastServ||{}; STORE.lastServ[foodKey(f)]={label:serv.label,g:serv.g,qty};
+  const ks=Object.keys(STORE.lastServ); if(ks.length>300) delete STORE.lastServ[ks[0]];
   rememberRecent(f); saveStore(); refreshLog();
 }
 function addEntry(...a){ keepData(); return addEntry_(...a); }
@@ -2537,8 +2576,8 @@ function openMealLog(id){
       closeAdd(); undoToast(`Added ${ml.n} to ${m} · ${fmtN(t.cal)} cal`,()=>{ const d=dayRec(date); d.meals[m]=(d.meals[m]||[]).filter(e=>!ids.includes(e.id)); saveStore(); refreshLog(); }); }});
 }
 function myRow(x,i){
-  if(x.vr){ const c=venueCal(x); return `<button class="rrow" style="--d:${Math.min(i,12)*22}ms" onclick="openDetail(${i})"><div class="rmain"><div class="rn">${esc(x.n)}</div><div class="rs2"><span class="rb rs">Restaurant</span>${esc(x.b)}${x.where?' · '+esc(x.where):''}${x.build?' · build your own':''}</div></div><div class="rcal"><b>${c??'–'}</b><span>cal</span></div></button>`; }
-  if(x.items){ const t=mealNut(x); return `<button class="rrow" style="--d:${Math.min(i,12)*22}ms" onclick="openMealLog('${x.id}')"><div class="rmain"><div class="rn">${esc(x.n)}</div><div class="rs2"><span class="rb my">Meal</span>${x.items.length} item${x.items.length>1?'s':''}</div></div><div class="rcal"><b>${fmtN(t.cal)}</b><span>cal</span></div></button>`; }
+  if(x.vr){ const c=venueCal(x); return `<div class="rrow qrow" style="--d:${Math.min(i,12)*22}ms"><button class="rhit" onclick="openDetail(${i})"><div class="rmain"><div class="rn">${esc(x.n)}</div><div class="rs2"><span class="rb rs">Restaurant</span>${esc(x.b)}${x.where?' · '+esc(x.where):''}${x.build?' · build your own':''}</div></div><div class="rcal"><b>${c??'–'}</b><span>cal</span></div></button>${x.build?'':QBTN(i,x.n)}</div>`; }
+  if(x.items){ const t=mealNut(x); return `<div class="rrow qrow" style="--d:${Math.min(i,12)*22}ms"><button class="rhit" onclick="openMealLog('${x.id}')"><div class="rmain"><div class="rn">${esc(x.n)}</div><div class="rs2"><span class="rb my">Meal</span>${x.items.length} item${x.items.length>1?'s':''}</div></div><div class="rcal"><b>${fmtN(t.cal)}</b><span>cal</span></div></button>${QBTN(i,x.n)}</div>`; }
   return resultRow(x,i);
 }
 
