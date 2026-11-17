@@ -688,6 +688,21 @@ body.night .pin.sel svg path{fill:#fff}
 .nmaplink{font:inherit;font-size:14px;font-weight:750;color:var(--orange-hi);padding:8px 0}
 body.night #recCard{display:none!important}
 #nightBldg{position:absolute;left:0;top:0;display:none;pointer-events:none}body.night #nightBldg{display:block}
+.mealcard{cursor:pointer}
+.msring{position:relative;width:112px;height:112px;margin:6px auto 0}
+.msring .msc{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.msring .msc b{font-size:26px;font-weight:800;letter-spacing:-.5px;line-height:1}.msring .msc span{font-size:12.5px;color:var(--muted);font-weight:650}
+.msmac{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0 4px;text-align:center}
+.msmac em{display:block;font-style:normal;font-size:13px;font-weight:750}.msmac b{display:block;font-size:20px;font-weight:800;margin-top:2px}.msmac span{font-size:12.5px;color:var(--muted);font-weight:600}
+.msbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 6px}
+.msbtns button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:13px 8px;border-radius:16px;background:var(--surface-2);border:1px solid var(--hair);color:var(--orange-hi);font:inherit;font-size:14px;font-weight:750}
+.msbtns button:disabled{opacity:.4}
+.mslist{margin-top:8px;border-top:1px solid var(--hair)}
+.msrow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 2px;border-bottom:1px solid var(--hair);font:inherit;color:var(--text)}
+.msrow>div{flex:1;min-width:0}.msrow b{display:block;font-size:15.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msrow span{display:block;font-size:13px;color:var(--muted);font-weight:550;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msrow em{font-style:normal;font-size:16px;font-weight:750;color:var(--text-2)}
+.mshint{font-size:14px;color:var(--text-2);margin:8px 0 4px}
 .rb.dk{background:rgba(168,85,247,.2);color:#d8b4fe}
 .drk{font-size:11.5px;font-weight:700;color:#d8b4fe;background:rgba(168,85,247,.16);padding:2px 7px;border-radius:99px;margin-left:6px;white-space:nowrap}
 </style>
@@ -1788,10 +1803,38 @@ function renderMealCards(){
   const d=todayISO(), y=addDays(d,-1);
   $('mealCards').innerHTML=MEALS.map((m,i)=>{const list=entriesOf(d,m), t=mealTotals(d,m), yl=entriesOf(y,m);
     const sum=list.length?`${list.slice(0,2).map(e=>esc(e.f.n)).join(', ')}${list.length>2?` <span class="muted">+ ${list.length-2} more</span>`:''}`
-      :yl.length?`<button class="copyln" onclick="copyMeal('${y}','${d}','${m}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>Copy yesterday's ${m.toLowerCase()} · ${fmtN(mealTotals(y,m).cal)} cal</button>`
+      :yl.length?`<button class="copyln" onclick="event.stopPropagation();copyMeal('${y}','${d}','${m}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>Copy yesterday's ${m.toLowerCase()} · ${fmtN(mealTotals(y,m).cal)} cal</button>`
       :`<span class="muted">Nothing logged yet</span>`;
-    return `<div class="card rise" style="--i:${7+i}"><div class="mealrow">${micon(m)}<div><h3>${m}</h3><div class="meta">${list.length?fmtN(t.cal)+' cal':'Recommended ' + fmtN(STORE.goals.cal*{Breakfast:.25,Lunch:.3,Dinner:.35,Snacks:.1}[m])+' cal'}</div></div>
-      <button class="logbtn pressable" onclick="openAdd('${m}','${d}')">Log</button></div><div class="mealsum">${sum}</div></div>`}).join('');
+    return `<div class="card rise mealcard pressable" style="--i:${7+i}" role="button" tabindex="0" aria-label="${m} details" onclick="openMealSheet('${d}','${m}')"><div class="mealrow">${micon(m)}<div><h3>${m}</h3><div class="meta">${list.length?fmtN(t.cal)+' cal':'Recommended ' + fmtN(STORE.goals.cal*{Breakfast:.25,Lunch:.3,Dinner:.35,Snacks:.1}[m])+' cal'}</div></div>
+      <button class="logbtn pressable" onclick="event.stopPropagation();openAdd('${m}','${d}')">Log</button></div><div class="mealsum">${sum}</div></div>`}).join('');
+}
+
+
+// ---------- Meal sheet (tap a meal on Today) ----------
+let mealSheet=null;
+function openMealSheet(d,m){
+  mealSheet={d,m,view:'meal'};
+  openForm({title:m,sub:relDay(d),saveLabel:'Log food',body:'<div id="msBody"></div>',onOpen:renderMealSheet,
+    onSave:()=>{ setTimeout(()=>openAdd(m,d),320); }});
+}
+function renderMealSheet(){
+  const box=$('msBody'); if(!box||!mealSheet) return; const {d,m}=mealSheet, list=entriesOf(d,m), t=mealTotals(d,m);
+  if(mealSheet.view==='copy'){
+    const days=Array.from({length:14},(_,i)=>addDays(d,-(i+1))).filter(x=>entriesOf(x,m).length);
+    box.innerHTML=`<button class="vback" onclick="mealSheet.view='meal';renderMealSheet()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>${esc(m)}</button>
+      <p class="mshint">Copy ${m.toLowerCase()} from another day into ${relDay(d).toLowerCase()}.</p>
+      <div class="mslist">${days.length?days.map(x=>{const l=entriesOf(x,m);return `<button class="msrow" onclick="copyMeal('${x}','${d}','${m}');mealSheet.view='meal';renderMealSheet()"><div><b>${esc(relDay(x))}</b><span>${esc(l.slice(0,2).map(e=>e.f.n).join(', '))}${l.length>2?` + ${l.length-2} more`:''}</span></div><em>${fmtN(mealTotals(x,m).cal)}</em></button>`}).join(''):`<p class="muted" style="padding:14px 4px">No ${m.toLowerCase()} logged in the last two weeks.</p>`}</div>`;
+    return;
+  }
+  const kc={c:t.c*4,f:t.f*9,p:t.p*4}, tot=kc.c+kc.f+kc.p, pct=k=>tot?Math.round(kc[k]/tot*100):0;
+  const R=44, C=2*Math.PI*R; let off=0;
+  const arcs=tot?['c','f','p'].map(k=>{const len=kc[k]/tot*C, gap=len>6?3:0, a=`<circle cx="56" cy="56" r="${R}" fill="none" stroke="var(--${{c:'carb',f:'fat',p:'protein'}[k]})" stroke-width="9" stroke-dasharray="${Math.max(0,len-gap)} ${C}" stroke-dashoffset="${-off}" transform="rotate(-90 56 56)"/>`; off+=len; return a;}).join(''):'';
+  box.innerHTML=`<div class="msring"><svg width="112" height="112" viewBox="0 0 112 112" aria-hidden="true"><circle cx="56" cy="56" r="${R}" fill="none" stroke="var(--surface-3)" stroke-width="9"/>${arcs}</svg>
+      <div class="msc"><b>${fmtN(t.cal)}</b><span>cal</span></div></div>
+    <div class="msmac">${[['c','Carbs','carb'],['f','Fat','fat'],['p','Protein','protein']].map(([k,l,v])=>`<div><em style="color:var(--${v})">${pct(k)}%</em><b>${Math.round(t[k])} g</b><span>${l}</span></div>`).join('')}</div>
+    <div class="msbtns"><button class="pressable" onclick="mealSheet.view='copy';renderMealSheet()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>Copy from</button>
+      <button class="pressable" ${list.length?'':'disabled'} onclick="closeForm();setTimeout(()=>saveMealFrom('${d}','${m}'),320)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg>Save as meal</button></div>
+    <div class="mslist">${list.length?list.map(e=>{const n=entryNut(e);return `<button class="msrow" onclick="closeForm();setTimeout(()=>openEdit('${e.id}'),320)"><div><b>${esc(e.f.n)}</b><span>${esc(entrySub(e))}</span></div><em>${fmtN(n.cal||0)}</em></button>`}).join(''):`<p class="muted" style="padding:14px 4px">Nothing logged yet.</p>`}</div>`;
 }
 
 // ---------- Diary ----------
