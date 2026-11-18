@@ -168,6 +168,43 @@ def convert(food, source):
     return rec
 
 
+SIZE_RX = re.compile(r",?\s*(\d+ )?(small|medium|large|regular) (patty|patties)", re.I)
+SIZE_RANK = {"small": 0, "regular": 1, "medium": 1, "large": 2}
+
+
+def merge_sizes(foods):
+    """One food per dish: "Hamburger, on white bun, 1 small/medium/large patty" become one
+    "Hamburger, on white bun" whose servings are the sizes. Only merged when the foods match
+    per 100 g (within 3%), so the only real difference is the portion."""
+    groups = {}
+    for i, f in enumerate(foods):
+        m = SIZE_RX.search(f["n"])
+        if m:
+            base = (SIZE_RX.sub("", f["n"]).strip(" ,"), f.get("b", ""))
+            groups.setdefault(base, []).append((i, m.group(2).lower(), m.group(3).lower()))
+    drop = set()
+    for (base, _), members in groups.items():
+        if len(members) < 2:
+            continue
+        cals = [foods[i]["k"].get("cal") or 0 for i, _, _ in members]
+        if not min(cals) or max(cals) / min(cals) > 1.03:
+            continue
+        members.sort(key=lambda m: SIZE_RANK[m[1]])
+        keep = next((m for m in members if m[1] in ("medium", "regular")), members[0])[0]
+        servs = []
+        for i, size, word in members:
+            word = "patties" if word == "patties" else "patty"
+            for label, g in foods[i].get("u") or []:
+                if label == "1 serving":
+                    continue
+                servs.append([f"{label} ({size} {word})", g])
+        k = foods[keep]
+        k["n"] = base
+        k["u"] = servs
+        drop.update(i for i, _, _ in members if i != keep)
+    return [f for i, f in enumerate(foods) if i not in drop]
+
+
 def main():
     urls = latest_urls()
     groups, total = {}, 0
@@ -199,7 +236,8 @@ def main():
     for rec in groups.values():
         info = rec.pop("_info"); rec.pop("_orig", None)
         out.append(rec)
-    print(f"{total} USDA foods -> {len(out)} after cleaning names and removing cooking-style duplicates")
+    out = merge_sizes(out)
+    print(f"{total} USDA foods -> {len(out)} after cleaning names and removing cooking-style and size duplicates")
     if len(out) < 1000:
         print("Too few foods came back; keeping the previous file.", file=sys.stderr)
         sys.exit(1)

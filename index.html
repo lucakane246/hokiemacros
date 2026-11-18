@@ -1166,12 +1166,45 @@ function sampleData(){
   return D;
 }
 
+
+// VT lists each size as its own item ("12 oz Latte", "16 oz Latte", "Iced Latte Medium", "Iced Latte Large").
+// Within a station, fold those into one item whose sizes are its servings (x.z = [[label,id],...], x.zd = default).
+const VT_SIZE=[[/^(\d+)\s?oz\s+(.+)$/i,m=>[m[2],m[1]+' oz',+m[1]]],[/^(.+?),?\s+(small|medium|large)$/i,m=>[m[1],m[2],0]],
+  [/^(small|medium|large)\s+(.+)$/i,m=>[m[2],m[1],0]],[/^(.+?),\s*small plate$/i,m=>[m[1],'Small plate',1]],[/^half basket\s+(.+)$/i,m=>[m[1],'Half basket',1]]];
+const SZ_RANK={small:1,medium:2,regular:2,large:3};
+function vtSizeOf(n){ for(const [re,fn] of VT_SIZE){ const m=String(n).trim().match(re); if(m){ const [base,l,o]=fn(m); return {base:base.trim(),l:l[0].toUpperCase()+l.slice(1).toLowerCase(),r:o||SZ_RANK[l.toLowerCase()]||2}; } } return null; }
+function mergeVtSizes(D){
+  if(!D||!D.menus||D._merged) return; D._merged=1;
+  const key=n=>n.toLowerCase().replace(/[^a-z0-9]/g,'');
+  for(const days of Object.values(D.menus)) for(const meals of Object.values(days)) for(const m of meals) for(const s of m.sections){
+    const groups=new Map();
+    s.items.forEach(id=>{ const x=D.items[id]; if(!x) return; const z=vtSizeOf(x.n), k=key(z?z.base:x.n);
+      if(!groups.has(k)) groups.set(k,[]); groups.get(k).push({id,x,z}); });
+    const drop=new Set();
+    for(const g of groups.values()){
+      if(g.length<2||!g.some(e=>e.z)) continue;
+      g.forEach(e=>{ if(!e.z) e.z={base:e.x.n,l:'Regular',r:SZ_RANK.regular}; });
+      g.sort((a,b)=>a.z.r-b.z.r);
+      const keep=(g.find(e=>/^(medium|regular)$/i.test(e.z.l))||g[0]);
+      if(!keep.x.z){ keep.x.z=g.map(e=>[e.z.l,e.id]); keep.x.zd=keep.z.l; keep.x.zn=g.filter(e=>e.z.l!=='Regular').map(e=>e.z.base).sort((a,b)=>b.length-a.length)[0]||keep.x.n; }
+      g.forEach(e=>{ if(e!==keep) drop.add(e.id); });
+    }
+    if(drop.size) s.items=s.items.filter(id=>!drop.has(id));
+  }
+}
+const vtName=x=>x.zn||x.n;
+const vtK=x=>({cal:x.cal,p:x.p,c:x.c,f:x.f,fib:x.fib,sug:x.sug,sod:x.sod});
+// size servings for a merged VT item (nothing for ordinary items)
+function vtSizes(x){ if(!x.z) return {};
+  const sk={}; for(const [l,id] of x.z){ const y=DATA.items[id]; if(y) sk[l]=vtK(y); }
+  return {u:x.z.filter(([l])=>sk[l]).map(([l])=>[l,100]),sk,du:x.zd,nog:1}; }
 async function loadData(){
   try{
     const r=await fetchLive('data/dining.json');
     if(!r.ok) throw 0;
     DATA=await r.json(); LIVE=true;
   }catch(e){ DATA=sampleData(); LIVE=false; }
+  try{ mergeVtSizes(DATA); }catch(e){}
   try{ const v=await fetchLive('data/venues.json'); if(v.ok) VENUES=await v.json(); }catch(e){}
   // get everything a tap might need ready in the background, so taps never wait
   setTimeout(()=>{ try{ fsWarm(); prefetchVenueNutrition(); loadFoods(); }catch(e){} },1200);
@@ -1403,7 +1436,7 @@ function foodRow(id){
   const x=DATA.items[id]; if(!x) return ''; const bad=conflicts(x.t,x.a);
   const tag=(x.t||[]).includes('vegan')?'<span class="vtag">Vegan</span>':(x.t||[]).includes('vegetarian')?'<span class="vtag">Vegetarian</span>':'';
   const nut=x.cal!=null?`<div class="mm"><span><b style="color:var(--protein)">P</b>${x.p??'–'}g</span><span><b style="color:var(--carb)">C</b>${x.c??'–'}g</span><span><b style="color:var(--fat)">F</b>${x.f??'–'}g</span>${tag}</div>`:(tag?`<div class="mm">${tag}</div>`:'');
-  return `<div class="food${bad.length?' nomatch':''}"><div><div class="nm">${esc(x.n)}</div>${bad.length?`<div class="badl">${esc(bad.join(' · '))}</div>`:''}<div class="kc">${x.cal!=null?x.cal+' cal · ':''}${esc(x.s)}${(()=>{const pr=!AYCE.has(hall)&&priceOf(hall,id);return pr?` · <span class="pr">${money(pr.p)}</span>`:''})()}</div>${nut}</div>
+  return `<div class="food${bad.length?' nomatch':''}"><div><div class="nm">${esc(vtName(x))}</div>${bad.length?`<div class="badl">${esc(bad.join(' · '))}</div>`:''}<div class="kc">${x.cal!=null?x.cal+' cal · ':''}${esc(x.z?x.z.map(z=>z[0]).join(' · '):x.s)}${(()=>{const pr=!AYCE.has(hall)&&priceOf(hall,id);return pr?` · <span class="pr">${money(pr.p)}</span>`:''})()}</div>${nut}</div>
     <button class="plus" data-id="${id}" onclick="openDiningItem('${id}')" aria-label="Add ${esc(x.n)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>`;
 }
 function renderMenu(){
@@ -1499,7 +1532,7 @@ function diningIndex(){
     const meals=days[d]||days[DATA.menuDays[0]]||[];
     for(const m of meals) for(const s of m.sections) for(const id of s.items){
       const x=DATA.items[id]; if(!x||x.cal==null||seen.has(id)) continue;
-      seen.set(id,{id,n:x.n,b:VENUE[num]||'',hall:num,station:s.name,k:{cal:x.cal,p:x.p,c:x.c,f:x.f,fib:x.fib,sug:x.sug,sod:x.sod},serving:x.s,vt:1,tags:x.t||[],al:x.a||'',_h:norm(x.n+' '+(VENUE[num]||''))});
+      seen.set(id,{id,n:vtName(x),b:VENUE[num]||'',hall:num,station:s.name,k:vtK(x),serving:x.s,vt:1,tags:x.t||[],al:x.a||'',...vtSizes(x),_h:norm(vtName(x)+' '+(VENUE[num]||''))});
     }
   }
   const v=[...seen.values()]; diningIndex.cache={k:DATA.updated+d,v}; return v;
@@ -1552,7 +1585,7 @@ function searchFoods(q,tab){
 
 function defaultServing(f){
   if(f.my) return {label:f.serving||'1 serving',g:null};
-  if(f.vt) return {label:f.serving||'1 serving',g:null,mult:1};
+  if(f.vt&&!f.sk) return {label:f.serving||'1 serving',g:null,mult:1};
   const u=(f.du&&f.u&&f.u.find(x=>x[0]===f.du))||(f.u&&f.u[0]);
   return u?{label:u[0],g:u[1]}:{label:'100 g',g:100};
 }
@@ -1684,12 +1717,12 @@ function openDetail(i){ const x=lastResults[i]; if(x.items) return openMealLog(x
 function openDiningItem(id,h){
   const x=DATA.items[id]; if(!x) return; h=h||hall;
   // always tie the item to the hall it was opened from (the same dish can be on several menus)
-  const base=diningIndex().find(d=>d.id===id)||{id,n:x.n,station:'',k:{cal:x.cal,p:x.p,c:x.c,f:x.f,fib:x.fib,sug:x.sug,sod:x.sod},serving:x.s,vt:1,tags:x.t||[],al:x.a||''};
+  const base=diningIndex().find(d=>d.id===id)||{id,n:vtName(x),station:'',k:vtK(x),serving:x.s,vt:1,tags:x.t||[],al:x.a||'',...vtSizes(x)};
   const f={...base,hall:h,b:VENUE[h]||base.b,station:base.hall===h?base.station:''};
   addMeal=mealNow(); addDate=todayISO();
   showDetail(f,{standalone:true});
 }
-const buildServs=f=>f.my?myServs(f):f.vt?[{label:f.serving||'1 serving',g:null}]:f.nog?(f.u||[]).map(([label,g])=>({label,g})):[...(f.u||[]).map(([label,g])=>({label,g})),{label:'100 g',g:100},{label:'1 oz',g:28.35},{label:'1 g',g:1}];
+const buildServs=f=>f.my?myServs(f):f.sk?(f.u||[]).map(([label,g])=>({label,g})):f.vt?[{label:f.serving||'1 serving',g:null}]:f.nog?(f.u||[]).map(([label,g])=>({label,g})):[...(f.u||[]).map(([label,g])=>({label,g})),{label:'100 g',g:100},{label:'1 oz',g:28.35},{label:'1 g',g:1}];
 function showDetail(f,opts={}){
   const servs=buildServs(f);
   let si=f.du?Math.max(0,servs.findIndex(x=>x.label===f.du)):0, qty=1, meal=addMeal;
