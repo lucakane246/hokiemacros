@@ -42,6 +42,7 @@
   <h2>What is sent off your phone</h2>
   <ul>
     <li><b>Food searches.</b> When you search for a brand or restaurant food, the search text (for example "big mac") goes to our small server (a Google Apps Script) and on to FatSecret, which provides the nutrition data. Results may be cached on the server for a few hours so repeat searches are fast. Searches aren't tied to you or your device.</li>
+    <li><b>AI meal scans.</b> If you use AI scan, the photo you take or pick is shrunk and sent through our server to Google's Gemini AI, which identifies the foods and estimates nutrition. Gobble doesn't save the photo; it's used only to answer that request. Google processes it under the <a href="https://ai.google.dev/gemini-api/terms">Gemini API terms</a>. The random app ID is sent along only to limit how many scans one phone can do per day. Only point the camera at food.</li>
     <li><b>Price reports.</b> If you choose to report a price, Gobble sends the item, the price, the dining location and a random ID created by the app. The random ID is used only to stop spam and duplicate reports; it isn't connected to your name, your Apple ID, or your diary. Reports are reviewed by a student moderator and stored in a Google Sheet.</li>
     <li><b>Menus, hours and how busy gyms are.</b> The app downloads public dining menus, hours and gym occupancy. These downloads don't include anything about you.</li>
   </ul>

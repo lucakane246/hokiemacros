@@ -564,6 +564,21 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 /* ---------- my foods & meals ---------- */
 .rb.my{background:rgba(95,203,143,.15);color:var(--green)}
 .mkrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:2px 0 6px}
+.aibtn{width:100%;margin:0 0 6px;color:#E97BA2;background:linear-gradient(135deg,rgba(180,70,108,.16),rgba(155,140,240,.14));border-color:rgba(233,123,162,.3)}
+.aiwarn{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:14px;background:rgba(242,169,91,.12);border:1px solid rgba(242,169,91,.35);color:#F2A95B}
+.aiwarn p{margin:0;color:var(--text);font-size:15px;font-weight:650;line-height:1.4}.aiwarn svg{flex:none}
+.aithumb{position:relative;height:180px;border-radius:16px;background:center/cover var(--surface-3);overflow:hidden}
+.aithumb.busy::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.25)}
+.aithumb i{position:absolute;left:0;right:0;height:3px;background:#E97BA2;box-shadow:0 0 14px 3px rgba(233,123,162,.7);z-index:1;animation:aiscan 1.6s ease-in-out infinite alternate}
+@keyframes aiscan{from{top:6%}to{top:92%}}
+.aitot{display:flex;align-items:baseline;gap:6px;margin:14px 2px 4px}.aitot b{font-size:30px;font-weight:800}.aitot span{color:var(--muted);font-weight:650}.aitot em{margin-left:auto;font-style:normal;color:var(--text-2);font-weight:650;font-size:14px}
+.aiitem{display:flex;gap:12px;padding:12px 2px;border-bottom:1px solid var(--hair)}.aiitem.off .aiinfo{opacity:.45}
+.aichk{flex:none;width:26px;height:26px;border-radius:8px;border:2px solid var(--orange);background:var(--orange);color:#fff;display:grid;place-items:center;margin-top:2px}
+.aiitem.off .aichk{background:transparent;border-color:var(--hair-2)}
+.aiinfo{flex:1;min-width:0}.aiinfo b{display:block;font-size:15.5px;font-weight:700}.aiinfo>span{display:block;font-size:13px;color:var(--muted);font-weight:550;margin-top:2px}
+.ailow{font-size:11px;font-weight:750;color:#F2A95B;background:rgba(242,169,91,.14);padding:2px 6px;border-radius:6px;vertical-align:2px}
+.aimult{display:flex;gap:6px;margin-top:8px}.aimult button{padding:5px 10px;border-radius:999px;border:1px solid var(--hair-2);background:var(--surface);color:var(--text-2);font:inherit;font-size:12.5px;font-weight:700}
+.aimult button.on{background:var(--orange);border-color:var(--orange);color:#fff}
 .mkbtn{display:flex;align-items:center;justify-content:center;gap:8px;height:48px;border-radius:14px;background:var(--surface);border:1px solid var(--hair);color:var(--orange-hi);font:inherit;font-size:14.5px;font-weight:750}
 .cfcal{margin-top:2px}
 .linkdanger{font:inherit;font-size:13.5px;font-weight:700;color:var(--fat);padding:4px 0;align-self:center}
@@ -1563,7 +1578,7 @@ function renderResults(){
     const tips=['banana','eggs','chicken breast','olive oil','oatmeal','McChicken','burrito','pizza'];
     const picking=builder&&builder.picking, meals=picking?[]:STORE.myMeals.slice(0,8), foods=STORE.myFoods.slice(0,8), recent=STORE.recent.filter(x=>!(x.my&&foods.some(f=>f.id===x.id))).slice(0,12);
     lastResults=[...meals,...foods,...recent]; let off=0; const sec=(title,arr)=>{const h=arr.length?`<div class="station">${title}</div><div class="card list0 rlist">${arr.map((x,j)=>myRow(x,off+j)).join('')}</div>`:''; off+=arr.length; return h;};
-    box.innerHTML=`<div class="mkrow"><button class="mkbtn pressable" onclick="openFoodForm()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Create food</button>${picking?'':`<button class="mkbtn pressable" onclick="builder=null;openMealBuilder()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13h16a8 8 0 0 1-16 0zM9 9V5M15 9V5"/></svg>Create meal</button>`}</div>`
+    box.innerHTML=`<div class="mkrow"><button class="mkbtn pressable" onclick="openFoodForm()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Create food</button>${picking?'':`<button class="mkbtn pressable" onclick="builder=null;openMealBuilder()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13h16a8 8 0 0 1-16 0zM9 9V5M15 9V5"/></svg>Create meal</button>`}</div>${picking?'':`<button class="mkbtn aibtn pressable" onclick="aiScan(addMeal,addDate)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3.2"/></svg>Scan a meal with AI</button>`}`
       +sec('My meals',meals)+sec('My foods',foods)+sec('Recent',recent)
       +(lastResults.length?'':'')
       +`<div class="ahint" style="padding-top:18px"><h4>${lastResults.length?'Or try':'Search VT dining, everyday foods and restaurants'}</h4>
@@ -2677,13 +2692,75 @@ function openAbout(){document.body.classList.add('about-open')}
 function closeAbout(){document.body.classList.remove('about-open')}
 
 // ---------- sheet + toast ----------
-const OPTS=[['Search food','#EE8A3C','M4 13h16a8 8 0 0 1-16 0zM12 9V5'],['Scan','#B4466C','M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2M7 12h10'],['Water','#69C3B2','M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z'],['Exercise','#E26D8F','M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z'],['Weight','#F2A95B','M5 20h14l-2-12H7zM9 8a3 3 0 0 1 6 0'],['Quick add','#9b8cf0','M13 3 4 14h7l-1 7 9-11h-7z']];
-$('opts').innerHTML=OPTS.map((o,k)=>`<button class="opt" style="--k:${k}" onclick="toggleSheet(false);${['openAdd()',"toast('Barcode scanning is coming soon')",'addWater()','openExercise()','openWeight()','openQuickAdd()'][k]}"><span class="oi" style="background:${o[1]}26"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${o[1]}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${o[2]}"/></svg></span>${o[0]}</button>`).join('');
+
+// ---------- AI meal scan ----------
+const AI_NOTE='AI scans are not always accurate. For accurate tracking, track manually.';
+let ai=null;
+function aiScan(meal,date){
+  ai={meal:meal||(document.body.classList.contains('add-open')?addMeal:mealNow()),date:date||(document.body.classList.contains('add-open')?addDate:todayISO())};
+  if(!STORE.aiNoted){
+    openForm({title:'Scan with AI',sub:'Snap your plate and get an estimate',saveLabel:'Got it',
+      body:`<div class="aiwarn"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20zM12 10v4M12 17.5v.01"/></svg><p>${AI_NOTE}</p></div>
+        <p class="fnote" style="margin-top:12px">Your photo is sent to Google’s Gemini AI to identify the food and isn’t saved by Gobble. You can review and change everything before it’s logged.</p>`,
+      onSave:()=>{ STORE.aiNoted=true; saveStore(); setTimeout(aiPick,340); }});
+    return;
+  }
+  aiPick();
+}
+function aiPick(){
+  let inp=$('aiFile'); if(!inp){ inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.id='aiFile'; inp.style.display='none';
+    inp.onchange=()=>{ const f=inp.files&&inp.files[0]; inp.value=''; if(f) aiSend(f); }; document.body.appendChild(inp); }
+  inp.click();
+}
+function aiShrink(file){ return new Promise((res,rej)=>{ const url=URL.createObjectURL(file), im=new Image();
+  im.onload=()=>{ const M=1024, r=Math.min(1,M/Math.max(im.width,im.height)), c=document.createElement('canvas'); c.width=Math.round(im.width*r); c.height=Math.round(im.height*r);
+    c.getContext('2d').drawImage(im,0,0,c.width,c.height); URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg',0.75)); };
+  im.onerror=()=>{ URL.revokeObjectURL(url); rej(new Error('img')); }; im.src=url; }); }
+async function aiSend(file){
+  let data; try{ data=await aiShrink(file); }catch(e){ toast("Couldn't read that photo"); return; }
+  ai.thumb=data; ai.items=null;
+  openForm({title:'Scanning…',sub:relDay(ai.date)+' · '+ai.meal,saveLabel:'Log selected',body:'<div id="aiBody"></div>',onOpen:aiRender,onSave:aiLog});
+  try{
+    if(!PRICE_API) throw {code:'not-configured'};
+    const r=await fetch(PRICE_API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify({ai:'scan',image:data.split(',')[1],device:STORE.device})}).then(r=>r.json());
+    if(!r||!r.ok) throw {code:(r&&r.error)||'error',limit:r&&r.limit};
+    ai.items=r.items.map(x=>({...x,on:true,mult:1})); ai.note=r.note||'';
+  }catch(e){ ai.err=e&&e.code?e.code:'network'; ai.limit=e&&e.limit; }
+  if(formCfg&&formCfg.onSave===aiLog){ $('fTitle').textContent=ai.err?'Scan didn’t work':'Here’s what we see'; aiRender(); }
+}
+function aiRender(){
+  const box=$('aiBody'); if(!box) return;
+  const thumb=`<div class="aithumb${ai.items||ai.err?'':' busy'}" style="background-image:url(${ai.thumb})">${ai.items||ai.err?'':'<i></i>'}</div>`;
+  if(ai.err){ const msg={'not-configured':'AI scan isn’t set up yet. Check back soon.',limit:`You’ve used today’s ${ai.limit||''} AI scans. They reset tomorrow.`,network:'Couldn’t reach the server. Check your connection and try again.'}[ai.err]||'The AI couldn’t read this photo. Try again or log it manually.';
+    box.innerHTML=thumb+`<div class="empty card" style="margin-top:12px">${msg}<button class="logbtn" style="margin:10px auto 0" onclick="closeForm();setTimeout(aiPick,320)">Try another photo</button></div>`; return; }
+  if(!ai.items){ box.innerHTML=thumb+`<p class="fnote" style="text-align:center;margin-top:12px">Identifying foods and estimating portions…</p>`; return; }
+  if(!ai.items.length){ box.innerHTML=thumb+`<div class="empty card" style="margin-top:12px">No food found in this photo.${ai.note?`<span>${esc(ai.note)}</span>`:''}<button class="logbtn" style="margin:10px auto 0" onclick="closeForm();setTimeout(aiPick,320)">Try another photo</button></div>`; return; }
+  const sel=ai.items.filter(x=>x.on), t=sel.reduce((a,x)=>{ for(const k of ['cal','p','c','f']) a[k]+=x[k]*x.mult; return a; },{cal:0,p:0,c:0,f:0});
+  const M=[[.5,'½×'],[1,'1×'],[1.5,'1½×'],[2,'2×']];
+  box.innerHTML=thumb+`<div class="aitot"><b>${Math.round(t.cal)}</b><span>cal</span><em>${Math.round(t.p)}P · ${Math.round(t.c)}C · ${Math.round(t.f)}F</em></div>`
+    +ai.items.map((x,i)=>`<div class="aiitem${x.on?'':' off'}"><button class="aichk" onclick="ai.items[${i}].on=!ai.items[${i}].on;aiRender()" aria-label="Include ${esc(x.name)}">${x.on?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>':''}</button>
+      <div class="aiinfo"><b>${esc(x.name)}${x.confidence&&x.confidence<.5?' <span class="ailow">unsure</span>':''}</b><span>${esc(x.portion)} · ${Math.round(x.cal*x.mult)} cal · ${Math.round(x.p*x.mult)}P ${Math.round(x.c*x.mult)}C ${Math.round(x.f*x.mult)}F</span>
+      <div class="aimult">${M.map(([m,l])=>`<button class="${x.mult===m?'on':''}" onclick="ai.items[${i}].mult=${m};aiRender()">${l}</button>`).join('')}</div></div></div>`).join('')
+    +`<p class="fnote" style="margin-top:12px">${ai.note?esc(ai.note)+' ':''}${AI_NOTE}</p>`;
+}
+function aiLog(){
+  if(!ai||!ai.items){ if(ai&&ai.err) return; toast('Still scanning…'); return false; }
+  const sel=ai.items.filter(x=>x.on); if(!sel.length){ toast('Pick at least one food'); return false; }
+  for(const x of sel){ const g=x.grams>0?x.grams:100, sc=100/g;
+    const f={id:'ai:'+x.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,40),n:x.name,b:'AI scan',src:'A',ai:true,
+      k:{cal:x.cal*sc,p:x.p*sc,c:x.c*sc,f:x.f*sc},u:[[x.portion,g]]};
+    addEntry(ai.date,ai.meal,f,{label:x.portion,g},x.mult); }
+  toast(`Logged ${sel.length} item${sel.length>1?'s':''} to ${ai.meal}`);
+}
+const OPTS=[['Search food','#EE8A3C','M4 13h16a8 8 0 0 1-16 0zM12 9V5'],['AI scan','#B4466C','M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2M7 12h10'],['Water','#69C3B2','M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z'],['Exercise','#E26D8F','M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z'],['Weight','#F2A95B','M5 20h14l-2-12H7zM9 8a3 3 0 0 1 6 0'],['Quick add','#9b8cf0','M13 3 4 14h7l-1 7 9-11h-7z']];
+$('opts').innerHTML=OPTS.map((o,k)=>`<button class="opt" style="--k:${k}" onclick="toggleSheet(false);${['openAdd()',"aiScan()",'addWater()','openExercise()','openWeight()','openQuickAdd()'][k]}"><span class="oi" style="background:${o[1]}26"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${o[1]}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${o[2]}"/></svg></span>${o[0]}</button>`).join('');
 function toggleSheet(on){ document.body.classList.toggle('sheet-open',on); }
 let tt; function toast(m){const t=$('toast');t.classList.remove('has-undo');undoFn=null;t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1800)}
 
 // first paint
-refreshLog(); renderProfile(); afterPrefs(); renderInstallCard(); $('v-today').classList.add('active'); requestAnimationFrame(()=>enter($('v-today')));
+refreshLog(); renderProfile(); afterPrefs(); renderInstallCard();
+if(!STORE.onboarded){ STORE.onboarded=true; saveStore(); if(!(STORE.profile&&STORE.profile.setup)&&!Object.values(STORE.days||{}).some(d=>Object.values(d.meals||{}).some(l=>l.length)||(d.exercise||[]).length||d.water)) setTimeout(openGoals,700); } $('v-today').classList.add('active'); requestAnimationFrame(()=>enter($('v-today')));
 function onData(){ try{renderRec()}catch(e){}
   renderHallCards(); hall='15'; mealIdx=pickMealFor(hall); renderDining(); refreshPins(); if(popIdx>=0) openPop(popIdx);
   const t=DATA.updated?new Date(DATA.updated):null;

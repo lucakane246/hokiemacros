@@ -83,6 +83,8 @@ function approvedPrices_() {
 }
 
 function doPost(e) {
+  // AI meal scan: no lock needed, it doesn't touch the sheets
+  try { const peek = JSON.parse(e.postData.contents); if (peek && peek.ai === 'scan') return json_(aiScan_(peek)); } catch (err) {}
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(10000)) return json_({ ok: false, error: 'busy' });
   try {
@@ -282,4 +284,72 @@ function foodsBatch_(idList, key, secret) {
     if (Object.keys(put).length) cache.putAll(put, 21600);
   }
   return { ok: true, foods: out };
+}
+
+
+// ---------------- AI meal scan (Gemini vision) ----------------
+// Setup: Project Settings > Script Properties > add GEMINI_KEY (from aistudio.google.com).
+// Optional: GEMINI_MODEL (default gemini-flash-latest), AI_DAILY_LIMIT (scans per phone per day, default 25).
+// Photos are sent to Gemini for this one request and are never stored here.
+const AI_PROMPT = [
+  'You are a nutrition assistant inside a college dining hall calorie tracker.',
+  'Look at the photo and list every distinct food and drink you can see, as eaten (cooked).',
+  'For each, estimate the visible portion and its nutrition for THAT portion.',
+  'Use common US serving language for the portion (e.g. "1 cup", "2 slices", "1 burger", "6 oz").',
+  'If a dining hall or restaurant item is recognizable, use typical values for it.',
+  'confidence is 0 to 1 for how sure you are of the food AND the amount.',
+  'If there is no food in the photo, return an empty items list and say why in note.',
+  'Respond with JSON only, exactly this shape:',
+  '{"items":[{"name":"Grilled chicken breast","portion":"1 breast (about 5 oz)","grams":140,"cal":230,"p":43,"c":0,"f":5,"confidence":0.7}],"note":"short optional note"}'
+].join('\n');
+
+function aiScan_(req) {
+  const props = PropertiesService.getScriptProperties();
+  const key = props.getProperty('GEMINI_KEY');
+  if (!key) return { ok: false, error: 'not-configured' };
+  const img = String(req.image || '');
+  if (!img || img.length > 2500000) return { ok: false, error: 'bad-image' };
+  // per-phone daily limit so one person can't run up the quota
+  const limit = Number(props.getProperty('AI_DAILY_LIMIT')) || 25;
+  const dev = String(req.device || 'anon').slice(0, 40), day = Utilities.formatDate(new Date(), 'America/New_York', 'yyyyMMdd');
+  const cache = CacheService.getScriptCache(), ck = 'ai:' + dev + ':' + day, used = Number(cache.get(ck)) || 0;
+  if (used >= limit) return { ok: false, error: 'limit', limit: limit };
+  cache.put(ck, String(used + 1), 21600);
+
+  const model = props.getProperty('GEMINI_MODEL') || 'gemini-flash-latest';
+  const hint = String(req.hint || '').slice(0, 200);
+  const body = {
+    contents: [{ parts: [
+      { text: AI_PROMPT + (hint ? '\nThe user says: ' + hint : '') },
+      { inline_data: { mime_type: 'image/jpeg', data: img } }
+    ] }],
+    generationConfig: { responseMimeType: 'application/json', temperature: 0.2 }
+  };
+  const res = UrlFetchApp.fetch('https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent', {
+    method: 'post', contentType: 'application/json', headers: { 'x-goog-api-key': key },
+    payload: JSON.stringify(body), muteHttpExceptions: true
+  });
+  if (res.getResponseCode() !== 200) return { ok: false, error: 'ai-' + res.getResponseCode(), detail: res.getContentText().slice(0, 200) };
+  let out;
+  try {
+    const j = JSON.parse(res.getContentText());
+    const text = j.candidates[0].content.parts.map(function (p) { return p.text || ''; }).join('');
+    out = JSON.parse(text.replace(/^```(?:json)?|```$/g, '').trim());
+  } catch (err) { return { ok: false, error: 'ai-parse' }; }
+  const num = function (v) { v = Number(v); return isFinite(v) && v >= 0 ? Math.round(v * 10) / 10 : 0; };
+  const items = (out.items || []).slice(0, 12).map(function (x) {
+    return { name: String(x.name || 'Food').slice(0, 80), portion: String(x.portion || '1 serving').slice(0, 60), grams: num(x.grams),
+      cal: Math.round(num(x.cal)), p: num(x.p), c: num(x.c), f: num(x.f), confidence: Math.min(1, num(x.confidence)) };
+  }).filter(function (x) { return x.cal > 0 || x.p || x.c || x.f; });
+  return { ok: true, items: items, note: String(out.note || '').slice(0, 200), left: limit - used - 1 };
+}
+
+// Run from the editor once after adding GEMINI_KEY: checks the key and model work (text only).
+function testGemini() {
+  const props = PropertiesService.getScriptProperties();
+  const model = props.getProperty('GEMINI_MODEL') || 'gemini-flash-latest';
+  const res = UrlFetchApp.fetch('https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent', {
+    method: 'post', contentType: 'application/json', headers: { 'x-goog-api-key': props.getProperty('GEMINI_KEY') || '' },
+    payload: JSON.stringify({ contents: [{ parts: [{ text: 'Reply with the word ok.' }] }] }), muteHttpExceptions: true });
+  Logger.log(res.getResponseCode() + ' ' + res.getContentText().slice(0, 300));
 }
