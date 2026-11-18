@@ -1008,7 +1008,7 @@ body.night #recCard{display:none!important}
 <section class="addscreen goalscreen" id="goalscreen" aria-label="Goals">
   <div class="addtop">
     <button class="iconbtn" onclick="closeGoals()" aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-    <h2>Goals</h2><span style="width:40px"></span>
+    <h2 id="goalsTitle">Goals</h2><span style="width:40px"></span>
   </div>
   <div class="card ghero">
     <div class="label">Daily calorie goal</div>
@@ -2167,9 +2167,13 @@ function openGoals(){
   G={name:pr.name||'',sex:pr.sex||'',age:pr.age||'',ft:pr.ft||'',inch:pr.inch??'',weightLb:latestWeight()||'',
      act:pr.act||1.375,goal:pr.goal||'maintain',rate:pr.rate||1,macros:pr.macros||'balanced',
      mc:pr.mc||50,mp:pr.mp||20,mf:pr.mf||30,gp:pr.gp??STORE.goals.p,gc:pr.gc??STORE.goals.c,gf:pr.gf??STORE.goals.f,manual:!!pr.manual,manualCal:pr.manualCal||STORE.goals.cal,water:STORE.goals.water};
+  $('goalsTitle').textContent=onb===1?'Step 1 of 2 · Goals':'Goals';
   renderGoalsForm(); document.body.classList.add('goals-open'); $('goalscreen').scrollTop=0;
 }
-function closeGoals(){ document.body.classList.remove('goals-open'); document.activeElement&&document.activeElement.blur(); }
+let onb=0;   // first-launch setup: 1 = goals, 2 = diet & allergies
+function startOnboarding(){ onb=1; openGoals(); }
+function closeGoals(){ document.body.classList.remove('goals-open'); document.activeElement&&document.activeElement.blur();
+  if(onb===1){ onb=2; setTimeout(()=>openPrefs(true),420); } }
 
 const pills=(key,opts,cur)=>`<div class="mchips gpills">${opts.map(([v,l])=>`<button class="mchip ${String(v)===String(cur)?'on':''}" onclick="gSet('${key}','${v}')">${l}</button>`).join('')}</div>`;
 function renderGoalsForm(){
@@ -2311,14 +2315,14 @@ function prefsSummary(){
   if(p.avoid.length) parts.push('No '+p.avoid.map(a=>ALG_LABEL[a].toLowerCase()).join(', '));
   return parts.join(' · ');
 }
-function openPrefs(){
+function openPrefs(first){ if(!first) onb=0;
   let diet=STORE.prefs.diet, avoid=[...STORE.prefs.avoid];
   const body=()=>`
     <div class="field"><span>Diet</span><div class="mchips gpills" id="pfDiet">${DIETS.map(([k,l])=>`<button class="mchip ${k===diet?'on':''}" onclick="pfDiet('${k}')">${l}</button>`).join('')}</div></div>
     <div class="field"><span>Avoid</span><div class="mchips gpills pfal" id="pfAvoid">${ALLERGENS.map(([k,l])=>`<button class="mchip ${avoid.includes(k)?'on':''}" onclick="pfAvoid('${k}')">${l}</button>`).join('')}</div></div>
     <p class="fnote">Uses VT Dining’s own labels and hides anything that doesn’t match on the Dining tab and in search. Dining halls share kitchens, so cross-contact is possible. With a serious allergy, ask the staff or email VT Dining’s dietitians at yes@vt.edu.</p>`;
-  openForm({title:'Diet & allergies',sub:'Filters VT Dining menus',body:body(),saveLabel:'Save',
-    onSave:()=>{ STORE.prefs={diet,avoid}; saveStore(); showHidden=false; diningIndex.cache=null; afterPrefs(); toast(prefsActive()?'Filters on · '+prefsSummary():'Filters off'); }});
+  openForm({title:'Diet & allergies',sub:first?'Step 2 of 2 · Skip with ✕ if none apply':'Filters VT Dining menus',body:body(),saveLabel:first?'Done':'Save',
+    onSave:()=>{ STORE.prefs={diet,avoid}; saveStore(); showHidden=false; diningIndex.cache=null; afterPrefs(); toast(first?(prefsActive()?'All set · filters on for '+prefsSummary():'All set'):prefsActive()?'Filters on · '+prefsSummary():'Filters off'); onb=0; }});
   window.pfDiet=k=>{ diet=k; document.querySelectorAll('#pfDiet .mchip').forEach((b,i)=>b.classList.toggle('on',DIETS[i][0]===k)); };
   window.pfAvoid=k=>{ avoid=avoid.includes(k)?avoid.filter(x=>x!==k):[...avoid,k]; document.querySelectorAll('#pfAvoid .mchip').forEach((b,i)=>b.classList.toggle('on',avoid.includes(ALLERGENS[i][0]))); };
 }
@@ -2760,7 +2764,7 @@ let tt; function toast(m){const t=$('toast');t.classList.remove('has-undo');undo
 
 // first paint
 refreshLog(); renderProfile(); afterPrefs(); renderInstallCard();
-if(!STORE.onboarded){ STORE.onboarded=true; saveStore(); if(!(STORE.profile&&STORE.profile.setup)&&!Object.values(STORE.days||{}).some(d=>Object.values(d.meals||{}).some(l=>l.length)||(d.exercise||[]).length||d.water)) setTimeout(openGoals,700); } $('v-today').classList.add('active'); requestAnimationFrame(()=>enter($('v-today')));
+if(!STORE.onboarded){ STORE.onboarded=true; saveStore(); if(!(STORE.profile&&STORE.profile.setup)&&!Object.values(STORE.days||{}).some(d=>Object.values(d.meals||{}).some(l=>l.length)||(d.exercise||[]).length||d.water)) setTimeout(startOnboarding,700); } $('v-today').classList.add('active'); requestAnimationFrame(()=>enter($('v-today')));
 function onData(){ try{renderRec()}catch(e){}
   renderHallCards(); hall='15'; mealIdx=pickMealFor(hall); renderDining(); refreshPins(); if(popIdx>=0) openPop(popIdx);
   const t=DATA.updated?new Date(DATA.updated):null;
