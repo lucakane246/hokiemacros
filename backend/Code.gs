@@ -289,7 +289,7 @@ function foodsBatch_(idList, key, secret) {
 
 // ---------------- AI meal scan (Gemini vision) ----------------
 // Setup: Project Settings > Script Properties > add GEMINI_KEY (from aistudio.google.com).
-// Optional: GEMINI_MODEL (default gemini-flash-latest), AI_DAILY_LIMIT (scans per phone per day, default 25).
+// Optional: GEMINI_MODEL (default gemini-flash-lite-latest, fast), GEMINI_FALLBACK (default gemini-flash-latest), AI_DAILY_LIMIT (scans per phone per day, default 25).
 // Photos are sent to Gemini for this one request and are never stored here.
 const AI_PROMPT = [
   'You are a nutrition assistant inside a college dining hall calorie tracker.',
@@ -316,7 +316,7 @@ function aiScan_(req) {
   if (used >= limit) return { ok: false, error: 'limit', limit: limit };
   cache.put(ck, String(used + 1), 21600);
 
-  const model = props.getProperty('GEMINI_MODEL') || 'gemini-flash-latest';
+  const model = props.getProperty('GEMINI_MODEL') || 'gemini-flash-lite-latest';
   const hint = String(req.hint || '').slice(0, 200);
   const body = {
     contents: [{ parts: [
@@ -325,8 +325,8 @@ function aiScan_(req) {
     ] }],
     generationConfig: { responseMimeType: 'application/json', temperature: 0.2 }
   };
-  // Gemini is sometimes overloaded (503) or rate-limited (429): retry once, then fall back to a lighter model
-  const models = [model, model, props.getProperty('GEMINI_FALLBACK') || 'gemini-flash-lite-latest'];
+  // Gemini is sometimes overloaded (503) or rate-limited (429): fall back to the other model
+  const models = [model, props.getProperty('GEMINI_FALLBACK') || 'gemini-flash-latest'];
   let res;
   for (let i = 0; i < models.length; i++) {
     if (i) Utilities.sleep(800);
