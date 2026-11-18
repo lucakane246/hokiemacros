@@ -325,10 +325,18 @@ function aiScan_(req) {
     ] }],
     generationConfig: { responseMimeType: 'application/json', temperature: 0.2 }
   };
-  const res = UrlFetchApp.fetch('https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent', {
-    method: 'post', contentType: 'application/json', headers: { 'x-goog-api-key': key },
-    payload: JSON.stringify(body), muteHttpExceptions: true
-  });
+  // Gemini is sometimes overloaded (503) or rate-limited (429): retry once, then fall back to a lighter model
+  const models = [model, model, props.getProperty('GEMINI_FALLBACK') || 'gemini-flash-lite-latest'];
+  let res;
+  for (let i = 0; i < models.length; i++) {
+    if (i) Utilities.sleep(800);
+    res = UrlFetchApp.fetch('https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(models[i]) + ':generateContent', {
+      method: 'post', contentType: 'application/json', headers: { 'x-goog-api-key': key },
+      payload: JSON.stringify(body), muteHttpExceptions: true
+    });
+    const code = res.getResponseCode();
+    if (code !== 503 && code !== 429 && code !== 500) break;
+  }
   if (res.getResponseCode() !== 200) return { ok: false, error: 'ai-' + res.getResponseCode(), detail: res.getContentText().slice(0, 200) };
   let out;
   try {

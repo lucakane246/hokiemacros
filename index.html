@@ -2732,7 +2732,7 @@ async function aiSend(file){
 function aiRender(){
   const box=$('aiBody'); if(!box) return;
   const thumb=`<div class="aithumb${ai.items||ai.err?'':' busy'}" style="background-image:url(${ai.thumb})">${ai.items||ai.err?'':'<i></i>'}</div>`;
-  if(ai.err){ const msg={'not-configured':'AI scan isn’t set up yet. Check back soon.',limit:`You’ve used today’s ${ai.limit||''} AI scans. They reset tomorrow.`,network:'Couldn’t reach the server. Check your connection and try again.'}[ai.err]||'The AI couldn’t read this photo. Try again or log it manually.';
+  if(ai.err){ const msg={'not-configured':'AI scan isn’t set up yet. Check back soon.',limit:`You’ve used today’s ${ai.limit||''} AI scans. They reset tomorrow.`,network:'Couldn’t reach the server. Check your connection and try again.','ai-503':'The AI is busy right now. Try again in a minute.','ai-429':'The AI is busy right now. Try again in a minute.'}[ai.err]||'The AI couldn’t read this photo. Try again or log it manually.';
     box.innerHTML=thumb+`<div class="empty card" style="margin-top:12px">${msg}<button class="logbtn" style="margin:10px auto 0" onclick="closeForm();setTimeout(aiPick,320)">Try another photo</button></div>`; return; }
   if(!ai.items){ box.innerHTML=thumb+`<p class="fnote" style="text-align:center;margin-top:12px">Identifying foods and estimating portions…</p>`; return; }
   if(!ai.items.length){ box.innerHTML=thumb+`<div class="empty card" style="margin-top:12px">No food found in this photo.${ai.note?`<span>${esc(ai.note)}</span>`:''}<button class="logbtn" style="margin:10px auto 0" onclick="closeForm();setTimeout(aiPick,320)">Try another photo</button></div>`; return; }
