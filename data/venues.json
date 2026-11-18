@@ -21,11 +21,17 @@
        {
         "n": "Chick-n-Minis",
         "fs": 68720441,
-        "ct": [
-         4,
-         "mini",
-         "minis"
-        ]
+        "sz": [
+         {
+          "l": "4 ct",
+          "fs": 68720441
+         },
+         {
+          "l": "10 ct",
+          "fs": 68720499
+         }
+        ],
+        "szd": "4 ct"
        },
        {
         "n": "Egg White Grill",
@@ -49,7 +55,18 @@
        },
        {
         "n": "Hash Browns",
-        "fs": 83706360
+        "fs": 83706360,
+        "sz": [
+         {
+          "l": "Small",
+          "fs": 83706360
+         },
+         {
+          "l": "Large",
+          "fs": 104055257
+         }
+        ],
+        "szd": "Small"
        }
       ]
      },
@@ -89,58 +106,61 @@
         }
        },
        {
-        "n": "Chick-fil-A Nuggets (8 ct)",
+        "n": "Chick-fil-A Nuggets",
         "fs": 68752626,
-        "ct": [
-         8,
-         "nugget",
-         "nuggets"
-        ]
+        "sz": [
+         {
+          "l": "5 ct",
+          "x": 0.625
+         },
+         {
+          "l": "8 ct",
+          "fs": 68752626
+         },
+         {
+          "l": "12 ct",
+          "fs": 68752635
+         }
+        ],
+        "szd": "8 ct"
        },
        {
-        "n": "Chick-fil-A Nuggets (12 ct)",
-        "fs": 68752635,
-        "ct": [
-         12,
-         "nugget",
-         "nuggets"
-        ]
-       },
-       {
-        "n": "Grilled Nuggets (8 ct)",
+        "n": "Grilled Nuggets",
         "fs": 68752649,
-        "ct": [
-         8,
-         "nugget",
-         "nuggets"
-        ]
+        "sz": [
+         {
+          "l": "5 ct",
+          "fs": 68752645
+         },
+         {
+          "l": "8 ct",
+          "fs": 68752649
+         },
+         {
+          "l": "12 ct",
+          "fs": 68752654
+         }
+        ],
+        "szd": "8 ct"
        },
        {
-        "n": "Grilled Nuggets (12 ct)",
-        "fs": 68752654,
-        "ct": [
-         12,
-         "nugget",
-         "nuggets"
-        ]
-       },
-       {
-        "n": "Chick-n-Strips (3 ct)",
+        "n": "Chick-n-Strips",
         "fs": 68752664,
-        "ct": [
-         3,
-         "strip",
-         "strips"
-        ]
-       },
-       {
-        "n": "Chick-n-Strips (4 ct)",
-        "fs": 68752670,
-        "ct": [
-         4,
-         "strip",
-         "strips"
-        ]
+        "sz": [
+         {
+          "l": "2 ct",
+          "fs": 68752659
+         },
+         {
+          "l": "3 ct",
+          "fs": 68752664
+         },
+         {
+          "l": "4 ct",
+          "fs": 68752670
+         }
+        ],
+        "szd": "3 ct"
        },
        {
         "n": "Grilled Cool Wrap",
@@ -169,24 +189,80 @@
       "name": "Sides",
       "items": [
        {
-        "n": "Waffle Potato Fries (medium)",
-        "fs": 104058567
+        "n": "Waffle Potato Fries",
+        "fs": 104058567,
+        "sz": [
+         {
+          "l": "Small",
+          "fs": 104058534
+         },
+         {
+          "l": "Medium",
+          "fs": 104058567
+         },
+         {
+          "l": "Large",
+          "fs": 104058594
+         }
+        ],
+        "szd": "Medium"
        },
        {
-        "n": "Mac & Cheese (medium)",
-        "fs": 104058665
+        "n": "Mac & Cheese",
+        "fs": 104058665,
+        "sz": [
+         {
+          "l": "Small",
+          "fs": 104058619
+         },
+         {
+          "l": "Medium",
+          "fs": 104058665
+         },
+         {
+          "l": "Large",
+          "fs": 104058702
+         }
+        ],
+        "szd": "Medium"
        },
        {
         "n": "Side Salad",
         "fs": 33115206
        },
        {
-        "n": "Fruit Cup (medium)",
-        "fs": 104055446
+        "n": "Fruit Cup",
+        "fs": 104055446,
+        "sz": [
+         {
+          "l": "Small",
+          "fs": 104055354
+         },
+         {
+          "l": "Medium",
+          "fs": 104055446
+         },
+         {
+          "l": "Large",
+          "fs": 104055462
+         }
+        ],
+        "szd": "Medium"
        },
        {
-        "n": "Chicken Noodle Soup (cup)",
-        "fs": 104058715
+        "n": "Chicken Noodle Soup",
+        "fs": 104058715,
+        "sz": [
+         {
+          "l": "Cup",
+          "fs": 104058715
+         },
+         {
+          "l": "Bowl",
+          "fs": 104058747
+         }
+        ],
+        "szd": "Cup"
        }
       ]
      },
@@ -227,20 +303,80 @@
       "name": "Drinks & treats",
       "items": [
        {
-        "n": "Chick-fil-A Lemonade (medium)",
-        "fs": 104059145
+        "n": "Chick-fil-A Lemonade",
+        "fs": 104059145,
+        "sz": [
+         {
+          "l": "Small",
+          "fs": 104059139
+         },
+         {
+          "l": "Medium",
+          "fs": 104059145
+         },
+         {
+          "l": "Large",
+          "fs": 104059167
+         }
+        ],
+        "szd": "Medium"
        },
        {
-        "n": "Diet Lemonade (medium)",
-        "fs": 104059206
+        "n": "Diet Lemonade",
+        "fs": 104059206,
+        "sz": [
+         {
+          "l": "Small",
+          "fs": 104059189
+         },
+         {
+          "l": "Medium",
+          "fs": 104059206
+         },
+         {
+          "l": "Large",
+          "fs": 104059221
+         }
+        ],
+        "szd": "Medium"
        },
        {
-        "n": "Sweet Tea (medium)",
-        "fs": 104059003
+        "n": "Sweet Tea",
+        "fs": 104059003,
+        "sz": [
+         {
+          "l": "Small",
+          "fs": 104058907
+         },
+         {
+          "l": "Medium",
+          "fs": 104059003
+         },
+         {
+          "l": "Large",
+          "fs": 104059020
+         }
+        ],
+        "szd": "Medium"
        },
        {
-        "n": "Unsweetened Tea (medium)",
-        "fs": 104059078
+        "n": "Unsweetened Tea",
+        "fs": 104059078,
+        "sz": [
+         {
+          "l": "Small",
+          "fs": 104059043
+         },
+         {
+          "l": "Medium",
+          "fs": 104059078
+         },
+         {
+          "l": "Large",
+          "fs": 104059122
+         }
+        ],
+        "szd": "Medium"
        },
        {
         "n": "Frosted Lemonade",
@@ -284,7 +420,7 @@
         "fs": 7180606
        },
        {
-        "n": "Coffee (medium)",
+        "n": "Coffee",
         "fs": 68753883
        }
       ]
@@ -1390,8 +1526,7 @@
       "name": "Coffee",
       "items": [
        {
-        "n": "Brewed Coffee Medium",
-        "price": 3.29,
+        "n": "Brewed Coffee",
         "k": {
          "cal": 5,
          "p": 0,
@@ -1400,24 +1535,39 @@
          "sod": 11,
          "fib": 0,
          "sug": 0
-        }
+        },
+        "sz": [
+         {
+          "l": "Medium",
+          "k": {
+           "cal": 5,
+           "p": 0,
+           "c": 0,
+           "f": 0,
+           "sod": 11,
+           "fib": 0,
+           "sug": 0
+          }
+         },
+         {
+          "l": "Large",
+          "k": {
+           "cal": 6,
+           "p": 0,
+           "c": 0,
+           "f": 0,
+           "sod": 14,
+           "fib": 0,
+           "sug": 0
+          }
+         }
+        ],
+        "szd": "Medium",
+        "d": "Medium $3.29 · Large $3.59",
+        "price": 3.29
        },
        {
-        "n": "Brewed Coffee Large",
-        "price": 3.59,
-        "k": {
-         "cal": 6,
-         "p": 0,
-         "c": 0,
-         "f": 0,
-         "sod": 14,
-         "fib": 0,
-         "sug": 0
-        }
-       },
-       {
-        "n": "Iced Coffee Medium",
-        "price": 3.39,
+        "n": "Iced Coffee",
         "k": {
          "cal": 5,
          "p": 0,
@@ -1426,20 +1576,36 @@
          "sod": 11,
          "fib": 0,
          "sug": 0
-        }
-       },
-       {
-        "n": "Iced Coffee Large",
-        "price": 3.69,
-        "k": {
-         "cal": 6,
-         "p": 0,
-         "c": 0,
-         "f": 0,
-         "sod": 14,
-         "fib": 0,
-         "sug": 0
-        }
+        },
+        "sz": [
+         {
+          "l": "Medium",
+          "k": {
+           "cal": 5,
+           "p": 0,
+           "c": 0,
+           "f": 0,
+           "sod": 11,
+           "fib": 0,
+           "sug": 0
+          }
+         },
+         {
+          "l": "Large",
+          "k": {
+           "cal": 6,
+           "p": 0,
+           "c": 0,
+           "f": 0,
+           "sod": 14,
+           "fib": 0,
+           "sug": 0
+          }
+         }
+        ],
+        "szd": "Medium",
+        "d": "Medium $3.39 · Large $3.69",
+        "price": 3.39
        }
       ]
      },
@@ -3061,11 +3227,17 @@
        {
         "n": "Chick-n-Minis",
         "fs": 68720441,
-        "ct": [
-         4,
-         "mini",
-         "minis"
-        ]
+        "sz": [
+         {
+          "l": "4 ct",
+          "fs": 68720441
+         },
+         {
+          "l": "10 ct",
+          "fs": 68720499
+         }
+        ],
+        "szd": "4 ct"
        },
        {
         "n": "Egg White Grill",
@@ -3089,7 +3261,18 @@
        },
        {
         "n": "Hash Browns",
-        "fs": 83706360
+        "fs": 83706360,
+        "sz": [
+         {
+          "l": "Small",
+          "fs": 83706360
+         },
+         {
+          "l": "Large",
+          "fs": 104055257
+         }
+        ],
+        "szd": "Small"
        }
       ]
      },
@@ -3129,58 +3312,61 @@
         }
        },
        {
-        "n": "Chick-fil-A Nuggets (8 ct)",
+        "n": "Chick-fil-A Nuggets",
         "fs": 68752626,
-        "ct": [
-         8,
-         "nugget",
-         "nuggets"
-        ]
+        "sz": [
+         {
+          "l": "5 ct",
+          "x": 0.625
+         },
+         {
+          "l": "8 ct",
+          "fs": 68752626
+         },
+         {
+          "l": "12 ct",
+          "fs": 68752635
+         }
+        ],
+        "szd": "8 ct"
        },
        {
-        "n": "Chick-fil-A Nuggets (12 ct)",
-        "fs": 68752635,
-        "ct": [
-         12,
-         "nugget",
-         "nuggets"
-        ]
-       },
-       {
-        "n": "Grilled Nuggets (8 ct)",
+        "n": "Grilled Nuggets",
         "fs": 68752649,
-        "ct": [
-         8,
-         "nugget",
-         "nuggets"
-        ]
+        "sz": [
+         {
+          "l": "5 ct",
+          "fs": 68752645
+         },
+         {
+          "l": "8 ct",
+          "fs": 68752649
+         },
+         {
+          "l": "12 ct",
+          "fs": 68752654
+         }
+        ],
+        "szd": "8 ct"
        },
        {
-        "n": "Grilled Nuggets (12 ct)",
-        "fs": 68752654,
-        "ct": [
-         12,
-         "nugget",
-         "nuggets"
-        ]
-       },
-       {
-        "n": "Chick-n-Strips (3 ct)",
+        "n": "Chick-n-Strips",
         "fs": 68752664,
-        "ct": [
-         3,
-         "strip",
-         "strips"
-        ]
-       },
-       {
-        "n": "Chick-n-Strips (4 ct)",
-        "fs": 68752670,
-        "ct": [
-         4,
-         "strip",
-         "strips"
-        ]
+        "sz": [
+         {
+          "l": "2 ct",
+          "fs": 68752659
+         },
+         {
+          "l": "3 ct",
+          "fs": 68752664
+         },
+         {
+          "l": "4 ct",
+          "fs": 68752670
+         }
+        ],
+        "szd": "3 ct"
        },
        {
         "n": "Grilled Cool Wrap",
@@ -3209,24 +3395,80 @@
       "name": "Sides",
       "items": [
        {
-        "n": "Waffle Potato Fries (medium)",
-        "fs": 104058567
+        "n": "Waffle Potato Fries",
+        "fs": 104058567,
+        "sz": [
+         {
+          "l": "Small",
+          "fs": 104058534
+         },
+         {
+          "l": "Medium",
+          "fs": 104058567
+         },
+         {
+          "l": "Large",
+          "fs": 104058594
+         }
+        ],
+        "szd": "Medium"
        },
        {
-        "n": "Mac & Cheese (medium)",
-        "fs": 104058665
+        "n": "Mac & Cheese",
+        "fs": 104058665,
+        "sz": [
+         {
+          "l": "Small",
+          "fs": 104058619
+         },
+         {
+          "l": "Medium",
+          "fs": 104058665
+         },
+         {
+          "l": "Large",
+          "fs": 104058702
+         }
+        ],
+        "szd": "Medium"
        },
        {
         "n": "Side Salad",
         "fs": 33115206
        },
        {
-        "n": "Fruit Cup (medium)",
-        "fs": 104055446
+        "n": "Fruit Cup",
+        "fs": 104055446,
+        "sz": [
+         {
+          "l": "Small",
+          "fs": 104055354
+         },
+         {
+          "l": "Medium",
+          "fs": 104055446
+         },
+         {
+          "l": "Large",
+          "fs": 104055462
+         }
+        ],
+        "szd": "Medium"
        },
        {
-        "n": "Chicken Noodle Soup (cup)",
-        "fs": 104058715
+        "n": "Chicken Noodle Soup",
+        "fs": 104058715,
+        "sz": [
+         {
+          "l": "Cup",
+          "fs": 104058715
+         },
+         {
+          "l": "Bowl",
+          "fs": 104058747
+         }
+        ],
+        "szd": "Cup"
        }
       ]
      },
@@ -3267,20 +3509,80 @@
       "name": "Drinks & treats",
       "items": [
        {
-        "n": "Chick-fil-A Lemonade (medium)",
-        "fs": 104059145
+        "n": "Chick-fil-A Lemonade",
+        "fs": 104059145,
+        "sz": [
+         {
+          "l": "Small",
+          "fs": 104059139
+         },
+         {
+          "l": "Medium",
+          "fs": 104059145
+         },
+         {
+          "l": "Large",
+          "fs": 104059167
+         }
+        ],
+        "szd": "Medium"
        },
        {
-        "n": "Diet Lemonade (medium)",
-        "fs": 104059206
+        "n": "Diet Lemonade",
+        "fs": 104059206,
+        "sz": [
+         {
+          "l": "Small",
+          "fs": 104059189
+         },
+         {
+          "l": "Medium",
+          "fs": 104059206
+         },
+         {
+          "l": "Large",
+          "fs": 104059221
+         }
+        ],
+        "szd": "Medium"
        },
        {
-        "n": "Sweet Tea (medium)",
-        "fs": 104059003
+        "n": "Sweet Tea",
+        "fs": 104059003,
+        "sz": [
+         {
+          "l": "Small",
+          "fs": 104058907
+         },
+         {
+          "l": "Medium",
+          "fs": 104059003
+         },
+         {
+          "l": "Large",
+          "fs": 104059020
+         }
+        ],
+        "szd": "Medium"
        },
        {
-        "n": "Unsweetened Tea (medium)",
-        "fs": 104059078
+        "n": "Unsweetened Tea",
+        "fs": 104059078,
+        "sz": [
+         {
+          "l": "Small",
+          "fs": 104059043
+         },
+         {
+          "l": "Medium",
+          "fs": 104059078
+         },
+         {
+          "l": "Large",
+          "fs": 104059122
+         }
+        ],
+        "szd": "Medium"
        },
        {
         "n": "Frosted Lemonade",
@@ -3324,7 +3626,7 @@
         "fs": 7180606
        },
        {
-        "n": "Coffee (medium)",
+        "n": "Coffee",
         "fs": 68753883
        }
       ]
@@ -3389,11 +3691,29 @@
        {
         "n": "Chicken McNuggets",
         "fs": 68427859,
-        "ct": [
-         10,
-         "nugget",
-         "nuggets"
-        ]
+        "sz": [
+         {
+          "l": "4 pc",
+          "fs": 68427891
+         },
+         {
+          "l": "6 pc",
+          "fs": 68427924
+         },
+         {
+          "l": "10 pc",
+          "fs": 68427859
+         },
+         {
+          "l": "20 pc",
+          "fs": 68427882
+         },
+         {
+          "l": "40 pc",
+          "fs": 68427838
+         }
+        ],
+        "szd": "10 pc"
        },
        {
         "n": "McChicken",
@@ -3429,16 +3749,23 @@
       "name": "Fries & Sides",
       "items": [
        {
-        "n": "Small Fries",
-        "fs": 68444328
-       },
-       {
-        "n": "Medium Fries",
-        "fs": 68444097
-       },
-       {
-        "n": "Large Fries",
-        "fs": 68444005
+        "n": "French Fries",
+        "fs": 68444097,
+        "sz": [
+         {
+          "l": "Small",
+          "fs": 68444328
+         },
+         {
+          "l": "Medium",
+          "fs": 68444097
+         },
+         {
+          "l": "Large",
+          "fs": 68444005
+         }
+        ],
+        "szd": "Medium"
        },
        {
         "n": "Hash Browns",
@@ -3496,11 +3823,33 @@
       "items": [
        {
         "n": "McFlurry with OREO Cookies",
-        "fs": 103243799
+        "fs": 103243799,
+        "sz": [
+         {
+          "l": "Snack size",
+          "fs": 103243733
+         },
+         {
+          "l": "Regular",
+          "fs": 103243799
+         }
+        ],
+        "szd": "Regular"
        },
        {
         "n": "McFlurry with M&M'S",
-        "fs": 103243683
+        "fs": 103243683,
+        "sz": [
+         {
+          "l": "Snack size",
+          "fs": 103243648
+         },
+         {
+          "l": "Regular",
+          "fs": 103243683
+         }
+        ],
+        "szd": "Regular"
        },
        {
         "n": "Hot Fudge Sundae",
@@ -3519,12 +3868,42 @@
         "fs": 33310
        },
        {
-        "n": "Coca-Cola (medium)",
-        "fs": 68428040
+        "n": "Coca-Cola",
+        "fs": 68428040,
+        "sz": [
+         {
+          "l": "Small (16 oz)",
+          "x": 0.7619047619047619
+         },
+         {
+          "l": "Medium (21 oz)",
+          "x": 1
+         },
+         {
+          "l": "Large (30 oz)",
+          "x": 1.4285714285714286
+         }
+        ],
+        "szd": "Medium (21 oz)"
        },
        {
-        "n": "Sweet Tea (medium)",
-        "fs": 68444392
+        "n": "Sweet Tea",
+        "fs": 68444392,
+        "sz": [
+         {
+          "l": "Small (16 oz)",
+          "x": 0.7619047619047619
+         },
+         {
+          "l": "Medium (21 oz)",
+          "x": 1
+         },
+         {
+          "l": "Large (30 oz)",
+          "x": 1.4285714285714286
+         }
+        ],
+        "szd": "Medium (21 oz)"
        }
       ]
      },
@@ -3682,11 +4061,18 @@
       "items": [
        {
         "n": "Nacho Fries",
-        "fs": 104457807
-       },
-       {
-        "n": "Large Nacho Fries",
-        "fs": 83499965
+        "fs": 104457807,
+        "sz": [
+         {
+          "l": "Regular",
+          "fs": 104457807
+         },
+         {
+          "l": "Large",
+          "fs": 83499965
+         }
+        ],
+        "szd": "Regular"
        },
        {
         "n": "Cheesy Fiesta Potatoes",
@@ -3769,8 +4155,23 @@
       "name": "Hashbrowns",
       "items": [
        {
-        "n": "Hashbrowns (regular)",
-        "fs": 75582875
+        "n": "Hashbrowns",
+        "fs": 75582875,
+        "sz": [
+         {
+          "l": "Regular",
+          "fs": 75582875
+         },
+         {
+          "l": "Large",
+          "fs": 75582876
+         },
+         {
+          "l": "Triple",
+          "fs": 75582890
+         }
+        ],
+        "szd": "Regular"
        },
        {
         "n": "Hashbrowns, smothered & covered",
@@ -3780,14 +4181,6 @@
          75582909
         ],
         "d": "Grilled onions and melted cheese"
-       },
-       {
-        "n": "Hashbrowns (large)",
-        "fs": 75582876
-       },
-       {
-        "n": "Hashbrowns (triple)",
-        "fs": 75582890
        },
        {
         "n": "Bacon, Egg & Cheese Hashbrown Bowl",
@@ -4240,19 +4633,7 @@
         }
        },
        {
-        "n": "Chicken Nuggets (full order)",
-        "k": {
-         "cal": 240.0,
-         "p": 16.0,
-         "c": 12.0,
-         "f": 18.0,
-         "fib": 0.0,
-         "sug": 0.0,
-         "sod": 540.0
-        }
-       },
-       {
-        "n": "Chicken Nuggets (side)",
+        "n": "Chicken Nuggets",
         "k": {
          "cal": 144.0,
          "p": 10.0,
@@ -4261,7 +4642,34 @@
          "fib": 0.0,
          "sug": 0.0,
          "sod": 324.0
-        }
+        },
+        "sz": [
+         {
+          "l": "Side",
+          "k": {
+           "cal": 144.0,
+           "p": 10.0,
+           "c": 7.0,
+           "f": 11.0,
+           "fib": 0.0,
+           "sug": 0.0,
+           "sod": 324.0
+          }
+         },
+         {
+          "l": "Full order",
+          "k": {
+           "cal": 240.0,
+           "p": 16.0,
+           "c": 12.0,
+           "f": 18.0,
+           "fib": 0.0,
+           "sug": 0.0,
+           "sod": 540.0
+          }
+         }
+        ],
+        "szd": "Side"
        }
       ]
      },
@@ -4418,7 +4826,7 @@
       "name": "Sides",
       "items": [
        {
-        "n": "Regular Fries",
+        "n": "Fries",
         "k": {
          "cal": 347.0,
          "p": 4.0,
@@ -4427,19 +4835,34 @@
          "fib": 4.0,
          "sug": 0.0,
          "sod": 687.0
-        }
-       },
-       {
-        "n": "Large Fries",
-        "k": {
-         "cal": 694.0,
-         "p": 7.0,
-         "c": 89.0,
-         "f": 34.0,
-         "fib": 9.0,
-         "sug": 1.0,
-         "sod": 1374.0
-        }
+        },
+        "sz": [
+         {
+          "l": "Regular",
+          "k": {
+           "cal": 347.0,
+           "p": 4.0,
+           "c": 45.0,
+           "f": 17.0,
+           "fib": 4.0,
+           "sug": 0.0,
+           "sod": 687.0
+          }
+         },
+         {
+          "l": "Large",
+          "k": {
+           "cal": 694.0,
+           "p": 7.0,
+           "c": 89.0,
+           "f": 34.0,
+           "fib": 9.0,
+           "sug": 1.0,
+           "sod": 1374.0
+          }
+         }
+        ],
+        "szd": "Regular"
        },
        {
         "n": "Cook Out Fries",
@@ -4454,7 +4877,7 @@
         }
        },
        {
-        "n": "Hushpuppies (side)",
+        "n": "Hushpuppies",
         "k": {
          "cal": 300.0,
          "p": 2.0,
@@ -4463,22 +4886,37 @@
          "fib": 5.0,
          "sug": 11.0,
          "sod": 720.0
-        }
+        },
+        "sz": [
+         {
+          "l": "Side",
+          "k": {
+           "cal": 300.0,
+           "p": 2.0,
+           "c": 47.0,
+           "f": 9.0,
+           "fib": 5.0,
+           "sug": 11.0,
+           "sod": 720.0
+          }
+         },
+         {
+          "l": "Full order",
+          "k": {
+           "cal": 600.0,
+           "p": 3.0,
+           "c": 93.0,
+           "f": 18.0,
+           "fib": 9.0,
+           "sug": 21.0,
+           "sod": 1440.0
+          }
+         }
+        ],
+        "szd": "Side"
        },
        {
-        "n": "Hushpuppies (full order)",
-        "k": {
-         "cal": 600.0,
-         "p": 3.0,
-         "c": 93.0,
-         "f": 18.0,
-         "fib": 9.0,
-         "sug": 21.0,
-         "sod": 1440.0
-        }
-       },
-       {
-        "n": "Onion Rings (side)",
+        "n": "Onion Rings",
         "k": {
          "cal": 128.0,
          "p": 3.0,
@@ -4487,22 +4925,37 @@
          "fib": 2.0,
          "sug": 3.0,
          "sod": 328.0
-        }
+        },
+        "sz": [
+         {
+          "l": "Side",
+          "k": {
+           "cal": 128.0,
+           "p": 3.0,
+           "c": 28.0,
+           "f": 1.0,
+           "fib": 2.0,
+           "sug": 3.0,
+           "sod": 328.0
+          }
+         },
+         {
+          "l": "Full order",
+          "k": {
+           "cal": 256.0,
+           "p": 6.0,
+           "c": 56.0,
+           "f": 2.0,
+           "fib": 3.0,
+           "sug": 6.0,
+           "sod": 656.0
+          }
+         }
+        ],
+        "szd": "Side"
        },
        {
-        "n": "Onion Rings (full order)",
-        "k": {
-         "cal": 256.0,
-         "p": 6.0,
-         "c": 56.0,
-         "f": 2.0,
-         "fib": 3.0,
-         "sug": 6.0,
-         "sod": 656.0
-        }
-       },
-       {
-        "n": "Cheese Curds (side)",
+        "n": "Cheese Curds",
         "k": {
          "cal": 150.0,
          "p": 8.0,
@@ -4511,22 +4964,37 @@
          "fib": 0.0,
          "sug": 0.0,
          "sod": 280.0
-        }
+        },
+        "sz": [
+         {
+          "l": "Side",
+          "k": {
+           "cal": 150.0,
+           "p": 8.0,
+           "c": 7.0,
+           "f": 10.0,
+           "fib": 0.0,
+           "sug": 0.0,
+           "sod": 280.0
+          }
+         },
+         {
+          "l": "Full order",
+          "k": {
+           "cal": 299.0,
+           "p": 16.0,
+           "c": 14.0,
+           "f": 19.0,
+           "fib": 0.0,
+           "sug": 1.0,
+           "sod": 560.0
+          }
+         }
+        ],
+        "szd": "Side"
        },
        {
-        "n": "Cheese Curds (full order)",
-        "k": {
-         "cal": 299.0,
-         "p": 16.0,
-         "c": 14.0,
-         "f": 19.0,
-         "fib": 0.0,
-         "sug": 1.0,
-         "sod": 560.0
-        }
-       },
-       {
-        "n": "Cook Out Rounds (side)",
+        "n": "Cook Out Rounds",
         "k": {
          "cal": 149.0,
          "p": 4.0,
@@ -4535,19 +5003,34 @@
          "fib": 2.0,
          "sug": 1.0,
          "sod": 372.0
-        }
-       },
-       {
-        "n": "Cook Out Rounds (full order)",
-        "k": {
-         "cal": 298.0,
-         "p": 8.0,
-         "c": 30.0,
-         "f": 17.0,
-         "fib": 5.0,
-         "sug": 2.0,
-         "sod": 745.0
-        }
+        },
+        "sz": [
+         {
+          "l": "Side",
+          "k": {
+           "cal": 149.0,
+           "p": 4.0,
+           "c": 15.0,
+           "f": 8.0,
+           "fib": 2.0,
+           "sug": 1.0,
+           "sod": 372.0
+          }
+         },
+         {
+          "l": "Full order",
+          "k": {
+           "cal": 298.0,
+           "p": 8.0,
+           "c": 30.0,
+           "f": 17.0,
+           "fib": 5.0,
+           "sug": 2.0,
+           "sod": 745.0
+          }
+         }
+        ],
+        "szd": "Side"
        },
        {
         "n": "Okra",

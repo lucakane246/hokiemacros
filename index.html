@@ -1249,7 +1249,7 @@ let VENUES=null;
 const xRests=h=>(VENUES&&VENUES.halls&&VENUES.halls[h])||[];
 function xRow(it,ri,si,ii,h){ const H=h?`,'${h}'`:'';
   const opts=it.build?it.build.reduce((n,g)=>n+g.o.length,0):0, fid=it.fs?[].concat(it.fs).join('_'):'';
-  return `<div class="food xfood"><div><div class="nm">${esc(it.n)}</div>${it.d?`<div class="xd">${esc(it.d)}</div>`:''}${it.k&&(it.est||it.note)?`<div class="xd">${esc(it.est||it.note)}</div>`:''}
+  return `<div class="food xfood"><div><div class="nm">${esc(it.n)}</div>${it.d?`<div class="xd">${esc(it.d)}</div>`:''}${it.sz?`<div class="xd">${esc(it.sz.map(z=>z.l).join(' · '))}</div>`:''}${it.k&&(it.est||it.note)?`<div class="xd">${esc(it.est||it.note)}</div>`:''}
     <div class="kc">${it.price!=null?`<span class="pr">${money(it.price)}</span> · `:''}${it.k?`<span class="xn">${it.est?'≈':''}<b>${fmtN(it.k.cal)}</b> cal · ${Math.round(it.k.p)}P ${Math.round(it.k.c)}C ${Math.round(it.k.f)}F</span>`:fid?`<span class="xn" data-fs="${fid}">…</span>`:it.build&&it.build.every(g=>g.o.every(o=>o.k))?`<span class="xn"><b>${fmtN(xsum([...(it.base?[it.base.k]:[]),...it.build.filter(g=>g.req).map(g=>g.o[0].k)]).cal)}</b> cal basic · adds up as you build</span>`:`<span class="soon">Nutrition coming soon</span>`}</div>
     ${it.build?`<button class="xbuild" onclick="openXItem(${ri},${si},${ii}${H})">Build your own · ${it.build.length} steps, ${opts} choices ›</button>`:''}</div>
     <button class="plus" onclick="openXItem(${ri},${si},${ii}${H})" aria-label="Log ${esc(it.n)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>`;
@@ -1303,15 +1303,32 @@ function menuServs(it,sec,G){
   if(it.ct){ const [c,one,many]=it.ct; return [[`1 order (${c} ${many})`,G],[`1 ${one}`,G/c]]; }
   return [[`1 ${unitFor(it.n,sec)}`,G]];
 }
+// One restaurant item as a food object. Items with sizes (it.sz) carry each size's own nutrition (f.sk),
+// so Small/Medium/Large live under one item. A size is {l, fs} | {l, k} | {l, x} (x = times the item's base nutrition).
+const kScale=(k,x)=>Object.fromEntries(Object.entries(k).map(([a,v])=>[a,v==null?v:v*x]));
+async function fsAbs(ids){ const f=await fsCombo(ids); if(!f) return null; const G=(f.u&&f.u[0]&&f.u[0][1])||100; return {f,abs:per(f,{label:'',g:G}),G}; }
+async function xFood(r,si,ri,ii){
+  const it=r.sections[si].items[ii], sec=r.sections[si].name;
+  if(it.sz){
+    let base=it.k||null, src='X';
+    if(!base&&it.fs){ const b=await fsAbs(it.fs); if(!b) return null; base=b.abs; src='F'; }
+    const sk={};
+    for(const z of it.sz){
+      if(z.k) sk[z.l]=z.k; else if(z.x!=null) sk[z.l]=kScale(base,z.x);
+      else if(z.fs){ const a=await fsAbs(z.fs); if(!a) return null; sk[z.l]=a.abs; } }
+    return {id:'xs:'+r.name+':'+it.n,n:it.n,b:r.name,k:base,u:it.sz.map(z=>[z.l,100]),du:it.szd||it.sz[0].l,sk,nog:true,src};
+  }
+  if(it.k){ const k=it.g?kScale(it.k,100/it.g):it.k;   // items with a gram weight offer other sizes
+    return {id:'xk'+ri+'_'+si+'_'+ii,n:it.n,b:r.name,k,u:menuServs(it,sec,it.g||100),nog:true,src:'X'}; }
+  if(it.fs){ const f=await fsCombo(it.fs); if(!f) return null; const G=(f.u&&f.u[0]&&f.u[0][1])||100;
+    return {...f,n:it.n,b:r.name,u:menuServs(it,sec,G),nog:true}; }
+  return null;
+}
 function openXItem(ri,si,ii,h){
   const r=xRests(h||hall)[ri], it=r.sections[si].items[ii], label=`${r.name} ${it.n}`;
-  if(it.k&&!it.build){ addMeal=mealNow(); addDate=todayISO();
-    const k=it.g?Object.fromEntries(Object.entries(it.k).map(([a,v])=>[a,v*100/it.g])):it.k;   // items with a gram weight offer other sizes
-    return showDetail({id:'xk'+ri+'_'+si+'_'+ii,n:it.n,b:r.name,k,u:menuServs(it,r.sections[si].name,it.g||100),nog:true,src:'X'},{standalone:true}); }
-  if(it.fs&&!it.build){ const slow=setTimeout(()=>toast('Loading nutrition…'),350);
-    fsCombo(it.fs).then(f=>{ clearTimeout(slow); if(!f) return toast('Couldn’t load nutrition. Check your connection and try again.');
-      addMeal=mealNow(); addDate=todayISO(); const G=(f.u&&f.u[0]&&f.u[0][1])||100;
-      showDetail({...f,n:it.n,b:r.name,u:menuServs(it,r.sections[si].name,G),nog:true},{standalone:true}); }); return; }
+  if((it.k||it.fs)&&!it.build){ const slow=setTimeout(()=>toast('Loading nutrition…'),350);
+    xFood(r,si,ri,ii).then(f=>{ clearTimeout(slow); if(!f) return toast('Couldn’t load nutrition. Check your connection and try again.');
+      addMeal=mealNow(); addDate=todayISO(); showDetail(f,{standalone:true}); }); return; }
   if(!it.build) return openQuickAdd(null,null,label,`${it.price!=null?money(it.price)+' at ':'From '}${r.name}. Nutrition for ${r.name} arrives soon; for now, enter what you know.`);
   if(it.build.every(g=>g.o.every(o=>o.k))) return openBuilder(r,it);
   openForm({title:it.n,sub:`${r.name}${it.price!=null?' · '+money(it.price):''}`,saveLabel:'Log it',
@@ -1497,7 +1514,7 @@ function venueIndex(){
     const key=r.name+'|'+it.n; if(seen.has(key)) return; seen.add(key);
     const k=it.k||null, fid=it.fs?[].concat(it.fs).join('_'):'';
     out.push({id:'v:'+key,n:it.n,b:r.name,where:hallName(h),venue:[ri,si,ii,h],fid,k:k&&it.g?Object.fromEntries(Object.entries(k).map(([a,v])=>[a,v*100/it.g])):k,
-      u:[[`1 ${it.ct?'order':unitFor(it.n,sec.name)}`,it.g||100]],r:1,vr:1,build:!!it.build,_h:norm(it.n+' '+r.name+' '+(it.d||''))});
+      u:[[it.sz?(it.szd||it.sz[0].l):`1 ${it.ct?'order':unitFor(it.n,sec.name)}`,it.g||100]],r:1,vr:1,build:!!it.build,_h:norm(it.n+' '+r.name+' '+(it.d||''))});
   })));
   return venueIdx=out;
 }
@@ -1536,10 +1553,10 @@ function searchFoods(q,tab){
 function defaultServing(f){
   if(f.my) return {label:f.serving||'1 serving',g:null};
   if(f.vt) return {label:f.serving||'1 serving',g:null,mult:1};
-  const u=(f.u&&f.u[0]);
+  const u=(f.du&&f.u&&f.u.find(x=>x[0]===f.du))||(f.u&&f.u[0]);
   return u?{label:u[0],g:u[1]}:{label:'100 g',g:100};
 }
-const per=(f,serv,qty=1)=>{const m=f.my?(serv.g==null?qty:serv.g/(f.sg||100)*qty):f.vt?qty:(serv.g/100)*qty, k=f.k||{}; const r=v=>v==null?null:Math.round(v*m*10)/10; return {cal:k.cal==null?null:Math.round(k.cal*m),p:r(k.p),c:r(k.c),f:r(k.f),fib:r(k.fib),sug:r(k.sug),sod:k.sod==null?null:Math.round(k.sod*m)}};
+const per=(f,serv,qty=1)=>{const sk=f.sk&&serv&&f.sk[serv.label]; if(sk) f={k:sk,u:[]}, serv={g:100}; const m=f.my?(serv.g==null?qty:serv.g/(f.sg||100)*qty):f.vt?qty:(serv.g/100)*qty, k=f.k||{}; const r=v=>v==null?null:Math.round(v*m*10)/10; return {cal:k.cal==null?null:Math.round(k.cal*m),p:r(k.p),c:r(k.c),f:r(k.f),fib:r(k.fib),sug:r(k.sug),sod:k.sod==null?null:Math.round(k.sod*m)}};
 
 const mealNow=()=>{const m=etNow().min;if(STORE.night&&m<180) return 'Snacks';return m<630?'Breakfast':m<960?'Lunch':m<1290?'Dinner':'Snacks'};
 let addDate=null;
@@ -1647,12 +1664,9 @@ async function quickAdd(i,btn){
   let f=x;
   if(x.items){ for(const it of x.items) addEntry(date,meal,it.f,it.serv,it.qty); return quickDone(btn,`${x.n} · ${fmtN(mealNut(x).cal)} cal`,meal,x.items.length); }
   if(x.vr){ const [ri,si,ii,h]=x.venue, r=xRests(h)[ri], it=r.sections[si].items[ii];
-    if(it.k){ const k=it.g?Object.fromEntries(Object.entries(it.k).map(([a,v])=>[a,v*100/it.g])):it.k;
-      f={id:'xk'+ri+'_'+si+'_'+ii,n:it.n,b:r.name,k,u:menuServs(it,r.sections[si].name,it.g||100),nog:true,src:'X'}; }
-    else if(it.fs){ btn.classList.add('busy'); const ff=await fsCombo(it.fs); btn.classList.remove('busy');
-      if(!ff) return toast('Couldn’t load nutrition. Check your connection.');
-      const G=(ff.u&&ff.u[0]&&ff.u[0][1])||100; f={...ff,n:it.n,b:r.name,u:menuServs(it,r.sections[si].name,G),nog:true}; }
-    else return openDetail(i); }
+    if(!(it.k||it.fs)||it.build) return openDetail(i);
+    btn.classList.add('busy'); f=await xFood(r,si,ri,ii); btn.classList.remove('busy');
+    if(!f) return toast('Couldn’t load nutrition. Check your connection.'); }
   const ls=lastServOf(f), serv=ls?ls.serv:defaultServing(f), qty=ls?ls.qty:1;
   addEntry(date,meal,f,serv,qty);
   quickDone(btn,`${f.n} · ${fmtN(per(f,serv,qty).cal||0)} cal`,meal,1);
@@ -1678,7 +1692,7 @@ function openDiningItem(id,h){
 const buildServs=f=>f.my?myServs(f):f.vt?[{label:f.serving||'1 serving',g:null}]:f.nog?(f.u||[]).map(([label,g])=>({label,g})):[...(f.u||[]).map(([label,g])=>({label,g})),{label:'100 g',g:100},{label:'1 oz',g:28.35},{label:'1 g',g:1}];
 function showDetail(f,opts={}){
   const servs=buildServs(f);
-  let si=0, qty=1, meal=addMeal;
+  let si=f.du?Math.max(0,servs.findIndex(x=>x.label===f.du)):0, qty=1, meal=addMeal;
   if(opts.entry){ const e=opts.entry.e; si=Math.max(0,servs.findIndex(x=>x.label===e.serv.label&&(x.g===e.serv.g||x.g==null))); if(si<0) si=0; qty=e.qty; meal=opts.entry.m;
     if(!servs.some(x=>x.label===e.serv.label)){ servs.unshift({label:e.serv.label,g:e.serv.g}); si=0; } }
   detail={f,servs,si,qty,standalone:opts.standalone,entry:opts.entry||null};
