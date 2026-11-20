@@ -1,0 +1,931 @@
+{
+ "note": "Equipment lists per gym. placeholder:true = starter list of common exercises until the real equipment list is added. Exercise ids must stay stable once real lists exist, because saved workouts and last-session numbers point at them.",
+ "gyms": [
+  {
+   "id": "war",
+   "n": "War Memorial Hall",
+   "short": "War Memorial",
+   "hours": "War Memorial",
+   "placeholder": true,
+   "groups": [
+    {
+     "n": "Chest",
+     "ex": [
+      {
+       "id": "barbell-bench-press",
+       "n": "Barbell bench press",
+       "t": "barbell"
+      },
+      {
+       "id": "incline-barbell-bench-press",
+       "n": "Incline barbell bench press",
+       "t": "barbell"
+      },
+      {
+       "id": "dumbbell-bench-press",
+       "n": "Dumbbell bench press",
+       "t": "dumbbell"
+      },
+      {
+       "id": "incline-dumbbell-press",
+       "n": "Incline dumbbell press",
+       "t": "dumbbell"
+      },
+      {
+       "id": "chest-press-machine",
+       "n": "Chest press machine",
+       "t": "machine"
+      },
+      {
+       "id": "pec-deck-chest-fly-machine",
+       "n": "Pec deck / chest fly machine",
+       "t": "machine"
+      },
+      {
+       "id": "cable-fly",
+       "n": "Cable fly",
+       "t": "cable"
+      },
+      {
+       "id": "dips",
+       "n": "Dips",
+       "t": "bodyweight"
+      },
+      {
+       "id": "push-ups",
+       "n": "Push-ups",
+       "t": "bodyweight"
+      }
+     ]
+    },
+    {
+     "n": "Back",
+     "ex": [
+      {
+       "id": "pull-ups",
+       "n": "Pull-ups",
+       "t": "bodyweight"
+      },
+      {
+       "id": "lat-pulldown",
+       "n": "Lat pulldown",
+       "t": "cable"
+      },
+      {
+       "id": "seated-cable-row",
+       "n": "Seated cable row",
+       "t": "cable"
+      },
+      {
+       "id": "barbell-row",
+       "n": "Barbell row",
+       "t": "barbell"
+      },
+      {
+       "id": "one-arm-dumbbell-row",
+       "n": "One-arm dumbbell row",
+       "t": "dumbbell"
+      },
+      {
+       "id": "t-bar-row",
+       "n": "T-bar row",
+       "t": "machine"
+      },
+      {
+       "id": "deadlift",
+       "n": "Deadlift",
+       "t": "barbell"
+      },
+      {
+       "id": "back-extension",
+       "n": "Back extension",
+       "t": "bodyweight"
+      },
+      {
+       "id": "face-pull",
+       "n": "Face pull",
+       "t": "cable"
+      }
+     ]
+    },
+    {
+     "n": "Shoulders",
+     "ex": [
+      {
+       "id": "overhead-barbell-press",
+       "n": "Overhead barbell press",
+       "t": "barbell"
+      },
+      {
+       "id": "seated-dumbbell-shoulder-press",
+       "n": "Seated dumbbell shoulder press",
+       "t": "dumbbell"
+      },
+      {
+       "id": "shoulder-press-machine",
+       "n": "Shoulder press machine",
+       "t": "machine"
+      },
+      {
+       "id": "lateral-raise",
+       "n": "Lateral raise",
+       "t": "dumbbell"
+      },
+      {
+       "id": "cable-lateral-raise",
+       "n": "Cable lateral raise",
+       "t": "cable"
+      },
+      {
+       "id": "rear-delt-fly-machine",
+       "n": "Rear delt fly machine",
+       "t": "machine"
+      },
+      {
+       "id": "shrugs",
+       "n": "Shrugs",
+       "t": "dumbbell"
+      }
+     ]
+    },
+    {
+     "n": "Legs",
+     "ex": [
+      {
+       "id": "back-squat",
+       "n": "Back squat",
+       "t": "barbell"
+      },
+      {
+       "id": "front-squat",
+       "n": "Front squat",
+       "t": "barbell"
+      },
+      {
+       "id": "leg-press",
+       "n": "Leg press",
+       "t": "machine"
+      },
+      {
+       "id": "hack-squat",
+       "n": "Hack squat",
+       "t": "machine"
+      },
+      {
+       "id": "romanian-deadlift",
+       "n": "Romanian deadlift",
+       "t": "barbell"
+      },
+      {
+       "id": "bulgarian-split-squat",
+       "n": "Bulgarian split squat",
+       "t": "dumbbell"
+      },
+      {
+       "id": "walking-lunges",
+       "n": "Walking lunges",
+       "t": "dumbbell"
+      },
+      {
+       "id": "leg-extension",
+       "n": "Leg extension",
+       "t": "machine"
+      },
+      {
+       "id": "lying-leg-curl",
+       "n": "Lying leg curl",
+       "t": "machine"
+      },
+      {
+       "id": "seated-leg-curl",
+       "n": "Seated leg curl",
+       "t": "machine"
+      },
+      {
+       "id": "hip-thrust",
+       "n": "Hip thrust",
+       "t": "barbell"
+      },
+      {
+       "id": "standing-calf-raise",
+       "n": "Standing calf raise",
+       "t": "machine"
+      },
+      {
+       "id": "seated-calf-raise",
+       "n": "Seated calf raise",
+       "t": "machine"
+      },
+      {
+       "id": "hip-abductor-machine",
+       "n": "Hip abductor machine",
+       "t": "machine"
+      },
+      {
+       "id": "hip-adductor-machine",
+       "n": "Hip adductor machine",
+       "t": "machine"
+      }
+     ]
+    },
+    {
+     "n": "Arms",
+     "ex": [
+      {
+       "id": "barbell-curl",
+       "n": "Barbell curl",
+       "t": "barbell"
+      },
+      {
+       "id": "dumbbell-curl",
+       "n": "Dumbbell curl",
+       "t": "dumbbell"
+      },
+      {
+       "id": "hammer-curl",
+       "n": "Hammer curl",
+       "t": "dumbbell"
+      },
+      {
+       "id": "preacher-curl",
+       "n": "Preacher curl",
+       "t": "machine"
+      },
+      {
+       "id": "cable-curl",
+       "n": "Cable curl",
+       "t": "cable"
+      },
+      {
+       "id": "triceps-pushdown",
+       "n": "Triceps pushdown",
+       "t": "cable"
+      },
+      {
+       "id": "overhead-cable-triceps-extension",
+       "n": "Overhead cable triceps extension",
+       "t": "cable"
+      },
+      {
+       "id": "skull-crushers",
+       "n": "Skull crushers",
+       "t": "barbell"
+      },
+      {
+       "id": "close-grip-bench-press",
+       "n": "Close-grip bench press",
+       "t": "barbell"
+      }
+     ]
+    },
+    {
+     "n": "Core",
+     "ex": [
+      {
+       "id": "plank",
+       "n": "Plank",
+       "t": "bodyweight"
+      },
+      {
+       "id": "hanging-leg-raise",
+       "n": "Hanging leg raise",
+       "t": "bodyweight"
+      },
+      {
+       "id": "cable-crunch",
+       "n": "Cable crunch",
+       "t": "cable"
+      },
+      {
+       "id": "ab-crunch-machine",
+       "n": "Ab crunch machine",
+       "t": "machine"
+      },
+      {
+       "id": "russian-twist",
+       "n": "Russian twist",
+       "t": "bodyweight"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mcc",
+   "n": "McComas Hall",
+   "short": "McComas",
+   "hours": "McComas",
+   "placeholder": true,
+   "groups": [
+    {
+     "n": "Chest",
+     "ex": [
+      {
+       "id": "barbell-bench-press",
+       "n": "Barbell bench press",
+       "t": "barbell"
+      },
+      {
+       "id": "incline-barbell-bench-press",
+       "n": "Incline barbell bench press",
+       "t": "barbell"
+      },
+      {
+       "id": "dumbbell-bench-press",
+       "n": "Dumbbell bench press",
+       "t": "dumbbell"
+      },
+      {
+       "id": "incline-dumbbell-press",
+       "n": "Incline dumbbell press",
+       "t": "dumbbell"
+      },
+      {
+       "id": "chest-press-machine",
+       "n": "Chest press machine",
+       "t": "machine"
+      },
+      {
+       "id": "pec-deck-chest-fly-machine",
+       "n": "Pec deck / chest fly machine",
+       "t": "machine"
+      },
+      {
+       "id": "cable-fly",
+       "n": "Cable fly",
+       "t": "cable"
+      },
+      {
+       "id": "dips",
+       "n": "Dips",
+       "t": "bodyweight"
+      },
+      {
+       "id": "push-ups",
+       "n": "Push-ups",
+       "t": "bodyweight"
+      }
+     ]
+    },
+    {
+     "n": "Back",
+     "ex": [
+      {
+       "id": "pull-ups",
+       "n": "Pull-ups",
+       "t": "bodyweight"
+      },
+      {
+       "id": "lat-pulldown",
+       "n": "Lat pulldown",
+       "t": "cable"
+      },
+      {
+       "id": "seated-cable-row",
+       "n": "Seated cable row",
+       "t": "cable"
+      },
+      {
+       "id": "barbell-row",
+       "n": "Barbell row",
+       "t": "barbell"
+      },
+      {
+       "id": "one-arm-dumbbell-row",
+       "n": "One-arm dumbbell row",
+       "t": "dumbbell"
+      },
+      {
+       "id": "t-bar-row",
+       "n": "T-bar row",
+       "t": "machine"
+      },
+      {
+       "id": "deadlift",
+       "n": "Deadlift",
+       "t": "barbell"
+      },
+      {
+       "id": "back-extension",
+       "n": "Back extension",
+       "t": "bodyweight"
+      },
+      {
+       "id": "face-pull",
+       "n": "Face pull",
+       "t": "cable"
+      }
+     ]
+    },
+    {
+     "n": "Shoulders",
+     "ex": [
+      {
+       "id": "overhead-barbell-press",
+       "n": "Overhead barbell press",
+       "t": "barbell"
+      },
+      {
+       "id": "seated-dumbbell-shoulder-press",
+       "n": "Seated dumbbell shoulder press",
+       "t": "dumbbell"
+      },
+      {
+       "id": "shoulder-press-machine",
+       "n": "Shoulder press machine",
+       "t": "machine"
+      },
+      {
+       "id": "lateral-raise",
+       "n": "Lateral raise",
+       "t": "dumbbell"
+      },
+      {
+       "id": "cable-lateral-raise",
+       "n": "Cable lateral raise",
+       "t": "cable"
+      },
+      {
+       "id": "rear-delt-fly-machine",
+       "n": "Rear delt fly machine",
+       "t": "machine"
+      },
+      {
+       "id": "shrugs",
+       "n": "Shrugs",
+       "t": "dumbbell"
+      }
+     ]
+    },
+    {
+     "n": "Legs",
+     "ex": [
+      {
+       "id": "back-squat",
+       "n": "Back squat",
+       "t": "barbell"
+      },
+      {
+       "id": "front-squat",
+       "n": "Front squat",
+       "t": "barbell"
+      },
+      {
+       "id": "leg-press",
+       "n": "Leg press",
+       "t": "machine"
+      },
+      {
+       "id": "hack-squat",
+       "n": "Hack squat",
+       "t": "machine"
+      },
+      {
+       "id": "romanian-deadlift",
+       "n": "Romanian deadlift",
+       "t": "barbell"
+      },
+      {
+       "id": "bulgarian-split-squat",
+       "n": "Bulgarian split squat",
+       "t": "dumbbell"
+      },
+      {
+       "id": "walking-lunges",
+       "n": "Walking lunges",
+       "t": "dumbbell"
+      },
+      {
+       "id": "leg-extension",
+       "n": "Leg extension",
+       "t": "machine"
+      },
+      {
+       "id": "lying-leg-curl",
+       "n": "Lying leg curl",
+       "t": "machine"
+      },
+      {
+       "id": "seated-leg-curl",
+       "n": "Seated leg curl",
+       "t": "machine"
+      },
+      {
+       "id": "hip-thrust",
+       "n": "Hip thrust",
+       "t": "barbell"
+      },
+      {
+       "id": "standing-calf-raise",
+       "n": "Standing calf raise",
+       "t": "machine"
+      },
+      {
+       "id": "seated-calf-raise",
+       "n": "Seated calf raise",
+       "t": "machine"
+      },
+      {
+       "id": "hip-abductor-machine",
+       "n": "Hip abductor machine",
+       "t": "machine"
+      },
+      {
+       "id": "hip-adductor-machine",
+       "n": "Hip adductor machine",
+       "t": "machine"
+      }
+     ]
+    },
+    {
+     "n": "Arms",
+     "ex": [
+      {
+       "id": "barbell-curl",
+       "n": "Barbell curl",
+       "t": "barbell"
+      },
+      {
+       "id": "dumbbell-curl",
+       "n": "Dumbbell curl",
+       "t": "dumbbell"
+      },
+      {
+       "id": "hammer-curl",
+       "n": "Hammer curl",
+       "t": "dumbbell"
+      },
+      {
+       "id": "preacher-curl",
+       "n": "Preacher curl",
+       "t": "machine"
+      },
+      {
+       "id": "cable-curl",
+       "n": "Cable curl",
+       "t": "cable"
+      },
+      {
+       "id": "triceps-pushdown",
+       "n": "Triceps pushdown",
+       "t": "cable"
+      },
+      {
+       "id": "overhead-cable-triceps-extension",
+       "n": "Overhead cable triceps extension",
+       "t": "cable"
+      },
+      {
+       "id": "skull-crushers",
+       "n": "Skull crushers",
+       "t": "barbell"
+      },
+      {
+       "id": "close-grip-bench-press",
+       "n": "Close-grip bench press",
+       "t": "barbell"
+      }
+     ]
+    },
+    {
+     "n": "Core",
+     "ex": [
+      {
+       "id": "plank",
+       "n": "Plank",
+       "t": "bodyweight"
+      },
+      {
+       "id": "hanging-leg-raise",
+       "n": "Hanging leg raise",
+       "t": "bodyweight"
+      },
+      {
+       "id": "cable-crunch",
+       "n": "Cable crunch",
+       "t": "cable"
+      },
+      {
+       "id": "ab-crunch-machine",
+       "n": "Ab crunch machine",
+       "t": "machine"
+      },
+      {
+       "id": "russian-twist",
+       "n": "Russian twist",
+       "t": "bodyweight"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "twc",
+   "n": "The Weight Club",
+   "short": "Weight Club",
+   "placeholder": true,
+   "groups": [
+    {
+     "n": "Chest",
+     "ex": [
+      {
+       "id": "barbell-bench-press",
+       "n": "Barbell bench press",
+       "t": "barbell"
+      },
+      {
+       "id": "incline-barbell-bench-press",
+       "n": "Incline barbell bench press",
+       "t": "barbell"
+      },
+      {
+       "id": "dumbbell-bench-press",
+       "n": "Dumbbell bench press",
+       "t": "dumbbell"
+      },
+      {
+       "id": "incline-dumbbell-press",
+       "n": "Incline dumbbell press",
+       "t": "dumbbell"
+      },
+      {
+       "id": "chest-press-machine",
+       "n": "Chest press machine",
+       "t": "machine"
+      },
+      {
+       "id": "pec-deck-chest-fly-machine",
+       "n": "Pec deck / chest fly machine",
+       "t": "machine"
+      },
+      {
+       "id": "cable-fly",
+       "n": "Cable fly",
+       "t": "cable"
+      },
+      {
+       "id": "dips",
+       "n": "Dips",
+       "t": "bodyweight"
+      },
+      {
+       "id": "push-ups",
+       "n": "Push-ups",
+       "t": "bodyweight"
+      }
+     ]
+    },
+    {
+     "n": "Back",
+     "ex": [
+      {
+       "id": "pull-ups",
+       "n": "Pull-ups",
+       "t": "bodyweight"
+      },
+      {
+       "id": "lat-pulldown",
+       "n": "Lat pulldown",
+       "t": "cable"
+      },
+      {
+       "id": "seated-cable-row",
+       "n": "Seated cable row",
+       "t": "cable"
+      },
+      {
+       "id": "barbell-row",
+       "n": "Barbell row",
+       "t": "barbell"
+      },
+      {
+       "id": "one-arm-dumbbell-row",
+       "n": "One-arm dumbbell row",
+       "t": "dumbbell"
+      },
+      {
+       "id": "t-bar-row",
+       "n": "T-bar row",
+       "t": "machine"
+      },
+      {
+       "id": "deadlift",
+       "n": "Deadlift",
+       "t": "barbell"
+      },
+      {
+       "id": "back-extension",
+       "n": "Back extension",
+       "t": "bodyweight"
+      },
+      {
+       "id": "face-pull",
+       "n": "Face pull",
+       "t": "cable"
+      }
+     ]
+    },
+    {
+     "n": "Shoulders",
+     "ex": [
+      {
+       "id": "overhead-barbell-press",
+       "n": "Overhead barbell press",
+       "t": "barbell"
+      },
+      {
+       "id": "seated-dumbbell-shoulder-press",
+       "n": "Seated dumbbell shoulder press",
+       "t": "dumbbell"
+      },
+      {
+       "id": "shoulder-press-machine",
+       "n": "Shoulder press machine",
+       "t": "machine"
+      },
+      {
+       "id": "lateral-raise",
+       "n": "Lateral raise",
+       "t": "dumbbell"
+      },
+      {
+       "id": "cable-lateral-raise",
+       "n": "Cable lateral raise",
+       "t": "cable"
+      },
+      {
+       "id": "rear-delt-fly-machine",
+       "n": "Rear delt fly machine",
+       "t": "machine"
+      },
+      {
+       "id": "shrugs",
+       "n": "Shrugs",
+       "t": "dumbbell"
+      }
+     ]
+    },
+    {
+     "n": "Legs",
+     "ex": [
+      {
+       "id": "back-squat",
+       "n": "Back squat",
+       "t": "barbell"
+      },
+      {
+       "id": "front-squat",
+       "n": "Front squat",
+       "t": "barbell"
+      },
+      {
+       "id": "leg-press",
+       "n": "Leg press",
+       "t": "machine"
+      },
+      {
+       "id": "hack-squat",
+       "n": "Hack squat",
+       "t": "machine"
+      },
+      {
+       "id": "romanian-deadlift",
+       "n": "Romanian deadlift",
+       "t": "barbell"
+      },
+      {
+       "id": "bulgarian-split-squat",
+       "n": "Bulgarian split squat",
+       "t": "dumbbell"
+      },
+      {
+       "id": "walking-lunges",
+       "n": "Walking lunges",
+       "t": "dumbbell"
+      },
+      {
+       "id": "leg-extension",
+       "n": "Leg extension",
+       "t": "machine"
+      },
+      {
+       "id": "lying-leg-curl",
+       "n": "Lying leg curl",
+       "t": "machine"
+      },
+      {
+       "id": "seated-leg-curl",
+       "n": "Seated leg curl",
+       "t": "machine"
+      },
+      {
+       "id": "hip-thrust",
+       "n": "Hip thrust",
+       "t": "barbell"
+      },
+      {
+       "id": "standing-calf-raise",
+       "n": "Standing calf raise",
+       "t": "machine"
+      },
+      {
+       "id": "seated-calf-raise",
+       "n": "Seated calf raise",
+       "t": "machine"
+      },
+      {
+       "id": "hip-abductor-machine",
+       "n": "Hip abductor machine",
+       "t": "machine"
+      },
+      {
+       "id": "hip-adductor-machine",
+       "n": "Hip adductor machine",
+       "t": "machine"
+      }
+     ]
+    },
+    {
+     "n": "Arms",
+     "ex": [
+      {
+       "id": "barbell-curl",
+       "n": "Barbell curl",
+       "t": "barbell"
+      },
+      {
+       "id": "dumbbell-curl",
+       "n": "Dumbbell curl",
+       "t": "dumbbell"
+      },
+      {
+       "id": "hammer-curl",
+       "n": "Hammer curl",
+       "t": "dumbbell"
+      },
+      {
+       "id": "preacher-curl",
+       "n": "Preacher curl",
+       "t": "machine"
+      },
+      {
+       "id": "cable-curl",
+       "n": "Cable curl",
+       "t": "cable"
+      },
+      {
+       "id": "triceps-pushdown",
+       "n": "Triceps pushdown",
+       "t": "cable"
+      },
+      {
+       "id": "overhead-cable-triceps-extension",
+       "n": "Overhead cable triceps extension",
+       "t": "cable"
+      },
+      {
+       "id": "skull-crushers",
+       "n": "Skull crushers",
+       "t": "barbell"
+      },
+      {
+       "id": "close-grip-bench-press",
+       "n": "Close-grip bench press",
+       "t": "barbell"
+      }
+     ]
+    },
+    {
+     "n": "Core",
+     "ex": [
+      {
+       "id": "plank",
+       "n": "Plank",
+       "t": "bodyweight"
+      },
+      {
+       "id": "hanging-leg-raise",
+       "n": "Hanging leg raise",
+       "t": "bodyweight"
+      },
+      {
+       "id": "cable-crunch",
+       "n": "Cable crunch",
+       "t": "cable"
+      },
+      {
+       "id": "ab-crunch-machine",
+       "n": "Ab crunch machine",
+       "t": "machine"
+      },
+      {
+       "id": "russian-twist",
+       "n": "Russian twist",
+       "t": "bodyweight"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
