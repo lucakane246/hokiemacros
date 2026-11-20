@@ -63,7 +63,7 @@ jobs:
         run: |
           P=ios/App/App/Info.plist
           B=/usr/libexec/PlistBuddy
-          $B -c "Set :CFBundleShortVersionString 1.0.1" $P
+          $B -c "Set :CFBundleShortVersionString 1.0.2" $P
           $B -c "Set :CFBundleVersion ${{ github.run_number }}" $P
           $B -c "Add :ITSAppUsesNonExemptEncryption bool false" $P
           $B -c "Add :NSLocationWhenInUseUsageDescription string 'Shows where you are on the campus map and how long it takes to walk to dining halls, gyms and restaurants.'" $P
