@@ -1239,6 +1239,11 @@ const vtK=x=>({cal:x.cal,p:x.p,c:x.c,f:x.f,fib:x.fib,sug:x.sug,sod:x.sod});
 function vtSizes(x){ if(!x.z) return {};
   const sk={}; for(const [l,id] of x.z){ const y=DATA.items[id]; if(y) sk[l]=vtK(y); }
   return {u:x.z.filter(([l])=>sk[l]).map(([l])=>[l,100]),sk,du:x.zd,nog:1}; }
+// The Weight Club (Blacksburg Health & Fitness, University Mall) isn't in VT's hours feed: weekly hours from Google Maps, Nov 2026.
+const WC_HOURS=[['08:00','20:00'],['05:00','22:00'],['05:00','22:00'],['05:00','22:00'],['05:00','22:00'],['05:00','20:00'],['08:00','20:00']]; // Sun..Sat
+function addWeightClubHours(D){ if(!D) return; D.gyms=D.gyms||{}; const g=D.gyms['Weight Club']={}, t=new Date();
+  for(let i=-1;i<15;i++){ const d=new Date(t.getFullYear(),t.getMonth(),t.getDate()+i), iso=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`, [o,c]=WC_HOURS[d.getDay()];
+    g[iso]=[{open:o,close:c,label:'Regular Hours',title:`${fmtT(o)} - ${fmtT(c)}`,unit:'Weight Club'}]; } }
 async function loadData(){
   try{
     const r=await fetchLive('data/dining.json');
@@ -1246,6 +1251,7 @@ async function loadData(){
     DATA=await r.json(); LIVE=true;
   }catch(e){ DATA=sampleData(); LIVE=false; }
   try{ mergeVtSizes(DATA); }catch(e){}
+  try{ addWeightClubHours(DATA); }catch(e){}
   try{ const v=await fetchLive('data/venues.json'); if(v.ok) VENUES=await v.json(); }catch(e){}
   // get everything a tap might need ready in the background, so taps never wait
   setTimeout(()=>{ try{ fsWarm(); prefetchVenueNutrition(); loadFoods(); }catch(e){} },1200);
@@ -2044,7 +2050,7 @@ const ACTIVITIES=[
           ['Cycling, moderate',8],['Hiking',6],['Dancing',5]]],
 ];
 const ACT_FLAT=Object.fromEntries(ACTIVITIES.flatMap(([,l])=>l));
-const PLACES={'':['Anywhere',null],'McComas':['McComas',[{key:'McComas',gym:true}]],'War Memorial':['War Memorial',[{key:'War Memorial',gym:true}]],'McComas Pool':['McComas Pool',[{key:'McComas Pool',gym:true}]]};
+const PLACES={'':['Anywhere',null],'McComas':['McComas',[{key:'McComas',gym:true}]],'War Memorial':['War Memorial',[{key:'War Memorial',gym:true}]],'McComas Pool':['McComas Pool',[{key:'McComas Pool',gym:true}]],'Weight Club':['Weight Club',[{key:'Weight Club',gym:true}]]};
 const latestWeight=()=>{const w=[...STORE.weights].sort((a,b)=>a.d<b.d?-1:1).pop(); return w?w.lb:(STORE.profile.weightLb||null)};
 const kcalFor=(met,min,lb)=>Math.round(met*(lb*0.45359237)*(min/60));
 const exOf=d=>(STORE.days[d]&&STORE.days[d].exercise)||[];
@@ -2103,7 +2109,7 @@ function exCalc(){ const m=parseFloat($('exMin').value), w=parseFloat($('exLb').
 // STORE.lift = { gym, unit:'lb', workouts:[{id,n,gym,ex:[{e,n,sets,reps,rest,note}],by,at,done}],
 //   last:{exId:{d,sets:[[reps,weight],...]}}   <- overwritten every session (progressive overload)
 //   sessions:[{id,d,wid,n,gym,min,ex:[{e,n,sets:[[r,w]]}]}] (last 40), active:{...} in-progress session }
-const GYM_FALLBACK={gyms:[{id:'war',n:'War Memorial Hall',short:'War Memorial',hours:'War Memorial',placeholder:true,groups:[]},{id:'mcc',n:'McComas Hall',short:'McComas',hours:'McComas',placeholder:true,groups:[]},{id:'twc',n:'The Weight Club',short:'Weight Club',placeholder:true,groups:[]}]};
+const GYM_FALLBACK={gyms:[{id:'war',n:'War Memorial Hall',short:'War Memorial',hours:'War Memorial',placeholder:true,groups:[]},{id:'mcc',n:'McComas Hall',short:'McComas',hours:'McComas',placeholder:true,groups:[]},{id:'twc',n:'The Weight Club',short:'Weight Club',hours:'Weight Club',placeholder:true,groups:[]}]};
 let GYMS=GYM_FALLBACK, gymsLoaded=false;
 async function loadGyms(){ try{ const r=await fetchLive('data/gyms.json'); if(r.ok){ const j=await r.json(); if(j&&j.gyms&&j.gyms.length) GYMS=j; } }catch(e){} gymsLoaded=true; if(cur==='lift') renderLift(); }
 function L(){ const l=STORE.lift||(STORE.lift={}); l.workouts=l.workouts||[]; l.last=l.last||{}; l.sessions=l.sessions||[]; l.unit=l.unit||'lb'; if(!l.gym) l.gym='war'; return l; }
@@ -3061,7 +3067,7 @@ const spots = [
   {name:'Viva Market & Viva Too', bldg:'Johnston Student Center · Goodwin Hall', t:[{key:'19'}], x:1635, y:488},
   {name:'War Memorial Hall', bldg:'Rec Sports gym', t:[{key:'War Memorial',gym:true,label:'Gym'}], x:1863, y:704, gym:true, lift:'war'},
   {name:'McComas Hall', bldg:'Rec Sports gym & pool', t:[{key:'McComas',gym:true,label:'Gym'},{key:'McComas Pool',gym:true,label:'Pool'}], x:1749, y:1167, gym:true, lift:'mcc'},
-  {name:'The Weight Club', bldg:'University Mall · 801 University City Blvd · membership gym', t:[], x:1006, y:123, gym:true, lift:'twc'},
+  {name:'The Weight Club', bldg:'University Mall · 801 University City Blvd · membership gym', t:[{key:'Weight Club',gym:true,label:'Gym'}], x:1006, y:123, gym:true, lift:'twc'},
 ];
 const pinsEl=document.getElementById('pins');
 function renderPins(){
