@@ -1171,7 +1171,7 @@ function slotsOf(t,date){ return (((t.gym?DATA.gyms[t.key]:DATA.hours[t.key])||{
 
 // open now? if not, when next?
 function statusOf(targets){
-  if(!DATA) return {known:false};
+  if(!DATA||!targets||!targets.length) return {known:false};
   const {date,min}=etNow();
   const all=d=>targets.flatMap(t=>slotsOf(t,d));
   const span=s=>{const o=toMin(s.open);let c=toMin(s.close);if(c<=o)c+=1440;return [o,c]};
@@ -3059,8 +3059,9 @@ const spots = [
   {name:'Squires Food Court', bldg:'Squires Student Center', t:[{key:'18'}], x:2036, y:466},
   {name:"Ducky's", bldg:'Graduate Life Center', t:[{key:'01'}], x:2059, y:556},
   {name:'Viva Market & Viva Too', bldg:'Johnston Student Center · Goodwin Hall', t:[{key:'19'}], x:1635, y:488},
-  {name:'War Memorial Hall', bldg:'Rec Sports gym', t:[{key:'War Memorial',gym:true,label:'Gym'}], x:1863, y:704, gym:true},
-  {name:'McComas Hall', bldg:'Rec Sports gym & pool', t:[{key:'McComas',gym:true,label:'Gym'},{key:'McComas Pool',gym:true,label:'Pool'}], x:1749, y:1167, gym:true},
+  {name:'War Memorial Hall', bldg:'Rec Sports gym', t:[{key:'War Memorial',gym:true,label:'Gym'}], x:1863, y:704, gym:true, lift:'war'},
+  {name:'McComas Hall', bldg:'Rec Sports gym & pool', t:[{key:'McComas',gym:true,label:'Gym'},{key:'McComas Pool',gym:true,label:'Pool'}], x:1749, y:1167, gym:true, lift:'mcc'},
+  {name:'The Weight Club', bldg:'University Mall · 801 University City Blvd · membership gym', t:[], x:1006, y:123, gym:true, lift:'twc'},
 ];
 const pinsEl=document.getElementById('pins');
 function renderPins(){
@@ -3088,7 +3089,10 @@ function openPop(i){
     const name=t.label||VENUE[t.key]||t.key;
     const rows=sl.length?sl.map(s=>`<div class="hl"><span>${esc(units.length>1?s.unit.replace(/^.*?\s{2,}/,''):(s.label&&!/regular/i.test(s.label)?s.label:''))}</span><b>${fmtT(s.open)} – ${fmtT(s.close)}${(()=>{const pr=doorPrice(t.key,s.label,date);return pr!=null?`<em class="hp">${money(pr)}</em>`:''})()}</b></div>`).join(''):`<div class="hl"><span></span><b class="muted">Closed today</b></div>`;
     return `<div class="hv"><div class="hn">${esc(name)}</div>${rows}</div>`}).join('');
-  const menuBtn=$('popMenu'); menuBtn.style.display=p.gym?'none':'flex'; menuBtn.onclick=()=>{closePop();openHall(p.t[0].key)};
+  $('popHrs').style.display=p.t.length?'':'none';
+  const menuBtn=$('popMenu'); menuBtn.style.display=p.gym&&!p.lift?'none':'flex';
+  if(p.lift){ menuBtn.innerHTML=POPMENU_HTML.replace("See today's menu",'My workouts here'); menuBtn.onclick=()=>{closePop();L().gym=p.lift;saveStore();go('lift')}; }
+  else menuBtn.onclick=()=>{closePop();openHall(p.t[0].key)};
   $('pop').classList.add('show'); updatePopWalk(); updatePopOcc(); if(drawRoute()) requestAnimationFrame(fitRoute);
 }
 function closePop(){popIdx=-1;$('pop').classList.remove('show');drawRoute();pinsEl.querySelectorAll('.pin').forEach(b=>b.classList.remove('sel'))}
