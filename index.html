@@ -609,6 +609,9 @@ button.profile{width:100%;text-align:left;color:inherit;font:inherit}
 .lset.ok .lok{background:#3fae74;border-color:#3fae74;color:#fff}.lset.ok .numin{border-color:rgba(63,174,116,.5)}
 .lsadd{display:flex;gap:14px;margin-top:4px}.lsadd button{font-size:13.5px;font-weight:700;color:var(--orange-hi)}
 .ldiscard{display:block;margin:18px auto 4px;color:#E26D8F;font-weight:700;font-size:14px}
+.calcard{cursor:pointer}.calcard .label{display:flex;align-items:center;justify-content:space-between}
+.todiary{display:flex;align-items:center;gap:2px;font-size:13px;font-weight:700;color:var(--orange-hi);text-transform:none;letter-spacing:0}
+.backbtn{width:34px;height:34px;margin-left:-8px;display:grid;place-items:center;color:var(--orange-hi)}
 .mkbtn{display:flex;align-items:center;justify-content:center;gap:8px;height:48px;border-radius:14px;background:var(--surface);border:1px solid var(--hair);color:var(--orange-hi);font:inherit;font-size:14.5px;font-weight:750}
 .cfcal{margin-top:2px}
 .linkdanger{font:inherit;font-size:13.5px;font-weight:700;color:var(--fat);padding:4px 0;align-self:center}
@@ -786,8 +789,8 @@ body.night #recCard{display:none!important}
     <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
   </button>
 
-  <div class="card rise" style="--i:2">
-    <div class="label">Calories</div>
+  <div class="card rise calcard pressable" style="--i:2" role="button" tabindex="0" aria-label="Open diary" onclick="go('diary')">
+    <div class="label">Calories<span class="todiary">Diary<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
     <div class="cal-top">
       <div class="big"><span id="calFood" data-count="0">0</span><small id="calGoalSmall">/ 2,200</small></div>
       <div class="left-n"><b id="calLeft" data-count="0">0</b><span id="calLeftLbl">remaining</span></div>
@@ -833,7 +836,7 @@ body.night #recCard{display:none!important}
 
 <!-- ============ DIARY ============ -->
 <section class="page" id="v-diary" data-title="Diary">
-  <div class="top rise" style="--i:0"><div class="title">Diary</div></div>
+  <div class="top rise" style="--i:0"><div class="title"><button class="backbtn" onclick="go('today')" aria-label="Back to Today"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>Diary</div></div>
   <div class="datebar rise" style="--i:1">
     <button aria-label="Previous day" onclick="shiftDay(-1)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
     <b id="diaryDate">Today</b>
@@ -942,12 +945,10 @@ body.night #recCard{display:none!important}
 <nav>
   <button class="tab on" data-v="today" onclick="go('today')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path class="ic-fill" d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5.5h-5V20H5a1 1 0 0 1-1-1z" fill="currentColor" stroke="none"/><path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5.5h-5V20H5a1 1 0 0 1-1-1z"/></svg>Today</button>
-  <button class="tab" data-v="diary" onclick="go('diary')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"><rect class="ic-fill" x="5" y="3.5" width="14" height="17" rx="2.5" fill="currentColor" fill-opacity=".22" stroke="none"/><rect x="5" y="3.5" width="14" height="17" rx="2.5"/><path d="M9 8.5h6M9 12h6M9 15.5h3.5"/></svg>Diary</button>
-  <div class="fabwrap"><button class="fab" onclick="toggleSheet()" aria-label="Log">
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>
   <button class="tab" data-v="dining" onclick="go('dining')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v8a2 2 0 0 0 2 2v8M11 3v8M3 3v6a4 4 0 0 0 4 4"/><path class="ic-fill" d="M17 21V3c2.5 0 4 2.5 4 6s-1.5 5-4 5z" fill="currentColor" stroke="none" fill-opacity=".35"/><path d="M17 21V3c2.5 0 4 2.5 4 6s-1.5 5-4 5"/></svg>Dining</button>
+  <div class="fabwrap"><button class="fab" onclick="toggleSheet()" aria-label="Log">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>
   <button class="tab" data-v="lift" onclick="go('lift')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect class="ic-fill" x="4.5" y="7" width="3" height="10" rx="1" fill="currentColor" fill-opacity=".35" stroke="none"/><rect class="ic-fill" x="16.5" y="7" width="3" height="10" rx="1" fill="currentColor" fill-opacity=".35" stroke="none"/><rect x="4.5" y="7" width="3" height="10" rx="1"/><rect x="16.5" y="7" width="3" height="10" rx="1"/><path d="M7.5 12h9M2.5 9.5v5M21.5 9.5v5"/></svg>Lift</button>
   <button class="tab" data-v="map" onclick="go('map')">
@@ -1106,7 +1107,7 @@ function go(v,force){
   to.classList.remove('leaving'); to.classList.add('active');
   setTimeout(()=>from.classList.remove('leaving','enter'),240);
   cur=v;
-  document.querySelectorAll('nav .tab').forEach(b=>b.classList.toggle('on',b.dataset.v===v||(v==='out'&&b.dataset.v==='dining')));
+  document.querySelectorAll('nav .tab').forEach(b=>b.classList.toggle('on',b.dataset.v===v||(v==='out'&&b.dataset.v==='dining')||(v==='diary'&&b.dataset.v==='today')));
   navTitle.textContent=to.dataset.title||''; syncNavbar();
   enter(to);
   if(v==='out') renderOut();
